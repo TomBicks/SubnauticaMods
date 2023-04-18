@@ -14,20 +14,10 @@ namespace CreatureConfig
     {
         static Dictionary<string, float> defaultDamageValues = new Dictionary<string, float>()
         {
-            { "BiterDmg",7F }
+            { "BiterDmg",7F },
+            { "SandSharkDmg",30F },
+            { "StalkerDmg", 30F }
         };
-
-        /*[HarmonyPatch(typeof(Player), nameof(Player.Awake))]
-        [HarmonyPostfix]
-        public static void PostfixStart(Player __instance)
-        {
-            // Check to see if this is the player
-            if (__instance.GetType() == typeof(Player))
-            {
-                //Populate default damage values dictionary
-                defaultDamageValues.Add("BiterDmg",7F);
-            }
-        }*/
 
         [HarmonyPatch(typeof(Creature), nameof(Creature.Start))]
         [HarmonyPrefix]
@@ -59,6 +49,8 @@ namespace CreatureConfig
             //logger.Log(LogLevel.Info, $"Creature TechType = {__techType}");
             logger.Log(LogLevel.Info, $"Creature TechType = {defaultDamageValues["BiterDmg"]}");
 
+            float __preset = config.DamagePreset;
+            
             switch (config.DamagePreset)
             {
                 //Custom, apply individual changes
@@ -67,6 +59,22 @@ namespace CreatureConfig
                     {
                         //Handle generic cases (just a MeleeAttack component; change biteDamage)
                         case TechType.Biter:
+                            float __biterDmg;
+                            switch(__preset)
+                            {
+                                case 1:
+                                    __biterDmg = config.BiterDmg;
+                                    break;
+                                case 2:
+                                    __biterDmg = 1;
+                                    break;
+                                case 8:
+                                    __biterDmg = 1000;
+                                    break;
+                                default: //Presets 3-7, subract 1, divide into quarters (0.25) then multiply damage by percentage
+                                    __biterDmg = ((__preset - 1) / 4) * defaultDamageValues["BiterDmg"];
+                                    break;
+                            }
                             ChangeGenericMeleeAttack(__instance, config.BiterDmg);
                             break;
                         case TechType.Bleeder:
