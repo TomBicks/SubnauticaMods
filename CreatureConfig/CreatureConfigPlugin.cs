@@ -34,16 +34,17 @@ namespace CreatureConfig
     [Menu("Creature Config")]
     public class Config : SMLHelper.V2.Json.ConfigFile
     {
-        [Slider("Damage Presets", Min = 1F, Max = 7F, DefaultValue = 4F, Step = 1F, Id = "DamagePreset", 
+        [Slider("Damage Presets", Min = 1F, Max = 8F, DefaultValue = 5F, Step = 1F, Id = "DamagePreset", 
             Tooltip = "The damage multiplier preset you wish to use if you want to quickly change all damage values. \n" +
-            "Keep in mind that changes made to individual creatures below will not take effect unless you select preset 4, Default. \n" +
-            "1 = Sandbox, all enemies deal 1 damage \n" +
-            "2 = Very Easy, All enemies deal 50% damage \n" +
-            "3 = Easy, All enemies deal 75% damage \n" +
-            "4 = Default, All enemies deal 100% damage and any individual changes made below will take effect \n" +
-            "5 = Hard, All enemies deal 125% damage \n" +
-            "6 = Very Hard, All enemies deal 150% damage \n" +
-            "7 = Sudden Death, All enemies will kill the player in one hit, including vehicles; you have been warned"), 
+            "Keep in mind that changes made to individual creatures below will not take effect unless you select preset 1, Custom. \n" +
+            "1 = Custom, any individual changes made below will take effect \n" +
+            "2 = Sandbox, all enemies deal 1 damage \n" +
+            "3 = Very Easy, All enemies deal 50% damage \n" +
+            "4 = Easy, All enemies deal 75% damage \n" +
+            "5 = Default, All enemies deal 100% damage \n" +
+            "6 = Hard, All enemies deal 125% damage \n" +
+            "7 = Very Hard, All enemies deal 150% damage \n" +
+            "8 = Sudden Death, All enemies will kill the player in one hit, including vehicles; you have been warned"), 
             OnChange(nameof(PresetChanged))]
         public float DamagePreset = 1.0F;
 
@@ -148,8 +149,8 @@ namespace CreatureConfig
             //CrabsnakeDmg = __percente * 35;
 
             //THIS SHOULD ROUND AFTER THE PERCENTAGE MULTIPLICATION AND ROUND TO THE NEAREST INTEGER, RATHER THAN MULTIPLE BY 1 or 2 ALWAYS
-            BiterDmg = (int)(e.Value * 7);
-            CrabsnakeDmg = (int)(e.Value * 35);
+            //BiterDmg = (int)(e.Value * 7);
+            //CrabsnakeDmg = (int)(e.Value * 35);
 
             //What I think I'm going to do is have this slider do nothing on its own, but instead in the patched method to actually change the values, it will check the preset
             //if the preset is 4, it uses individual; if not, it goes through each creature and multiplies its damage by the given multiplication (so passing 7 * 0.5 for example)

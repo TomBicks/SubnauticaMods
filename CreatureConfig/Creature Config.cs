@@ -61,8 +61,8 @@ namespace CreatureConfig
 
             switch (config.DamagePreset)
             {
-                //Default, apply individual changes
-                case 4:
+                //Custom, apply individual changes
+                case 1:
                     switch(__techType)
                     {
                         //Handle generic cases (just a MeleeAttack component; change biteDamage)
@@ -100,14 +100,14 @@ namespace CreatureConfig
                     break;
 
                 //Sandbox, make all damage values 1
-                case 1:
+                case 2:
                     break;
 
                 //Sudden Death, make all damage values 1000?
-                case 7:
+                case 8:
                     break;
 
-                //Damage Presets 2,3,5,6, multiply default damage values by a percentage
+                //Damage Presets 3,4,5,6,7 multiply default damage values by a percentage
                 default:
                     break;
             }
