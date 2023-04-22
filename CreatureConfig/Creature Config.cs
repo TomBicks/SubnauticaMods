@@ -23,30 +23,9 @@ namespace CreatureConfig
         [HarmonyPrefix]
         public static void PrefixCreatureStart(Creature __instance)
         {
-            #region Attempt 1; Several Nested If Statements
-            /*if (__instance.gameObject.GetComponent<CrabSnake>())
-            {
-                logger.Log(LogLevel.Info, $"Found Crabsnake; setting damage to {config.CrabsnakeDmg}");
-                if(__instance.gameObject.GetComponent<CrabsnakeMeleeAttack>())
-                {
-                    logger.Log(LogLevel.Info, "Found CrabsnakeMeleeAttack component");
-                    __instance.gameObject.GetComponent<CrabsnakeMeleeAttack>().biteDamage = 1f;
-                }
-            }
-            if (__instance.gameObject.GetComponent<Biter>())
-            {
-                logger.Log(LogLevel.Info, "Found Biter");
-                if (__instance.gameObject.GetComponent<MeleeAttack>())
-                {
-                    logger.Log(LogLevel.Info, $"Found MeleeAttack component; setting damage to {config.BiterDmg}");
-                    __instance.gameObject.GetComponent<MeleeAttack>().biteDamage = config.BiterDmg;
-                }
-            }*/
-            #endregion
-
             #region Attempt 2; getting TechType and running the result through a switch case
             TechType __techType = CraftData.GetTechType(__instance.gameObject);
-            
+
             switch(__techType)
             {
                 //Handle generic cases (just a MeleeAttack component; change biteDamage)
