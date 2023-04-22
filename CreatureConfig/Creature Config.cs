@@ -23,41 +23,40 @@ namespace CreatureConfig
         [HarmonyPrefix]
         public static void PrefixCreatureStart(Creature __instance)
         {
-            #region Attempt 2; getting TechType and running the result through a switch case
             TechType __techType = CraftData.GetTechType(__instance.gameObject);
-
-            switch(__techType)
+            
+            switch (__techType)
             {
                 //Handle generic cases (just a MeleeAttack component; change biteDamage)
                 case TechType.Biter:
-                    ChangeGenericMeleeAttack(__instance, config.BiterDmg, defaultDamageValues["BiterDmg"]);
+                    ChangeGenericMeleeAttack(__instance, config.BiterDmg, "BiterDmg");
                     break;
                 case TechType.Bleeder:
-                    ChangeGenericMeleeAttack(__instance, config.BleederDmg, defaultDamageValues["BleederDmg"]);
+                    ChangeGenericMeleeAttack(__instance, config.BleederDmg, "BleederDmg");
                     break;
                 case TechType.Shuttlebug: //Blood Crawler
-                    ChangeGenericMeleeAttack(__instance, config.BloodCrawlerDmg, defaultDamageValues["BloodCrawlerDmg"]);
+                    ChangeGenericMeleeAttack(__instance, config.BloodCrawlerDmg, "BloodCrawlerDmg");
                     break;
                 case TechType.BoneShark:
-                    ChangeGenericMeleeAttack(__instance, config.BonesharkDmg, defaultDamageValues["BonesharkDmg"]);
+                    ChangeGenericMeleeAttack(__instance, config.BonesharkDmg, "BonesharkDmg");
                     break;
                 case TechType.CaveCrawler:
-                    ChangeGenericMeleeAttack(__instance, config.CaveCrawlerDmg, defaultDamageValues["CaveCrawlerDmg"]);
+                    ChangeGenericMeleeAttack(__instance, config.CaveCrawlerDmg, "CaveCrawlerDmg");
                     break;
                 case TechType.CrabSquid:
-                    ChangeGenericMeleeAttack(__instance, config.CrabsquidDmg, defaultDamageValues["CrabsquidDmg"]);
+                    ChangeGenericMeleeAttack(__instance, config.CrabsquidDmg, "CrabsquidDmg");
                     break;
                 case TechType.LavaLizard:
-                    //ChangeGenericMeleeAttack(__instance, config.Lava, defaultDamageValues["BleederDmg"]);
+                    //ChangeGenericMeleeAttack(__instance, config.Lava, "BleederDmg");
                     break;
                 case TechType.Mesmer:
-                    ChangeGenericMeleeAttack(__instance, config.MesmerDmg, defaultDamageValues["MesmerDmg"]);
+                    ChangeGenericMeleeAttack(__instance, config.MesmerDmg, "MesmerDmg");
                     break;
                 case TechType.Sandshark:
-                    ChangeGenericMeleeAttack(__instance, config.SandSharkDmg, defaultDamageValues["SandsharkDmg"]);
+                    ChangeGenericMeleeAttack(__instance, config.SandSharkDmg, "SandsharkDmg");
                     break;
                 case TechType.Stalker:
-                    ChangeGenericMeleeAttack(__instance, config.StalkerDmg, defaultDamageValues["StalkerDmg"]);
+                    ChangeGenericMeleeAttack(__instance, config.StalkerDmg, "StalkerDmg");
                     break;
 
                 //Handle unique cases (has a unique MeleeAttack component, often with a grab animation and cinematic damage; change case by case)
@@ -68,51 +67,61 @@ namespace CreatureConfig
                     break;
  
             }
-            #endregion
         }
 
-        public static void ChangeGenericMeleeAttack(Creature __instance, float __customDmgValue, float __defaultDmgValue)
+        public static void ChangeGenericMeleeAttack(Creature __instance, float __customDmgValue, string __defaultDmgValueKey)
         {
-            //Store value to assign as new biteDamage for the selected creature; default value is the default biteDamge for the creature
-            float __dmgValueToAssign = __defaultDmgValue;
-
-            //Obtain preset and determine which damage value to assign according to the preset
-            float __preset = config.DamagePreset;
-            logger.Log(LogLevel.Info, $"Preset = {__preset}");
-
-            switch(__preset)
+            //First, check if key for default damage value actually exists in the dictionary
+            if (defaultDamageValues.ContainsKey(__defaultDmgValueKey))
             {
-                //Custom, apply individual custom changes
-                case 1:
-                    __dmgValueToAssign = __customDmgValue;
-                    break;
+                //If it exists, assign the default damage value to a variable
+                float __defaultDmgValue = defaultDamageValues[__defaultDmgValueKey];
 
-                //Sandbox, make all damage values 1
-                case 2:
-                    __dmgValueToAssign = 1;
-                    break;
+                //Store value to assign as new biteDamage for the selected creature; default value is the default biteDamge for the creature
+                float __dmgValueToAssign = __defaultDmgValue;
 
-                //Default, keep default value and break out of switch statement
-                case 5:
-                    break;
+                //Obtain preset and determine which damage value to assign according to the preset
+                float __preset = config.DamagePreset;
+                logger.Log(LogLevel.Info, $"Preset = {__preset}");
 
-                //Sudden Death, make all damage values 1000?
-                case 8:
-                    __dmgValueToAssign = 1000;
-                    break;
+                switch (__preset)
+                {
+                    //Custom, apply individual custom changes
+                    case 1:
+                        __dmgValueToAssign = __customDmgValue;
+                        break;
 
-                //Damage Presets 3,4,6,7, multiply default damage values by a percentage, based on the preset selected
-                default:
-                    __dmgValueToAssign = ((__preset - 1) / 4) * __defaultDmgValue;
-                    break;
+                    //Sandbox, make all damage values 1
+                    case 2:
+                        __dmgValueToAssign = 1;
+                        break;
+
+                    //Default, keep default value and break out of switch statement
+                    case 5:
+                        break;
+
+                    //Sudden Death, make all damage values 1000?
+                    case 8:
+                        __dmgValueToAssign = 1000;
+                        break;
+
+                    //Damage Presets 3,4,6,7, multiply default damage values by a percentage, based on the preset selected
+                    default:
+                        __dmgValueToAssign = ((__preset - 1) / 4) * __defaultDmgValue;
+                        break;
+                }
+
+                //DEBUG CODE; prints creature type and damage assigned
+                TechType __techType = CraftData.GetTechType(__instance.gameObject);
+                logger.Log(LogLevel.Info, $"Setting {__techType} biteDamage to {__dmgValueToAssign}");
+
+                //Set biteDamage to new damage value
+                __instance.gameObject.GetComponent<MeleeAttack>().biteDamage = __dmgValueToAssign;
             }
-
-            //DEBUG CODE; prints creature type and damage assigned
-            TechType __techType = CraftData.GetTechType(__instance.gameObject);
-            logger.Log(LogLevel.Info, $"Setting {__techType} biteDamage to {__dmgValueToAssign}");
-
-            //Set biteDamage to new damage value
-            __instance.gameObject.GetComponent<MeleeAttack>().biteDamage = __dmgValueToAssign;
+            else
+            {
+                logger.Log(LogLevel.Error, $"Default Damage Value Key {__defaultDmgValueKey} does not exist in the dictionary!");
+            }
         }
 
 
