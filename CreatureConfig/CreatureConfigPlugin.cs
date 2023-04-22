@@ -66,7 +66,7 @@ namespace CreatureConfig
         #endregion
 
         #region Blood Crawler
-        [Slider("Crabsnake Damage", Min = 1F, Max = 100F, DefaultValue = 5F, Step = 1F, Id = "BloodCrawlerDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Blood Crawler Damage", Min = 1F, Max = 100F, DefaultValue = 5F, Step = 1F, Id = "BloodCrawlerDmg"), OnChange(nameof(DamageChanged))]
         public float BloodCrawlerDmg = 5F;
         #endregion
 
