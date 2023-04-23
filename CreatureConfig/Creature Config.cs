@@ -12,10 +12,28 @@ namespace CreatureConfig
     [HarmonyPatch]
     internal class CreatureConfig
     {
-        static Dictionary<string, float> defaultDamageValues = new Dictionary<string, float>()
+        static readonly Dictionary<string, float> defaultDamageValues = new Dictionary<string, float>()
         {
             { "BiterDmg",7F },
+            { "BleederDmg",5F },
+            { "BloodCrawlerDmg",5F },
+            { "BonesharkDmg",30F },
+            { "CaveCrawlerDmg",5F },
+            { "CrabsnakeDmg",35F },
+            { "CrabsquidDmg",40F },
+            { "GhostLeviathanDmg",85F },
+            { "GhostLeviathanCyclopsDmg",250F },
+            { "GhostLeviathanJuvenileDmg",55F },
+            { "GhostLeviathanJuvenileCyclopsDmg",220F },
+            { "LavaLizardBiteDmg",30F },
+            { "LavaLizardSpitDmg",30F },
+            { "MesmerDmg",35F },
+            { "ReaperDmg",80F },
+            { "ReaperCyclopsDmg",220F },
             { "SandsharkDmg",30F },
+            { "SeaDragonBiteDmg",300F },
+            { "SeaDragonSwatDmg",70F },
+            { "SeaDragonShoveDmg",250F },
             { "StalkerDmg", 30F }
         };
 
@@ -31,10 +49,7 @@ namespace CreatureConfig
                 case TechType.Biter:
                     ChangeGenericMeleeAttack(__instance, config.BiterDmg, "BiterDmg");
                     break;
-                case TechType.Bleeder:
-                    ChangeGenericMeleeAttack(__instance, config.BleederDmg, "BleederDmg");
-                    break;
-                case TechType.Shuttlebug: //Blood Crawler
+                case TechType.Shuttlebug: //TechType for Blood Crawler
                     ChangeGenericMeleeAttack(__instance, config.BloodCrawlerDmg, "BloodCrawlerDmg");
                     break;
                 case TechType.BoneShark:
@@ -46,8 +61,8 @@ namespace CreatureConfig
                 case TechType.CrabSquid:
                     ChangeGenericMeleeAttack(__instance, config.CrabsquidDmg, "CrabsquidDmg");
                     break;
-                case TechType.LavaLizard:
-                    //ChangeGenericMeleeAttack(__instance, config.Lava, "BleederDmg");
+                case TechType.LavaLizard: //Ranged attack is handled in unique cases
+                    ChangeGenericMeleeAttack(__instance, config.LavaLizardBiteDmg, "LavaLizardBiteDmg");
                     break;
                 case TechType.Mesmer:
                     ChangeGenericMeleeAttack(__instance, config.MesmerDmg, "MesmerDmg");
@@ -60,12 +75,37 @@ namespace CreatureConfig
                     break;
 
                 //Handle unique cases (has a unique MeleeAttack component, often with a grab animation and cinematic damage; change case by case)
-                //This includes; Crabsnake, Ghost, Juvenile Emperor?, Reaper, Sea Dragon, Sea Trader, Ampeel (Shocker), Warper 
-                case TechType.Crabsnake:
+                //This includes; Bleeder (Done), Crabsnake (Done), Ghost (done), Juvenile Emperor?, Reaper, Sea Dragon, Sea Trader, Ampeel (Shocker), Warper, Lava Lizard (ranged attack)
+                case TechType.Bleeder:
+                    logger.Log(LogLevel.Info, $"Found Bleeder; setting damage to {config.BleederDmg}");
+                    __instance.gameObject.GetComponent<AttachAndSuck>().leechDamage = config.BleederDmg;
+                    break;
+                case TechType.Crabsnake: //Damage to player and damage to vehicles are seperate variables, but ulitmately the same damage value
                     logger.Log(LogLevel.Info, $"Found Crabsnake; setting damage to {config.CrabsnakeDmg}");
                     __instance.gameObject.GetComponent<CrabsnakeMeleeAttack>().biteDamage = config.CrabsnakeDmg;
+                    __instance.gameObject.GetComponent<CrabsnakeMeleeAttack>().seamothDamage = config.CrabsnakeDmg;
                     break;
- 
+                case TechType.GhostLeviathan:
+                    logger.Log(LogLevel.Info, $"Found Ghost Leviathan; setting player damage to {config.GhostLeviathanDmg} and cyclops damage to {config.GhostLeviathanCyclopsDmg}");
+                    __instance.gameObject.GetComponent<GhostLeviathanMeleeAttack>().biteDamage = config.GhostLeviathanDmg; //85; Damage dealt to player, seamoth and prawn suit
+                    __instance.gameObject.GetComponent<GhostLeviathanMeleeAttack>().cyclopsDamage = config.GhostLeviathanCyclopsDmg; //250; Damage dealt to cyclops
+                    break;
+                case TechType.GhostLeviathanJuvenile:
+                    logger.Log(LogLevel.Info, $"Found Ghost Leviathan Juvenile; setting player damage to {config.GhostLeviathanJuvenileDmg} and cyclops damage to {config.GhostLeviathanJuvenileCyclopsDmg}");
+                    __instance.gameObject.GetComponent<GhostLeviathanMeleeAttack>().biteDamage = config.GhostLeviathanJuvenileDmg; //55; Damage dealt to player, seamoth and prawn suit
+                    __instance.gameObject.GetComponent<GhostLeviathanMeleeAttack>().cyclopsDamage = config.GhostLeviathanJuvenileCyclopsDmg; //220; Damage dealt to cyclops
+                    break;
+                case TechType.ReaperLeviathan:
+                    logger.Log(LogLevel.Info, $"Found Reaper Leviathan; setting player damage to {config.ReaperDmg} and cyclops damage to {config.ReaperCyclopsDmg}");
+                    __instance.gameObject.GetComponent<ReaperMeleeAttack>().biteDamage = config.ReaperDmg; //80; Damage dealt to player, seamoth and prawn suit
+                    __instance.gameObject.GetComponent<ReaperMeleeAttack>().cyclopsDamage = config.ReaperCyclopsDmg; //220; Damage dealt to cyclops
+                    break;
+                case TechType.SeaDragon:
+                    logger.Log(LogLevel.Info, $"Found Sea Dragon Leviathan; setting bite damage to {config.ReaperDmg} and swat damage to {config.ReaperCyclopsDmg}");
+                    __instance.gameObject.GetComponent<SeaDragonMeleeAttack>().biteDamage = config.SeaDragonBiteDmg; //300; Bite (at least for player; unclear if seamoth or prawn suit are affected; might only be swat for them)
+                    __instance.gameObject.GetComponent<SeaDragonMeleeAttack>().swatAttackDamage = config.SeaDragonSwatDmg; //70; Swatted with arms (only for player, seamoth and prawn suit)
+                    __instance.gameObject.GetComponent<SeaDragonMeleeAttack>().shoveAttackDamage = config.SeaDragonShoveDmg; //250; Shove when shoving into the cyclops
+                    break;
             }
         }
 
@@ -107,7 +147,7 @@ namespace CreatureConfig
 
                     //Damage Presets 3,4,6,7, multiply default damage values by a percentage, based on the preset selected
                     default:
-                        __dmgValueToAssign = ((__preset - 1) / 4) * __defaultDmgValue;
+                        __dmgValueToAssign = (__preset - 1) / 4 * __defaultDmgValue;
                         break;
                 }
 
@@ -122,15 +162,6 @@ namespace CreatureConfig
             {
                 logger.Log(LogLevel.Error, $"Default Damage Value Key {__defaultDmgValueKey} does not exist in the dictionary!");
             }
-        }
-
-
-        [HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.TakeDamage))]
-        [HarmonyPrefix]
-        public static void PrefixTakeDamage(LiveMixin __instance)
-        {
-            //If all else fails; hook into dealer and see what they are and retroactively change the damage here?
-            //https://harmony.pardeike.net/articles/patching-injections.html
         }
     }
 }

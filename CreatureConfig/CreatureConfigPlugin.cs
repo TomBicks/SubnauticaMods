@@ -48,6 +48,9 @@ namespace CreatureConfig
             OnChange(nameof(PresetChanged))]
         public float DamagePreset = 1.0F;
 
+        //Note!! Seamoth has 200 HP, Prawn Suit has 600 HP, and Cyclops has 1500 HP. As such, some attacks designed for vehicles may do less damage than appears
+        //Might be good to put this blurb on the modpage
+
         #region Ampeel
         [Slider("Ampeel Bite Damage", Min = 1F, Max = 100F, DefaultValue = 45F, Step = 1F, Id = "AmpeelBiteDmg"), OnChange(nameof(DamageChanged))]
         public float AmpeelBiteDmg = 45F;
@@ -90,15 +93,19 @@ namespace CreatureConfig
         public float CrabsquidDmg = 40F;
         #endregion
 
-        /*#region Ghost Leviathan
-        [Slider("Crabsnake Grab Damage", Min = 1F, Max = 100F, DefaultValue = 35F, Step = 1F, Id = "CrabsnakeGrabDmg"), OnChange(nameof(SpawnIntensityChanged))]
-        public float CrabsnakeGrabDmg = 35F;
+        #region Ghost Leviathan
+        [Slider("Ghost Leviathan Damage", Min = 1F, Max = 100F, DefaultValue = 85F, Step = 1F, Id = "GhostLeviathanDmg"), OnChange(nameof(DamageChanged))]
+        public float GhostLeviathanDmg = 85F;
+        [Slider("Ghost Leviathan Cyclops Damage", Min = 5F, Max = 500F, DefaultValue = 250F, Step = 5F, Id = "GhostLeviathanCyclopsDmg"), OnChange(nameof(DamageChanged))]
+        public float GhostLeviathanCyclopsDmg = 250F;
         #endregion
 
         #region Ghost Leviathan Juvenile
-        [Slider("Crabsnake Grab Damage", Min = 1F, Max = 100F, DefaultValue = 35F, Step = 1F, Id = "CrabsnakeGrabDmg"), OnChange(nameof(SpawnIntensityChanged))]
-        public float CrabsnakeGrabDmg = 35F;
-        #endregion*/
+        [Slider("Ghost Leviathan Juvenile Damage", Min = 1F, Max = 100F, DefaultValue = 55F, Step = 1F, Id = "GhostLeviathanJuvenileDmg"), OnChange(nameof(DamageChanged))]
+        public float GhostLeviathanJuvenileDmg = 55F;
+        [Slider("Ghost Leviathan Juvenile Cyclops Damage", Min = 5F, Max = 500F, DefaultValue = 220F, Step = 5F, Id = "GhostLeviathanJuvenileCyclopsDmg"), OnChange(nameof(DamageChanged))]
+        public float GhostLeviathanJuvenileCyclopsDmg = 220F;
+        #endregion
 
         #region Lava Lizard
         [Slider("Lava Lizard Bite Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "LavaLizardBiteDmg"), OnChange(nameof(DamageChanged))]
@@ -112,25 +119,31 @@ namespace CreatureConfig
         public float MesmerDmg = 35F;
         #endregion
 
-        /*#region Reaper Leviathan
-        [Slider("Crabsnake Grab Damage", Min = 1F, Max = 100F, DefaultValue = 35F, Step = 1F, Id = "CrabsnakeGrabDmg"), OnChange(nameof(SpawnIntensityChanged))]
-        public float CrabsnakeGrabDmg = 35F;
-        #endregion*/
+        #region Reaper Leviathan
+        [Slider("Reaper Damage", Min = 1F, Max = 100F, DefaultValue = 80F, Step = 1F, Id = "ReaperDmg", Tooltip = "Damage dealt by a reaper to the player, seamoth & prawn suit"), OnChange(nameof(DamageChanged))]
+        public float ReaperDmg = 80F;
+        [Slider("Reaper Cyclops Damage", Min = 5F, Max = 500F, DefaultValue = 220F, Step = 5F, Id = "ReaperCyclopsDmg", Tooltip = "Damage dealt by a reaper to the cyclops"), OnChange(nameof(DamageChanged))]
+        public float ReaperCyclopsDmg = 220F;
+        #endregion
 
-        /*#region River Prowler
+        #region River Prowler
         [Slider("Crabsnake Grab Damage", Min = 1F, Max = 100F, DefaultValue = 35F, Step = 1F, Id = "CrabsnakeGrabDmg"), OnChange(nameof(DamageChanged))]
         public float CrabsnakeGrabDmg = 35F;
-        #endregion*/
+        #endregion
 
         #region Sand Shark
         [Slider("Sand Shark Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "SandSharkDmg"), OnChange(nameof(DamageChanged))]
         public float SandSharkDmg = 30F;
         #endregion
 
-        /*#region Sea Dragon Leviathan
-        [Slider("Crabsnake Grab Damage", Min = 1F, Max = 100F, DefaultValue = 35F, Step = 1F, Id = "CrabsnakeGrabDmg"), OnChange(nameof(SpawnIntensityChanged))]
-        public float CrabsnakeGrabDmg = 35F;
-        #endregion*/
+        #region Sea Dragon Leviathan
+        [Slider("Sea Dragon Bite Damage", Min = 5F, Max = 500F, DefaultValue = 300F, Step = 5F, Id = "SeaDragonBiteDmg"), OnChange(nameof(DamageChanged))]
+        public float SeaDragonBiteDmg = 300F;
+        [Slider("Sea Dragon Swat Damage", Min = 1F, Max = 100F, DefaultValue = 70F, Step = 1F, Id = "SeaDragonSwatDmg"), OnChange(nameof(DamageChanged))]
+        public float SeaDragonSwatDmg = 70F;
+        [Slider("Sea Dragon Shove Damage", Min = 5F, Max = 500F, DefaultValue = 250F, Step = 5F, Id = "SeaDragonShoveDmg"), OnChange(nameof(DamageChanged))]
+        public float SeaDragonShoveDmg = 250F;
+        #endregion
 
         #region Stalker
         [Slider("Stalker Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "StalkerDmg"), OnChange(nameof(DamageChanged))]
@@ -144,23 +157,12 @@ namespace CreatureConfig
 
         private void PresetChanged(SliderChangedEventArgs e)
         {
-            //float __percent = e.Value / 100;
-            //BiterDmg = __percent * 7;
-            //CrabsnakeDmg = __percente * 35;
-
-            //THIS SHOULD ROUND AFTER THE PERCENTAGE MULTIPLICATION AND ROUND TO THE NEAREST INTEGER, RATHER THAN MULTIPLE BY 1 or 2 ALWAYS
-            //BiterDmg = (int)(e.Value * 7);
-            //CrabsnakeDmg = (int)(e.Value * 35);
-
-            //What I think I'm going to do is have this slider do nothing on its own, but instead in the patched method to actually change the values, it will check the preset
-            //if the preset is 4, it uses individual; if not, it goes through each creature and multiplies its damage by the given multiplication (so passing 7 * 0.5 for example)
-            //Need a list of default values for this to work though, so going to use a Dictionary, with the specific default value it's looking for being a string key in the dictionary
-            //For example, if we're looking for BonesharkDmg, the dictionary would have "BonesharkDmg" as a key athat would lead to a default value of 30
+            //DamagePreset = e.Value;
         }
 
         private void DamageChanged(SliderChangedEventArgs e)
         {
-            switch(e.Id)
+            /*switch(e.Id)
             {
                 case "BiterDmg":
                     BiterDmg = e.Value;
@@ -171,7 +173,7 @@ namespace CreatureConfig
                 case "CrabsnakeDmg":
                     CrabsnakeDmg = e.Value;
                     break;
-            }
+            }*/
         }
     }
 }
