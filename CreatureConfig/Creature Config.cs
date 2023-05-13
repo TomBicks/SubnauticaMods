@@ -101,10 +101,11 @@ namespace CreatureConfig
                     __instance.gameObject.GetComponent<ReaperMeleeAttack>().cyclopsDamage = config.ReaperCyclopsDmg; //220; Damage dealt to cyclops
                     break;
                 case TechType.SeaDragon:
-                    logger.Log(LogLevel.Info, $"Found Sea Dragon Leviathan; setting bite damage to {config.ReaperDmg} and swat damage to {config.ReaperCyclopsDmg}");
-                    __instance.gameObject.GetComponent<SeaDragonMeleeAttack>().biteDamage = config.SeaDragonBiteDmg; //300; Bite (at least for player; unclear if seamoth or prawn suit are affected; might only be swat for them)
+                    logger.Log(LogLevel.Info, $"Found Sea Dragon Leviathan; setting bite damage to {config.SeaDragonBiteDmg}, swat damage to {config.SeaDragonSwatDmg} and shove damage to {config.SeaDragonShoveDmg}");
+                    __instance.gameObject.GetComponent<SeaDragonMeleeAttack>().biteDamage = config.SeaDragonBiteDmg; //300; Bite (so far for player and seamoth; untested on prawn suit)
                     __instance.gameObject.GetComponent<SeaDragonMeleeAttack>().swatAttackDamage = config.SeaDragonSwatDmg; //70; Swatted with arms (only for player, seamoth and prawn suit)
                     __instance.gameObject.GetComponent<SeaDragonMeleeAttack>().shoveAttackDamage = config.SeaDragonShoveDmg; //250; Shove when shoving into the cyclops
+                    //__instance.gameObject.GetComponent<Sea>().shoveAttackDamage = config.SeaDragonFireballDmg; //??; Spawns fireballs; posisbly two types???
                     break;
             }
         }
