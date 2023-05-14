@@ -2,10 +2,11 @@
 using System;
 using System.IO;
 using BepInEx.Logging;
-using SMLHelper.V2.Handlers;
+using Nautilus.Handlers;
 using static CreatureConfig.CreatureConfigPlugin;
 using System.Xml.Serialization;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace CreatureConfig
 {
@@ -105,7 +106,17 @@ namespace CreatureConfig
                     __instance.gameObject.GetComponent<SeaDragonMeleeAttack>().biteDamage = config.SeaDragonBiteDmg; //300; Bite (so far for player and seamoth; untested on prawn suit)
                     __instance.gameObject.GetComponent<SeaDragonMeleeAttack>().swatAttackDamage = config.SeaDragonSwatDmg; //70; Swatted with arms (only for player, seamoth and prawn suit)
                     __instance.gameObject.GetComponent<SeaDragonMeleeAttack>().shoveAttackDamage = config.SeaDragonShoveDmg; //250; Shove when shoving into the cyclops
-                    //__instance.gameObject.GetComponent<Sea>().shoveAttackDamage = config.SeaDragonFireballDmg; //??; Spawns fireballs; posisbly two types???
+                    logger.Log(LogLevel.Info, $"For Sea Dragon Leviathan projectiles, setting burning chunk damage to {config.SeaDragonBurningChunkDmg} and lava meteor damage to {config.SeaDragonLavaMeteorDmg}");
+                    GameObject __projectile1 = __instance.gameObject.GetComponent<RangedAttackLastTarget>().attackTypes[0].ammoPrefab;
+                    __projectile1.GetComponent<BurningChunk>().fireDamage = config.SeaDragonBurningChunkDmg;
+                    GameObject __projectile2 = __instance.gameObject.GetComponent<RangedAttackLastTarget>().attackTypes[1].ammoPrefab;
+                    __projectile2.GetComponent<LavaMeteor>().damage = config.SeaDragonLavaMeteorDmg;
+
+                    //??; Spawns fireballs; posisbly two types; 1 LavaMeteor or <=80 BurningChunks
+                    // The LavaMeteor as a prefab has a default of 10 damage; 40 when spawned by the seadragon (as this is what it is in their ammoPrefab)...
+                    // ...yet one-shot a seamoth and left the player on 20 health (80 damage from inside). However, a second attempt caused 60 damage to the Seamoth
+                    // The BurningChunk as a prefab has fire damage of 5; 10 when spawned by seadragon (as this is what it is in their ammoPrefab)...
+                    // ...yet appears to do no damage to a seamoth (just a bunch of sounds akin to schools of fish hitting the screen); untested whether it hurts the player or just the cyclops
                     break;
             }
         }

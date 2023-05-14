@@ -2,9 +2,9 @@
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using SMLHelper.V2.Handlers;
-using SMLHelper.V2.Options;
-using SMLHelper.V2.Options.Attributes;
+using Nautilus.Handlers;
+using Nautilus.Options;
+using Nautilus.Options.Attributes;
 using UnityEngine;
 using static OVRHaptics;
 
@@ -32,7 +32,7 @@ namespace CreatureConfig
     }
 
     [Menu("Creature Config")]
-    public class Config : SMLHelper.V2.Json.ConfigFile
+    public class Config : Nautilus.Json.ConfigFile
     {
         [Slider("Damage Presets", Min = 1F, Max = 8F, DefaultValue = 5F, Step = 1F, Id = "DamagePreset", 
             Tooltip = "The damage multiplier preset you wish to use if you want to quickly change all damage values. \n" +
@@ -143,6 +143,10 @@ namespace CreatureConfig
         public float SeaDragonSwatDmg = 70F;
         [Slider("Sea Dragon Shove Damage", Min = 5F, Max = 500F, DefaultValue = 250F, Step = 5F, Id = "SeaDragonShoveDmg"), OnChange(nameof(DamageChanged))]
         public float SeaDragonShoveDmg = 250F;
+        [Slider("Sea Dragon Shove Damage", Min = 1F, Max = 100F, DefaultValue = 10F, Step = 1F, Id = "SeaDragonBurningChunkDmg"), OnChange(nameof(DamageChanged))]
+        public float SeaDragonBurningChunkDmg = 10F;
+        [Slider("Sea Dragon Shove Damage", Min = 1F, Max = 100F, DefaultValue = 40F, Step = 1F, Id = "SeaDragonLavaMeteorDmg"), OnChange(nameof(DamageChanged))]
+        public float SeaDragonLavaMeteorDmg = 40F;
         #endregion
 
         #region Stalker
