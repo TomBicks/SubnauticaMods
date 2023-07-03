@@ -101,7 +101,7 @@ namespace CreatureConfig
         #endregion
 
         #region Crashfish
-        [Slider("Crashfish Damage", Min = 1F, Max = 100F, DefaultValue = 40F, Step = 1F, Id = "CrashfishDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Crashfish Damage", Min = 1F, Max = 100F, DefaultValue = 50F, Step = 1F, Id = "CrashfishDmg"), OnChange(nameof(DamageChanged))]
         public float CrashfishDmg = 0F;
         #endregion
 

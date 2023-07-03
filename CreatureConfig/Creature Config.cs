@@ -26,8 +26,8 @@ namespace CreatureConfig
             { "CaveCrawlerDmg",5F },
             { "CrabsnakeDmg",35F },
             { "CrabsquidDmg",40F },
-            //{ "CrashfishDmg",50F },
-            //{ "GasopodGasPodDmg",10F },
+            { "CrashfishDmg",50F },
+            { "GasopodGasPodDmg",10F },
             { "GhostLeviathanDmg",85F },
             { "GhostLeviathanCyclopsDmg",250F },
             { "GhostLeviathanJuvenileDmg",55F },
@@ -77,7 +77,6 @@ namespace CreatureConfig
                 case TechType.CrabSquid:
                     ChangeGenericMeleeAttack(__instance, config.CrabsquidDmg, "CrabsquidDmg");
                     break;
-                    break;
                 case TechType.LavaLizard:
                     ChangeGenericMeleeAttack(__instance, config.LavaLizardBiteDmg, "LavaLizardBiteDmg");
                     GameObject __LL_projectile1 = __instance.gameObject.GetComponent<RangedAttackLastTarget>().attackTypes[0].ammoPrefab;
@@ -113,15 +112,15 @@ namespace CreatureConfig
                     __instance.gameObject.GetComponent<CrabsnakeMeleeAttack>().seamothDamage = config.CrabsnakeDmg;
                     break;
                 case TechType.Crash: //TechType for Crashfish
-                    //For SOME unknown reason, the maxDamage value of the crashfish is private
-                    //Need to download and use Publicizer to access that!
-                    //__instance.gameObject.GetComponent<Crash>().maxDamage = config.CrashFishDmg;
-                case TechType.Gasopod:
-                    //NOTE!! The Gasopod only has a reference to the GasPod prefab; unlike the other projectile attacks, this doesn't state its own
-                    //instead it's just spawning GasPods based on the reference to the default GasPod prefab in the files, rather than stating its own custom version
-                    //GameObject __GP_projectile2 = __instance.gameObject.GetComponent<GasoPod>().podPrefabReference.damage;
-                    //__GP_projectile2.GetComponent<GasPod>().damagePerSecond = config.GasopodGasPodDmg;
+                    //Uses Publicizer
+                    __instance.gameObject.GetComponent<Crash>().maxDamage = config.CrashfishDmg;
                     break;
+                //case TechType.Gasopod:
+                //NOTE!! The Gasopod only has a reference to the GasPod prefab; unlike the other projectile attacks, this doesn't state its own
+                //instead it's just spawning GasPods based on the reference to the default GasPod prefab in the files, rather than stating its own custom version
+                //As a result, we need to patch into the function used to spawn the gaspods to alter their damage
+                //Patch is located below; "PrefixGasPod"
+                //break;
                 case TechType.GhostLeviathan:
                     logger.Log(LogLevel.Info, $"Found Ghost Leviathan; setting player damage to {config.GhostLeviathanDmg} and cyclops damage to {config.GhostLeviathanCyclopsDmg}");
                     __instance.gameObject.GetComponent<GhostLeviathanMeleeAttack>().biteDamage = config.GhostLeviathanDmg; //85; Damage dealt to player, seamoth and prawn suit
@@ -152,7 +151,7 @@ namespace CreatureConfig
                     // The LavaMeteor as a prefab has a default of 10 damage; 40 when spawned by the seadragon (as this is what it is in their ammoPrefab)...
                     // ...yet one-shot a seamoth and left the player on 20 health (80 damage from inside). However, a second attempt caused 60 damage to the Seamoth
                     // The BurningChunk as a prefab has fire damage of 5; 10 when spawned by seadragon (as this is what it is in their ammoPrefab)...
-                    // ...yet appears to do no damage to a seamoth (just a bunch of sounds akin to schools of fish hitting the screen); untested whether it hurts the player or just the cyclops
+                    // ...yet appears to do no damage to a player, seamoth or cyclops (just a bunch of sounds akin to schools of fish hitting the screen)
                     break;
                 case TechType.SeaTreader:
                     __instance.gameObject.GetComponent<SeaTreaderMeleeAttack>().damage = config.SeaTreaderDmg;
@@ -163,6 +162,20 @@ namespace CreatureConfig
                     __WP_projectile1.GetComponent<WarpBall>().damage = config.WarperWarpDmg;
                     break;
             }
+        }
+
+        [HarmonyPatch(typeof(GasPod), nameof(GasPod.Start))]
+        [HarmonyPostfix]
+        public static void PrefixGasPod(GasPod __instance)
+        {
+            //NOTE!! The Gasopod only has a reference to the GasPod prefab; unlike the other projectile attacks, this doesn't state its own
+            //instead it's just spawning GasPods based on the reference to the default GasPod prefab in the files, rather than stating its own custom version
+            //As a result, we need to patch into the function used to spawn the gaspods to alter their damage
+            //NOTE!! This will not change the damage of gaspods dropped by the player, meaning are still viable to use by the player
+            logger.Log(LogLevel.Info, "GasPod Spawned");
+            logger.Log(LogLevel.Info, $"Found GasPod; damage is currently {__instance.damagePerSecond}");
+            logger.Log(LogLevel.Info, $"Found GasPod; setting damage to {config.GasopodGasPodDmg}");
+            __instance.damagePerSecond = config.GasopodGasPodDmg;
         }
 
         public static void ChangeGenericMeleeAttack(Creature __instance, float __customDmgValue, string __defaultDmgValueKey)
