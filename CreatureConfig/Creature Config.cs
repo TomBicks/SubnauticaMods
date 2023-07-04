@@ -7,6 +7,7 @@ using static CreatureConfig.CreatureConfigPlugin;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 using UnityEngine;
+using Nautilus.Json.Converters;
 
 namespace CreatureConfig
 {
@@ -132,9 +133,13 @@ namespace CreatureConfig
                     __instance.gameObject.GetComponent<GhostLeviathanMeleeAttack>().cyclopsDamage = config.GhostLeviathanJuvenileCyclopsDmg; //220; Damage dealt to cyclops
                     break;
                 case TechType.ReaperLeviathan:
-                    logger.Log(LogLevel.Info, $"Found Reaper Leviathan; setting player damage to {config.ReaperDmg} and cyclops damage to {config.ReaperCyclopsDmg}");
-                    __instance.gameObject.GetComponent<ReaperMeleeAttack>().biteDamage = config.ReaperDmg; //80; Damage dealt to player, seamoth and prawn suit
-                    __instance.gameObject.GetComponent<ReaperMeleeAttack>().cyclopsDamage = config.ReaperCyclopsDmg; //220; Damage dealt to cyclops
+                    //logger.Log(LogLevel.Info, $"Found Reaper Leviathan; setting player damage to {config.ReaperDmg} and cyclops damage to {config.ReaperCyclopsDmg}");
+                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<ReaperMeleeAttack>().biteDamage, config.ReaperDmg, "ReaperDmg");
+                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<ReaperMeleeAttack>().cyclopsDamage, config.ReaperCyclopsDmg, "ReaperCyclopsDmg");
+                    //__instance.gameObject.GetComponent<ReaperMeleeAttack>().biteDamage = config.ReaperDmg; //80; Damage dealt to player, seamoth and prawn suit
+                    //__instance.gameObject.GetComponent<ReaperMeleeAttack>().cyclopsDamage = config.ReaperCyclopsDmg; //220; Damage dealt to cyclops
+                    //__instance.gameObject.GetComponent<ReaperMeleeAttack>().biteDamage = config.ReaperDmg; //80; Damage dealt to player, seamoth and prawn suit
+                    //__instance.gameObject.GetComponent<ReaperMeleeAttack>().cyclopsDamage = config.ReaperCyclopsDmg; //220; Damage dealt to cyclops
                     break;
                 case TechType.SeaDragon:
                     logger.Log(LogLevel.Info, $"Found Sea Dragon Leviathan; setting bite damage to {config.SeaDragonBiteDmg}, swat damage to {config.SeaDragonSwatDmg} and shove damage to {config.SeaDragonShoveDmg}");
@@ -172,8 +177,6 @@ namespace CreatureConfig
             //instead it's just spawning GasPods based on the reference to the default GasPod prefab in the files, rather than stating its own custom version
             //As a result, we need to patch into the function used to spawn the gaspods to alter their damage
             //NOTE!! This will not change the damage of gaspods dropped by the player, meaning are still viable to use by the player
-            logger.Log(LogLevel.Info, "GasPod Spawned");
-            logger.Log(LogLevel.Info, $"Found GasPod; damage is currently {__instance.damagePerSecond}");
             logger.Log(LogLevel.Info, $"Found GasPod; setting damage to {config.GasopodGasPodDmg}");
             __instance.damagePerSecond = config.GasopodGasPodDmg;
         }
@@ -186,7 +189,8 @@ namespace CreatureConfig
                 //If it exists, assign the default damage value to a variable
                 float __defaultDmgValue = defaultDamageValues[__defaultDmgValueKey];
 
-                //Store value to assign as new biteDamage for the selected creature; default value is the default biteDamge for the creature
+                //Store value to assign as new biteDamage for the selected creature
+                //Default value is the default biteDamge for the creature
                 float __dmgValueToAssign = __defaultDmgValue;
 
                 //Obtain preset and determine which damage value to assign according to the preset
@@ -226,6 +230,63 @@ namespace CreatureConfig
 
                 //Set biteDamage to new damage value
                 __instance.gameObject.GetComponent<MeleeAttack>().biteDamage = __dmgValueToAssign;
+            }
+            else
+            {
+                logger.Log(LogLevel.Error, $"Default Damage Value Key {__defaultDmgValueKey} does not exist in the dictionary!");
+            }
+        }
+
+        //public static void ChangeUniqueAttack<T>(Creature __instance, ref T uniqueAttackDmg, float __customDmgValue, string __defaultDmgValueKey)
+        public static void ChangeUniqueAttack(Creature __instance, ref float __uniqueAttackDmg, float __customDmgValue, string __defaultDmgValueKey)
+        {
+            //First, check if key for default damage value actually exists in the dictionary
+            if (defaultDamageValues.ContainsKey(__defaultDmgValueKey))
+            {
+                //If it exists, assign the default damage value to a variable
+                float __defaultDmgValue = defaultDamageValues[__defaultDmgValueKey];
+
+                //Store value to assign as new damage for the selected creature's unique attack
+                //Default value is the default damage for the creature's unique attack
+                float __dmgValueToAssign = __defaultDmgValue;
+
+                //Obtain preset and determine which damage value to assign according to the preset
+                float __preset = config.DamagePreset;
+                logger.Log(LogLevel.Info, $"Preset = {__preset}");
+
+                switch (__preset)
+                {
+                    //Custom, apply individual custom changes
+                    case 1:
+                        __dmgValueToAssign = __customDmgValue;
+                        break;
+
+                    //Sandbox, make all damage values 1
+                    case 2:
+                        __dmgValueToAssign = 1;
+                        break;
+
+                    //Default, keep default value and break out of switch statement
+                    case 5:
+                        break;
+
+                    //Sudden Death, make all damage values 1000?
+                    case 8:
+                        __dmgValueToAssign = 1000;
+                        break;
+
+                    //Damage Presets 3,4,6,7, multiply default damage values by a percentage, based on the preset selected
+                    default:
+                        __dmgValueToAssign = (__preset - 1) / 4 * __defaultDmgValue;
+                        break;
+                }
+
+                //DEBUG CODE; prints creature type and damage assigned
+                TechType __techType = CraftData.GetTechType(__instance.gameObject);
+                logger.Log(LogLevel.Info, $"Setting {__techType} {__defaultDmgValueKey} to {__dmgValueToAssign}");
+
+                //Set unique attack damage to new damage value, by reference
+                __uniqueAttackDmg = __dmgValueToAssign;
             }
             else
             {
