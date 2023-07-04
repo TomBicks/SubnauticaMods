@@ -183,49 +183,16 @@ namespace CreatureConfig
 
         public static void ChangeGenericMeleeAttack(Creature __instance, float __customDmgValue, string __defaultDmgValueKey)
         {
-            //First, check if key for default damage value actually exists in the dictionary
-            if (defaultDamageValues.ContainsKey(__defaultDmgValueKey))
+            //DEBUG CODE; prints creature type
+            TechType __techType = CraftData.GetTechType(__instance.gameObject);
+
+            //Calculate correct damage value to assign to creature's generic melee attack; returns -1 if no such attack exists in the dictionary
+            float __dmgValueToAssign = CalculateDmgToAssign(__customDmgValue, __defaultDmgValueKey);
+
+            //Check if the method managed to calculate a damage value to assign; -1 if it did not
+            if(__dmgValueToAssign != -1)
             {
-                //If it exists, assign the default damage value to a variable
-                float __defaultDmgValue = defaultDamageValues[__defaultDmgValueKey];
-
-                //Store value to assign as new biteDamage for the selected creature
-                //Default value is the default biteDamge for the creature
-                float __dmgValueToAssign = __defaultDmgValue;
-
-                //Obtain preset and determine which damage value to assign according to the preset
-                float __preset = config.DamagePreset;
-                logger.Log(LogLevel.Info, $"Preset = {__preset}");
-
-                switch (__preset)
-                {
-                    //Custom, apply individual custom changes
-                    case 1:
-                        __dmgValueToAssign = __customDmgValue;
-                        break;
-
-                    //Sandbox, make all damage values 1
-                    case 2:
-                        __dmgValueToAssign = 1;
-                        break;
-
-                    //Default, keep default value and break out of switch statement
-                    case 5:
-                        break;
-
-                    //Sudden Death, make all damage values 1000?
-                    case 8:
-                        __dmgValueToAssign = 1000;
-                        break;
-
-                    //Damage Presets 3,4,6,7, multiply default damage values by a percentage, based on the preset selected
-                    default:
-                        __dmgValueToAssign = (__preset - 1) / 4 * __defaultDmgValue;
-                        break;
-                }
-
-                //DEBUG CODE; prints creature type and damage assigned
-                TechType __techType = CraftData.GetTechType(__instance.gameObject);
+                //DEBUG CODE; prints damage assigned
                 logger.Log(LogLevel.Info, $"Setting {__techType} biteDamage to {__dmgValueToAssign}");
 
                 //Set biteDamage to new damage value
@@ -233,12 +200,39 @@ namespace CreatureConfig
             }
             else
             {
-                logger.Log(LogLevel.Error, $"Default Damage Value Key {__defaultDmgValueKey} does not exist in the dictionary!");
+                //DEBUG CODE; prints failure in assigning damage
+                logger.Log(LogLevel.Info, $"Failed setting {__techType} biteDamage");
             }
         }
 
         //public static void ChangeUniqueAttack<T>(Creature __instance, ref T uniqueAttackDmg, float __customDmgValue, string __defaultDmgValueKey)
         public static void ChangeUniqueAttack(Creature __instance, ref float __uniqueAttackDmg, float __customDmgValue, string __defaultDmgValueKey)
+        {
+            //DEBUG CODE; prints creature type
+            TechType __techType = CraftData.GetTechType(__instance.gameObject);
+
+            //Calculate correct damage value to assign to creature's generic melee attack; returns -1 if no such attack exists in the dictionary
+            float __dmgValueToAssign = CalculateDmgToAssign(__customDmgValue, __defaultDmgValueKey);
+
+            //Check if the method managed to calculate a damage value to assign; -1 if it did not
+            if (__dmgValueToAssign != -1)
+            {
+                //DEBUG CODE; prints damage assigned
+                logger.Log(LogLevel.Info, $"Setting {__techType} {__defaultDmgValueKey} to {__dmgValueToAssign}");
+
+                //Set unique attack damage to new damage value, by reference
+                __uniqueAttackDmg = __dmgValueToAssign;
+            }
+            else
+            {
+                //DEBUG CODE; prints failure in assigning damage
+                logger.Log(LogLevel.Info, $"Failed setting {__techType} {__defaultDmgValueKey}");
+            }
+        }
+
+        //Passed custom damage value and default damage value from dictionary; returns either the damage value to assign, or -1 if there is no such key in the dictionary
+        //Both ChangeAttack methods use this code; reduces redundant code
+        public static float CalculateDmgToAssign(float __customDmgValue, string __defaultDmgValueKey)
         {
             //First, check if key for default damage value actually exists in the dictionary
             if (defaultDamageValues.ContainsKey(__defaultDmgValueKey))
@@ -281,16 +275,14 @@ namespace CreatureConfig
                         break;
                 }
 
-                //DEBUG CODE; prints creature type and damage assigned
-                TechType __techType = CraftData.GetTechType(__instance.gameObject);
-                logger.Log(LogLevel.Info, $"Setting {__techType} {__defaultDmgValueKey} to {__dmgValueToAssign}");
-
-                //Set unique attack damage to new damage value, by reference
-                __uniqueAttackDmg = __dmgValueToAssign;
+                //Return attack damage value to assign
+                return __dmgValueToAssign;
             }
             else
             {
+                //Return -1 if the calculation failed and the key did not exist in the default damage dictionary
                 logger.Log(LogLevel.Error, $"Default Damage Value Key {__defaultDmgValueKey} does not exist in the dictionary!");
+                return -1.0f;
             }
         }
     }
