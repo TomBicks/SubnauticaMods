@@ -55,85 +55,88 @@ namespace CreatureConfig
         [HarmonyPrefix]
         public static void PrefixCreatureStart(Creature __instance)
         {
-            TechType __techType = CraftData.GetTechType(__instance.gameObject);
+            //Reference the gameObject Class directly, as none of the functionality uses the Creature class specifically
+            GameObject __creature = __instance.gameObject;
+
+            TechType __techType = CraftData.GetTechType(__creature);
             
             switch (__techType)
             {
                 //Handle generic cases (just a MeleeAttack component; change biteDamage)
                 case TechType.Biter:
-                    ChangeGenericMeleeAttack(__instance, config.BiterDmg, "BiterDmg");
+                    ChangeGenericMeleeAttack(__creature, config.BiterDmg, "BiterDmg");
                     break;
                 case TechType.Shuttlebug: //TechType for Blood Crawler
-                    ChangeGenericMeleeAttack(__instance, config.BloodCrawlerDmg, "BloodCrawlerDmg");
+                    ChangeGenericMeleeAttack(__creature, config.BloodCrawlerDmg, "BloodCrawlerDmg");
                     break;
                 case TechType.Blighter:
-                    ChangeGenericMeleeAttack(__instance, config.BlighterDmg, "BlighterDmg");
+                    ChangeGenericMeleeAttack(__creature, config.BlighterDmg, "BlighterDmg");
                     break;
                 case TechType.BoneShark:
-                    ChangeGenericMeleeAttack(__instance, config.BonesharkDmg, "BonesharkDmg");
+                    ChangeGenericMeleeAttack(__creature, config.BonesharkDmg, "BonesharkDmg");
                     break;
                 case TechType.CaveCrawler:
-                    ChangeGenericMeleeAttack(__instance, config.CaveCrawlerDmg, "CaveCrawlerDmg");
+                    ChangeGenericMeleeAttack(__creature, config.CaveCrawlerDmg, "CaveCrawlerDmg");
                     break;
                 case TechType.CrabSquid:
-                    ChangeGenericMeleeAttack(__instance, config.CrabsquidDmg, "CrabsquidDmg");
+                    ChangeGenericMeleeAttack(__creature, config.CrabsquidDmg, "CrabsquidDmg");
                     break;
                 case TechType.LavaLizard:
-                    ChangeGenericMeleeAttack(__instance, config.LavaLizardBiteDmg, "LavaLizardBiteDmg");
-                    GameObject __LL_projectile1 = __instance.gameObject.GetComponent<RangedAttackLastTarget>().attackTypes[0].ammoPrefab;
-                    ChangeUniqueAttack(__instance, ref __LL_projectile1.GetComponent<LavaMeteor>().damage, config.LavaLizardLavaRockDmg, "LavaLizardLavaRockDmg");
+                    ChangeGenericMeleeAttack(__creature, config.LavaLizardBiteDmg, "LavaLizardBiteDmg");
+                    GameObject __LL_projectile1 = __creature.GetComponent<RangedAttackLastTarget>().attackTypes[0].ammoPrefab;
+                    ChangeUniqueAttack(__creature, ref __LL_projectile1.GetComponent<LavaMeteor>().damage, config.LavaLizardLavaRockDmg, "LavaLizardLavaRockDmg");
                     break;
                 case TechType.Mesmer:
-                    ChangeGenericMeleeAttack(__instance, config.MesmerDmg, "MesmerDmg");
+                    ChangeGenericMeleeAttack(__creature, config.MesmerDmg, "MesmerDmg");
                     break;
                 case TechType.SpineEel: //TechType for River Prowler
-                    ChangeGenericMeleeAttack(__instance, config.RiverProwlerDmg, "RiverProwlerDmg");
+                    ChangeGenericMeleeAttack(__creature, config.RiverProwlerDmg, "RiverProwlerDmg");
                     break;
                 case TechType.Sandshark:
-                    ChangeGenericMeleeAttack(__instance, config.SandSharkDmg, "SandsharkDmg");
+                    ChangeGenericMeleeAttack(__creature, config.SandSharkDmg, "SandsharkDmg");
                     break;
                 case TechType.Stalker:
-                    ChangeGenericMeleeAttack(__instance, config.StalkerDmg, "StalkerDmg");
+                    ChangeGenericMeleeAttack(__creature, config.StalkerDmg, "StalkerDmg");
                     break;
 
                 //Handle unique cases (has a unique MeleeAttack component, often with a grab animation and cinematic damage; change case by case)
                 //This includes; Bleeder (Done), Crabsnake (Done), Ghost (done), Juvenile Emperor?, Reaper, Sea Dragon, Sea Trader, Ampeel (Shocker), Warper, Lava Lizard (ranged attack)
                 case TechType.Shocker: //TeechType for Ampeel
-                    ChangeGenericMeleeAttack(__instance, config.AmpeelBiteDmg, "AmpeelBiteDmg");
-                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<ShockerMeleeAttack>().electricalDamage, config.AmpeelShockDmg, "AmpeelShockDmg");
-                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<ShockerMeleeAttack>().cyclopsDamage, config.AmpeelCyclopsDmg, "AmpeelCyclopsDmg");
+                    ChangeGenericMeleeAttack(__creature, config.AmpeelBiteDmg, "AmpeelBiteDmg");
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<ShockerMeleeAttack>().electricalDamage, config.AmpeelShockDmg, "AmpeelShockDmg");
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<ShockerMeleeAttack>().cyclopsDamage, config.AmpeelCyclopsDmg, "AmpeelCyclopsDmg");
                     break;
                 case TechType.Bleeder:
-                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<AttachAndSuck>().leechDamage, config.BleederDmg, "BleederDmg");
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<AttachAndSuck>().leechDamage, config.BleederDmg, "BleederDmg");
                     break;
                 case TechType.Crabsnake: //Damage to player and damage to vehicles are seperate variables, but ulitmately the same damage value
-                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<CrabsnakeMeleeAttack>().biteDamage, config.CrabsnakeDmg, "CrabsnakeDmg");
-                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<CrabsnakeMeleeAttack>().seamothDamage, config.CrabsnakeDmg, "CrabsnakeDmg");
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<CrabsnakeMeleeAttack>().biteDamage, config.CrabsnakeDmg, "CrabsnakeDmg");
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<CrabsnakeMeleeAttack>().seamothDamage, config.CrabsnakeDmg, "CrabsnakeDmg");
                     break;
                 case TechType.Crash: //TechType for Crashfish
                     //Uses Publicizer
-                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<Crash>().maxDamage, config.CrashfishDmg, "CrashfishDmg");
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<Crash>().maxDamage, config.CrashfishDmg, "CrashfishDmg");
                     break;
                 case TechType.GhostLeviathan:
-                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<GhostLeviathanMeleeAttack>().biteDamage, config.GhostLeviathanDmg, "GhostLeviathanDmg"); //85; Damage dealt to player, seamoth and prawn suit
-                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<GhostLeviathanMeleeAttack>().cyclopsDamage, config.GhostLeviathanCyclopsDmg, "GhostLeviathanCyclopsDmg"); //250; Damage dealt to cyclops
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<GhostLeviathanMeleeAttack>().biteDamage, config.GhostLeviathanDmg, "GhostLeviathanDmg"); //85; Damage dealt to player, seamoth and prawn suit
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<GhostLeviathanMeleeAttack>().cyclopsDamage, config.GhostLeviathanCyclopsDmg, "GhostLeviathanCyclopsDmg"); //250; Damage dealt to cyclops
                     break;
                 case TechType.GhostLeviathanJuvenile:
-                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<GhostLeviathanMeleeAttack>().biteDamage, config.GhostLeviathanJuvenileDmg, "GhostLeviathanJuvenileDmg"); //55; Damage dealt to player, seamoth and prawn suit
-                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<GhostLeviathanMeleeAttack>().cyclopsDamage, config.GhostLeviathanJuvenileCyclopsDmg, "GhostLeviathanJuvenileCyclopsDmg"); //220; Damage dealt to cyclops
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<GhostLeviathanMeleeAttack>().biteDamage, config.GhostLeviathanJuvenileDmg, "GhostLeviathanJuvenileDmg"); //55; Damage dealt to player, seamoth and prawn suit
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<GhostLeviathanMeleeAttack>().cyclopsDamage, config.GhostLeviathanJuvenileCyclopsDmg, "GhostLeviathanJuvenileCyclopsDmg"); //220; Damage dealt to cyclops
                     break;
                 case TechType.ReaperLeviathan:
-                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<ReaperMeleeAttack>().biteDamage, config.ReaperDmg, "ReaperDmg"); //80; Damage dealt to player, seamoth and prawn suit
-                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<ReaperMeleeAttack>().cyclopsDamage, config.ReaperCyclopsDmg, "ReaperCyclopsDmg"); //220; Damage dealt to cyclops
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<ReaperMeleeAttack>().biteDamage, config.ReaperDmg, "ReaperDmg"); //80; Damage dealt to player, seamoth and prawn suit
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<ReaperMeleeAttack>().cyclopsDamage, config.ReaperCyclopsDmg, "ReaperCyclopsDmg"); //220; Damage dealt to cyclops
                     break;
                 case TechType.SeaDragon:
-                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<SeaDragonMeleeAttack>().biteDamage, config.SeaDragonBiteDmg, "SeaDragonBiteDmg"); //300; Bite (so far for player and seamoth; untested on prawn suit)
-                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<SeaDragonMeleeAttack>().swatAttackDamage, config.SeaDragonSwatDmg, "SeaDragonSwatDmg"); //70; Swatted with arms (only for player, seamoth and prawn suit)
-                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<SeaDragonMeleeAttack>().shoveAttackDamage, config.SeaDragonShoveDmg, "SeaDragonShoveDmg"); //250; Shove when shoving into the cyclops
-                    GameObject __SD_projectile1 = __instance.gameObject.GetComponent<RangedAttackLastTarget>().attackTypes[0].ammoPrefab;
-                    ChangeUniqueAttack(__instance, ref __SD_projectile1.GetComponent<BurningChunk>().fireDamage, config.SeaDragonBurningChunkDmg, "SeaDragonBurningChunkDmg");
-                    GameObject __SD_projectile2 = __instance.gameObject.GetComponent<RangedAttackLastTarget>().attackTypes[1].ammoPrefab;
-                    ChangeUniqueAttack(__instance, ref __SD_projectile2.GetComponent<LavaMeteor>().damage, config.SeaDragonLavaMeteorDmg, "SeaDragonLavaMeteorDmg");
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaDragonMeleeAttack>().biteDamage, config.SeaDragonBiteDmg, "SeaDragonBiteDmg"); //300; Bite (so far for player and seamoth; untested on prawn suit)
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaDragonMeleeAttack>().swatAttackDamage, config.SeaDragonSwatDmg, "SeaDragonSwatDmg"); //70; Swatted with arms (only for player, seamoth and prawn suit)
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaDragonMeleeAttack>().shoveAttackDamage, config.SeaDragonShoveDmg, "SeaDragonShoveDmg"); //250; Shove when shoving into the cyclops
+                    GameObject __SD_projectile1 = __creature.GetComponent<RangedAttackLastTarget>().attackTypes[0].ammoPrefab;
+                    ChangeUniqueAttack(__creature, ref __SD_projectile1.GetComponent<BurningChunk>().fireDamage, config.SeaDragonBurningChunkDmg, "SeaDragonBurningChunkDmg");
+                    GameObject __SD_projectile2 = __creature.GetComponent<RangedAttackLastTarget>().attackTypes[1].ammoPrefab;
+                    ChangeUniqueAttack(__creature, ref __SD_projectile2.GetComponent<LavaMeteor>().damage, config.SeaDragonLavaMeteorDmg, "SeaDragonLavaMeteorDmg");
                     //??; Spawns fireballs; posisbly two types; 1 LavaMeteor or <=80 BurningChunks
                     // The LavaMeteor as a prefab has a default of 10 damage; 40 when spawned by the seadragon (as this is what it is in their ammoPrefab)...
                     // ...yet one-shot a seamoth and left the player on 20 health (80 damage from inside). However, a second attempt caused 60 damage to the Seamoth
@@ -141,12 +144,12 @@ namespace CreatureConfig
                     // ...yet appears to do no damage to a player, seamoth or cyclops (just a bunch of sounds akin to schools of fish hitting the screen)
                     break;
                 case TechType.SeaTreader:
-                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<SeaTreaderMeleeAttack>().damage, config.SeaTreaderDmg, "SeaTreaderDmg");
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaTreaderMeleeAttack>().damage, config.SeaTreaderDmg, "SeaTreaderDmg");
                     break;
                 case TechType.Warper:
-                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<WarperMeleeAttack>().biteDamage, config.WarperClawDmg, "WarperClawDmg");
-                    GameObject __WP_projectile1 = __instance.gameObject.GetComponent<RangedAttackLastTarget>().attackTypes[0].ammoPrefab;
-                    ChangeUniqueAttack(__instance, ref __WP_projectile1.GetComponent<WarpBall>().damage, config.WarperWarpDmg, "WarperWarpDmg");
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<WarperMeleeAttack>().biteDamage, config.WarperClawDmg, "WarperClawDmg");
+                    GameObject __WP_projectile1 = __creature.GetComponent<RangedAttackLastTarget>().attackTypes[0].ammoPrefab;
+                    ChangeUniqueAttack(__creature, ref __WP_projectile1.GetComponent<WarpBall>().damage, config.WarperWarpDmg, "WarperWarpDmg");
                     break;
             }
         }
@@ -160,13 +163,13 @@ namespace CreatureConfig
             //As a result, we need to patch into the function used to spawn the gaspods to alter their damage
             //NOTE!! This will not change the damage of gaspods dropped by the player, meaning are still viable to use by the player
             logger.Log(LogLevel.Info, $"Found GasPod; setting damage to {config.GasopodGasPodDmg}");
-            ChangeUniqueAttack(__instance, ref __instance.damagePerSecond, config.GasopodGasPodDmg, "GasopodGasPodDmg");
+            ChangeUniqueAttack(__instance.gameObject, ref __instance.damagePerSecond, config.GasopodGasPodDmg, "GasopodGasPodDmg");
         }
 
-        public static void ChangeGenericMeleeAttack(Creature __instance, float __customDmgValue, string __defaultDmgValueKey)
+        public static void ChangeGenericMeleeAttack(GameObject __instance, float __customDmgValue, string __defaultDmgValueKey)
         {
             //DEBUG CODE; prints creature type
-            TechType __techType = CraftData.GetTechType(__instance.gameObject);
+            TechType __techType = CraftData.GetTechType(__instance);
 
             //Calculate correct damage value to assign to creature's generic melee attack; returns -1 if no such attack exists in the dictionary
             float __dmgValueToAssign = CalculateDmgToAssign(__customDmgValue, __defaultDmgValueKey);
@@ -178,7 +181,7 @@ namespace CreatureConfig
                 logger.Log(LogLevel.Info, $"Setting {__techType} biteDamage to {__dmgValueToAssign}");
 
                 //Set biteDamage to new damage value
-                __instance.gameObject.GetComponent<MeleeAttack>().biteDamage = __dmgValueToAssign;
+                __instance.GetComponent<MeleeAttack>().biteDamage = __dmgValueToAssign;
             }
             else
             {
@@ -188,10 +191,10 @@ namespace CreatureConfig
         }
 
         //public static void ChangeUniqueAttack<T>(Creature __instance, ref T uniqueAttackDmg, float __customDmgValue, string __defaultDmgValueKey)
-        public static void ChangeUniqueAttack(Creature __instance, ref float __uniqueAttackDmg, float __customDmgValue, string __defaultDmgValueKey)
+        public static void ChangeUniqueAttack(GameObject __instance, ref float __uniqueAttackDmg, float __customDmgValue, string __defaultDmgValueKey)
         {
             //DEBUG CODE; prints creature type
-            TechType __techType = CraftData.GetTechType(__instance.gameObject);
+            TechType __techType = CraftData.GetTechType(__instance);
 
             //Calculate correct damage value to assign to creature's generic melee attack; returns -1 if no such attack exists in the dictionary
             float __dmgValueToAssign = CalculateDmgToAssign(__customDmgValue, __defaultDmgValueKey);
