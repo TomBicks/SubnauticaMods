@@ -114,7 +114,7 @@ namespace CreatureConfig
                     ChangeUniqueAttack(__creature, ref __creature.GetComponent<CrabsnakeMeleeAttack>().seamothDamage, config.CrabsnakeDmg, "CrabsnakeDmg");
                     break;
                 case TechType.Crash: //TechType for Crashfish
-                    //Uses Publicizer
+                    //Private field; Uses Publicizer to access
                     ChangeUniqueAttack(__creature, ref __creature.GetComponent<Crash>().maxDamage, config.CrashfishDmg, "CrashfishDmg");
                     break;
                 case TechType.GhostLeviathan:
@@ -161,8 +161,6 @@ namespace CreatureConfig
             //NOTE!! The Gasopod only has a reference to the GasPod prefab; unlike the other projectile attacks, this doesn't state its own
             //instead it's just spawning GasPods based on the reference to the default GasPod prefab in the files, rather than stating its own custom version
             //As a result, we need to patch into the function used to spawn the gaspods to alter their damage
-            //NOTE!! This will not change the damage of gaspods dropped by the player, meaning are still viable to use by the player
-            logger.Log(LogLevel.Info, $"Found GasPod; setting damage to {config.GasopodGasPodDmg}");
             ChangeUniqueAttack(__instance.gameObject, ref __instance.damagePerSecond, config.GasopodGasPodDmg, "GasopodGasPodDmg");
         }
 
@@ -245,8 +243,10 @@ namespace CreatureConfig
                         __dmgValueToAssign = 1;
                         break;
 
-                    //Default, keep default value and break out of switch statement
-                    case 5:
+                    //Damage Presets 3,4,5,6,7, multiply default damage values by a percentage, based on the preset selected
+                    //5 is Default, damage value is reset to default
+                    case float n when n >= 3 && n <= 7:
+                        __dmgValueToAssign = (__preset - 1) / 4 * __defaultDmgValue;
                         break;
 
                     //Sudden Death, make all damage values 1000?
@@ -254,9 +254,8 @@ namespace CreatureConfig
                         __dmgValueToAssign = 1000;
                         break;
 
-                    //Damage Presets 3,4,6,7, multiply default damage values by a percentage, based on the preset selected
                     default:
-                        __dmgValueToAssign = (__preset - 1) / 4 * __defaultDmgValue;
+                        logger.Log(LogLevel.Error, $"Preset {__preset} not recognised!");
                         break;
                 }
 
