@@ -81,7 +81,7 @@ namespace CreatureConfig
                 case TechType.LavaLizard:
                     ChangeGenericMeleeAttack(__instance, config.LavaLizardBiteDmg, "LavaLizardBiteDmg");
                     GameObject __LL_projectile1 = __instance.gameObject.GetComponent<RangedAttackLastTarget>().attackTypes[0].ammoPrefab;
-                    __LL_projectile1.GetComponent<LavaMeteor>().damage = config.LavaLizardLavaRockDmg;
+                    ChangeUniqueAttack(__instance, ref __LL_projectile1.GetComponent<LavaMeteor>().damage, config.LavaLizardLavaRockDmg, "LavaLizardLavaRockDmg");
                     break;
                 case TechType.Mesmer:
                     ChangeGenericMeleeAttack(__instance, config.MesmerDmg, "MesmerDmg");
@@ -99,59 +99,41 @@ namespace CreatureConfig
                 //Handle unique cases (has a unique MeleeAttack component, often with a grab animation and cinematic damage; change case by case)
                 //This includes; Bleeder (Done), Crabsnake (Done), Ghost (done), Juvenile Emperor?, Reaper, Sea Dragon, Sea Trader, Ampeel (Shocker), Warper, Lava Lizard (ranged attack)
                 case TechType.Shocker: //TeechType for Ampeel
-                    __instance.gameObject.GetComponent<MeleeAttack>().biteDamage = config.AmpeelBiteDmg;
-                    __instance.gameObject.GetComponent<ShockerMeleeAttack>().electricalDamage = config.AmpeelShockDmg;
-                    __instance.gameObject.GetComponent<ShockerMeleeAttack>().cyclopsDamage = config.AmpeelCyclopsDmg;
+                    ChangeGenericMeleeAttack(__instance, config.AmpeelBiteDmg, "AmpeelBiteDmg");
+                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<ShockerMeleeAttack>().electricalDamage, config.AmpeelShockDmg, "AmpeelShockDmg");
+                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<ShockerMeleeAttack>().cyclopsDamage, config.AmpeelCyclopsDmg, "AmpeelCyclopsDmg");
                     break;
                 case TechType.Bleeder:
-                    logger.Log(LogLevel.Info, $"Found Bleeder; setting damage to {config.BleederDmg}");
-                    __instance.gameObject.GetComponent<AttachAndSuck>().leechDamage = config.BleederDmg;
+                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<AttachAndSuck>().leechDamage, config.BleederDmg, "BleederDmg");
                     break;
                 case TechType.Crabsnake: //Damage to player and damage to vehicles are seperate variables, but ulitmately the same damage value
-                    logger.Log(LogLevel.Info, $"Found Crabsnake; setting damage to {config.CrabsnakeDmg}");
-                    __instance.gameObject.GetComponent<CrabsnakeMeleeAttack>().biteDamage = config.CrabsnakeDmg;
-                    __instance.gameObject.GetComponent<CrabsnakeMeleeAttack>().seamothDamage = config.CrabsnakeDmg;
+                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<CrabsnakeMeleeAttack>().biteDamage, config.CrabsnakeDmg, "CrabsnakeDmg");
+                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<CrabsnakeMeleeAttack>().seamothDamage, config.CrabsnakeDmg, "CrabsnakeDmg");
                     break;
                 case TechType.Crash: //TechType for Crashfish
                     //Uses Publicizer
-                    __instance.gameObject.GetComponent<Crash>().maxDamage = config.CrashfishDmg;
+                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<Crash>().maxDamage, config.CrashfishDmg, "CrashfishDmg");
                     break;
-                //case TechType.Gasopod:
-                //NOTE!! The Gasopod only has a reference to the GasPod prefab; unlike the other projectile attacks, this doesn't state its own
-                //instead it's just spawning GasPods based on the reference to the default GasPod prefab in the files, rather than stating its own custom version
-                //As a result, we need to patch into the function used to spawn the gaspods to alter their damage
-                //Patch is located below; "PrefixGasPod"
-                //break;
                 case TechType.GhostLeviathan:
-                    logger.Log(LogLevel.Info, $"Found Ghost Leviathan; setting player damage to {config.GhostLeviathanDmg} and cyclops damage to {config.GhostLeviathanCyclopsDmg}");
-                    __instance.gameObject.GetComponent<GhostLeviathanMeleeAttack>().biteDamage = config.GhostLeviathanDmg; //85; Damage dealt to player, seamoth and prawn suit
-                    __instance.gameObject.GetComponent<GhostLeviathanMeleeAttack>().cyclopsDamage = config.GhostLeviathanCyclopsDmg; //250; Damage dealt to cyclops
+                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<GhostLeviathanMeleeAttack>().biteDamage, config.GhostLeviathanDmg, "GhostLeviathanDmg"); //85; Damage dealt to player, seamoth and prawn suit
+                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<GhostLeviathanMeleeAttack>().cyclopsDamage, config.GhostLeviathanCyclopsDmg, "GhostLeviathanCyclopsDmg"); //250; Damage dealt to cyclops
                     break;
                 case TechType.GhostLeviathanJuvenile:
-                    logger.Log(LogLevel.Info, $"Found Ghost Leviathan Juvenile; setting player damage to {config.GhostLeviathanJuvenileDmg} and cyclops damage to {config.GhostLeviathanJuvenileCyclopsDmg}");
-                    __instance.gameObject.GetComponent<GhostLeviathanMeleeAttack>().biteDamage = config.GhostLeviathanJuvenileDmg; //55; Damage dealt to player, seamoth and prawn suit
-                    __instance.gameObject.GetComponent<GhostLeviathanMeleeAttack>().cyclopsDamage = config.GhostLeviathanJuvenileCyclopsDmg; //220; Damage dealt to cyclops
+                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<GhostLeviathanMeleeAttack>().biteDamage, config.GhostLeviathanJuvenileDmg, "GhostLeviathanJuvenileDmg"); //55; Damage dealt to player, seamoth and prawn suit
+                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<GhostLeviathanMeleeAttack>().cyclopsDamage, config.GhostLeviathanJuvenileCyclopsDmg, "GhostLeviathanJuvenileCyclopsDmg"); //220; Damage dealt to cyclops
                     break;
                 case TechType.ReaperLeviathan:
-                    //logger.Log(LogLevel.Info, $"Found Reaper Leviathan; setting player damage to {config.ReaperDmg} and cyclops damage to {config.ReaperCyclopsDmg}");
-                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<ReaperMeleeAttack>().biteDamage, config.ReaperDmg, "ReaperDmg");
-                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<ReaperMeleeAttack>().cyclopsDamage, config.ReaperCyclopsDmg, "ReaperCyclopsDmg");
-                    //__instance.gameObject.GetComponent<ReaperMeleeAttack>().biteDamage = config.ReaperDmg; //80; Damage dealt to player, seamoth and prawn suit
-                    //__instance.gameObject.GetComponent<ReaperMeleeAttack>().cyclopsDamage = config.ReaperCyclopsDmg; //220; Damage dealt to cyclops
-                    //__instance.gameObject.GetComponent<ReaperMeleeAttack>().biteDamage = config.ReaperDmg; //80; Damage dealt to player, seamoth and prawn suit
-                    //__instance.gameObject.GetComponent<ReaperMeleeAttack>().cyclopsDamage = config.ReaperCyclopsDmg; //220; Damage dealt to cyclops
+                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<ReaperMeleeAttack>().biteDamage, config.ReaperDmg, "ReaperDmg"); //80; Damage dealt to player, seamoth and prawn suit
+                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<ReaperMeleeAttack>().cyclopsDamage, config.ReaperCyclopsDmg, "ReaperCyclopsDmg"); //220; Damage dealt to cyclops
                     break;
                 case TechType.SeaDragon:
-                    logger.Log(LogLevel.Info, $"Found Sea Dragon Leviathan; setting bite damage to {config.SeaDragonBiteDmg}, swat damage to {config.SeaDragonSwatDmg} and shove damage to {config.SeaDragonShoveDmg}");
-                    __instance.gameObject.GetComponent<SeaDragonMeleeAttack>().biteDamage = config.SeaDragonBiteDmg; //300; Bite (so far for player and seamoth; untested on prawn suit)
-                    __instance.gameObject.GetComponent<SeaDragonMeleeAttack>().swatAttackDamage = config.SeaDragonSwatDmg; //70; Swatted with arms (only for player, seamoth and prawn suit)
-                    __instance.gameObject.GetComponent<SeaDragonMeleeAttack>().shoveAttackDamage = config.SeaDragonShoveDmg; //250; Shove when shoving into the cyclops
-                    logger.Log(LogLevel.Info, $"For Sea Dragon Leviathan projectiles, setting burning chunk damage to {config.SeaDragonBurningChunkDmg} and lava meteor damage to {config.SeaDragonLavaMeteorDmg}");
+                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<SeaDragonMeleeAttack>().biteDamage, config.SeaDragonBiteDmg, "SeaDragonBiteDmg"); //300; Bite (so far for player and seamoth; untested on prawn suit)
+                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<SeaDragonMeleeAttack>().swatAttackDamage, config.SeaDragonSwatDmg, "SeaDragonSwatDmg"); //70; Swatted with arms (only for player, seamoth and prawn suit)
+                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<SeaDragonMeleeAttack>().shoveAttackDamage, config.SeaDragonShoveDmg, "SeaDragonShoveDmg"); //250; Shove when shoving into the cyclops
                     GameObject __SD_projectile1 = __instance.gameObject.GetComponent<RangedAttackLastTarget>().attackTypes[0].ammoPrefab;
-                    __SD_projectile1.GetComponent<BurningChunk>().fireDamage = config.SeaDragonBurningChunkDmg;
+                    ChangeUniqueAttack(__instance, ref __SD_projectile1.GetComponent<BurningChunk>().fireDamage, config.SeaDragonBurningChunkDmg, "SeaDragonBurningChunkDmg");
                     GameObject __SD_projectile2 = __instance.gameObject.GetComponent<RangedAttackLastTarget>().attackTypes[1].ammoPrefab;
-                    __SD_projectile2.GetComponent<LavaMeteor>().damage = config.SeaDragonLavaMeteorDmg;
-
+                    ChangeUniqueAttack(__instance, ref __SD_projectile2.GetComponent<LavaMeteor>().damage, config.SeaDragonLavaMeteorDmg, "SeaDragonLavaMeteorDmg");
                     //??; Spawns fireballs; posisbly two types; 1 LavaMeteor or <=80 BurningChunks
                     // The LavaMeteor as a prefab has a default of 10 damage; 40 when spawned by the seadragon (as this is what it is in their ammoPrefab)...
                     // ...yet one-shot a seamoth and left the player on 20 health (80 damage from inside). However, a second attempt caused 60 damage to the Seamoth
@@ -159,12 +141,12 @@ namespace CreatureConfig
                     // ...yet appears to do no damage to a player, seamoth or cyclops (just a bunch of sounds akin to schools of fish hitting the screen)
                     break;
                 case TechType.SeaTreader:
-                    __instance.gameObject.GetComponent<SeaTreaderMeleeAttack>().damage = config.SeaTreaderDmg;
+                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<SeaTreaderMeleeAttack>().damage, config.SeaTreaderDmg, "SeaTreaderDmg");
                     break;
                 case TechType.Warper:
-                    __instance.gameObject.GetComponent<WarperMeleeAttack>().biteDamage = config.WarperClawDmg;
+                    ChangeUniqueAttack(__instance, ref __instance.gameObject.GetComponent<WarperMeleeAttack>().biteDamage, config.WarperClawDmg, "WarperClawDmg");
                     GameObject __WP_projectile1 = __instance.gameObject.GetComponent<RangedAttackLastTarget>().attackTypes[0].ammoPrefab;
-                    __WP_projectile1.GetComponent<WarpBall>().damage = config.WarperWarpDmg;
+                    ChangeUniqueAttack(__instance, ref __WP_projectile1.GetComponent<WarpBall>().damage, config.WarperWarpDmg, "WarperWarpDmg");
                     break;
             }
         }
@@ -178,7 +160,7 @@ namespace CreatureConfig
             //As a result, we need to patch into the function used to spawn the gaspods to alter their damage
             //NOTE!! This will not change the damage of gaspods dropped by the player, meaning are still viable to use by the player
             logger.Log(LogLevel.Info, $"Found GasPod; setting damage to {config.GasopodGasPodDmg}");
-            __instance.damagePerSecond = config.GasopodGasPodDmg;
+            ChangeUniqueAttack(__instance, ref __instance.damagePerSecond, config.GasopodGasPodDmg, "GasopodGasPodDmg");
         }
 
         public static void ChangeGenericMeleeAttack(Creature __instance, float __customDmgValue, string __defaultDmgValueKey)
@@ -246,7 +228,7 @@ namespace CreatureConfig
 
                 //Obtain preset and determine which damage value to assign according to the preset
                 float __preset = config.DamagePreset;
-                logger.Log(LogLevel.Info, $"Preset = {__preset}");
+                //logger.Log(LogLevel.Info, $"Preset = {__preset}");
 
                 switch (__preset)
                 {
