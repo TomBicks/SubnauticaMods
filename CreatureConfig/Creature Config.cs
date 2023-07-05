@@ -184,7 +184,7 @@ namespace CreatureConfig
             else
             {
                 //DEBUG CODE; prints failure in assigning damage
-                logger.Log(LogLevel.Info, $"Failed setting {__techType} biteDamage");
+                logger.Log(LogLevel.Error, $"Failed setting {__techType} biteDamage");
             }
         }
 
@@ -209,7 +209,7 @@ namespace CreatureConfig
             else
             {
                 //DEBUG CODE; prints failure in assigning damage
-                logger.Log(LogLevel.Info, $"Failed setting {__techType} {__defaultDmgValueKey}");
+                logger.Log(LogLevel.Error, $"Failed setting {__techType} {__defaultDmgValueKey}");
             }
         }
 
