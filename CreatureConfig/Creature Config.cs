@@ -168,7 +168,7 @@ namespace CreatureConfig
 
         public static void ChangeGenericMeleeAttack(GameObject __instance, float __customDmgValue, string __defaultDmgValueKey)
         {
-            //DEBUG CODE; prints creature type
+            //DEBUG CODE; retrieves creature type
             TechType __techType = CraftData.GetTechType(__instance);
 
             //Calculate correct damage value to assign to creature's generic melee attack; returns -1 if no such attack exists in the dictionary
@@ -177,7 +177,7 @@ namespace CreatureConfig
             //Check if the method managed to calculate a damage value to assign; -1 if it did not
             if(__dmgValueToAssign != -1)
             {
-                //DEBUG CODE; prints damage assigned
+                //DEBUG CODE; prints creature type and damage assigned
                 logger.Log(LogLevel.Info, $"Setting {__techType} biteDamage to {__dmgValueToAssign}");
 
                 //Set biteDamage to new damage value
@@ -193,7 +193,7 @@ namespace CreatureConfig
         //public static void ChangeUniqueAttack<T>(Creature __instance, ref T uniqueAttackDmg, float __customDmgValue, string __defaultDmgValueKey)
         public static void ChangeUniqueAttack(GameObject __instance, ref float __uniqueAttackDmg, float __customDmgValue, string __defaultDmgValueKey)
         {
-            //DEBUG CODE; prints creature type
+            //DEBUG CODE; retrieves creature type
             TechType __techType = CraftData.GetTechType(__instance);
 
             //Calculate correct damage value to assign to creature's generic melee attack; returns -1 if no such attack exists in the dictionary
@@ -202,7 +202,7 @@ namespace CreatureConfig
             //Check if the method managed to calculate a damage value to assign; -1 if it did not
             if (__dmgValueToAssign != -1)
             {
-                //DEBUG CODE; prints damage assigned
+                //DEBUG CODE; prints creature type and damage assigned
                 logger.Log(LogLevel.Info, $"Setting {__techType} {__defaultDmgValueKey} to {__dmgValueToAssign}");
 
                 //Set unique attack damage to new damage value, by reference
