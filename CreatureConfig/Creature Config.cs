@@ -81,11 +81,6 @@ namespace CreatureConfig
                 case TechType.CrabSquid:
                     ChangeGenericMeleeAttack(__creature, config.CrabsquidDmg, "CrabsquidDmg");
                     break;
-                case TechType.LavaLizard:
-                    ChangeGenericMeleeAttack(__creature, config.LavaLizardBiteDmg, "LavaLizardBiteDmg");
-                    GameObject __LL_projectile1 = __creature.GetComponent<RangedAttackLastTarget>().attackTypes[0].ammoPrefab;
-                    ChangeUniqueAttack(__creature, ref __LL_projectile1.GetComponent<LavaMeteor>().damage, config.LavaLizardLavaRockDmg, "LavaLizardLavaRockDmg");
-                    break;
                 case TechType.Mesmer:
                     ChangeGenericMeleeAttack(__creature, config.MesmerDmg, "MesmerDmg");
                     break;
@@ -99,7 +94,7 @@ namespace CreatureConfig
                     ChangeGenericMeleeAttack(__creature, config.StalkerDmg, "StalkerDmg");
                     break;
 
-                //Handle unique cases (has a unique MeleeAttack component, often with a grab animation and cinematic damage; change case by case)
+                //Handle unique cases (has a unique MeleeAttack component, often with a grab animation and cinematic damage, or shoots a projectile; change case by case)
                 //This includes; Bleeder (Done), Crabsnake (Done), Ghost (done), Juvenile Emperor?, Reaper, Sea Dragon, Sea Trader, Ampeel (Shocker), Warper, Lava Lizard (ranged attack)
                 case TechType.Shocker: //TeechType for Ampeel
                     ChangeGenericMeleeAttack(__creature, config.AmpeelBiteDmg, "AmpeelBiteDmg");
@@ -116,6 +111,11 @@ namespace CreatureConfig
                 case TechType.Crash: //TechType for Crashfish
                     //Private field; Uses Publicizer to access
                     ChangeUniqueAttack(__creature, ref __creature.GetComponent<Crash>().maxDamage, config.CrashfishDmg, "CrashfishDmg");
+                    break;
+                case TechType.LavaLizard:
+                    ChangeGenericMeleeAttack(__creature, config.LavaLizardBiteDmg, "LavaLizardBiteDmg");
+                    GameObject __LL_projectile1 = __creature.GetComponent<RangedAttackLastTarget>().attackTypes[0].ammoPrefab;
+                    ChangeUniqueAttack(__creature, ref __LL_projectile1.GetComponent<LavaMeteor>().damage, config.LavaLizardLavaRockDmg, "LavaLizardLavaRockDmg");
                     break;
                 case TechType.GhostLeviathan:
                     ChangeUniqueAttack(__creature, ref __creature.GetComponent<GhostLeviathanMeleeAttack>().biteDamage, config.GhostLeviathanDmg, "GhostLeviathanDmg"); //85; Damage dealt to player, seamoth and prawn suit
@@ -137,11 +137,11 @@ namespace CreatureConfig
                     ChangeUniqueAttack(__creature, ref __SD_projectile1.GetComponent<BurningChunk>().fireDamage, config.SeaDragonBurningChunkDmg, "SeaDragonBurningChunkDmg");
                     GameObject __SD_projectile2 = __creature.GetComponent<RangedAttackLastTarget>().attackTypes[1].ammoPrefab;
                     ChangeUniqueAttack(__creature, ref __SD_projectile2.GetComponent<LavaMeteor>().damage, config.SeaDragonLavaMeteorDmg, "SeaDragonLavaMeteorDmg");
-                    //??; Spawns fireballs; posisbly two types; 1 LavaMeteor or <=80 BurningChunks
-                    // The LavaMeteor as a prefab has a default of 10 damage; 40 when spawned by the seadragon (as this is what it is in their ammoPrefab)...
-                    // ...yet one-shot a seamoth and left the player on 20 health (80 damage from inside). However, a second attempt caused 60 damage to the Seamoth
-                    // The BurningChunk as a prefab has fire damage of 5; 10 when spawned by seadragon (as this is what it is in their ammoPrefab)...
-                    // ...yet appears to do no damage to a player, seamoth or cyclops (just a bunch of sounds akin to schools of fish hitting the screen)
+                    //NOTE!! Spawns fireballs; posisbly two types; 1 LavaMeteor or <=80 BurningChunks
+                        // The LavaMeteor as a prefab has a default of 10 damage; 40 when spawned by the seadragon (as this is what it is in their ammoPrefab)...
+                        // ...yet one-shot a seamoth and left the player on 20 health (80 damage from inside). However, a second attempt caused 60 damage to the Seamoth
+                        // The BurningChunk as a prefab has fire damage of 5; 10 when spawned by seadragon (as this is what it is in their ammoPrefab)...
+                        // ...yet appears to do no damage to a player, seamoth or cyclops (just a bunch of sounds akin to schools of fish hitting the screen)
                     break;
                 case TechType.SeaTreader:
                     ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaTreaderMeleeAttack>().damage, config.SeaTreaderDmg, "SeaTreaderDmg");
@@ -159,8 +159,8 @@ namespace CreatureConfig
         public static void PrefixGasPod(GasPod __instance)
         {
             //NOTE!! The Gasopod only has a reference to the GasPod prefab; unlike the other projectile attacks, this doesn't state its own
-            //instead it's just spawning GasPods based on the reference to the default GasPod prefab in the files, rather than stating its own custom version
-            //As a result, we need to patch into the function used to spawn the gaspods to alter their damage
+                //instead it's just spawning GasPods based on the reference to the default GasPod prefab in the files, rather than stating its own custom version
+                //As a result, we need to patch into the function used to spawn the gaspods to alter their damage
             ChangeUniqueAttack(__instance.gameObject, ref __instance.damagePerSecond, config.GasopodGasPodDmg, "GasopodGasPodDmg");
         }
 
@@ -249,7 +249,7 @@ namespace CreatureConfig
                         __dmgValueToAssign = (__preset - 1) / 4 * __defaultDmgValue;
                         break;
 
-                    //Sudden Death, make all damage values 1000?
+                    //Sudden Death, make all damage values 1000
                     case 8:
                         __dmgValueToAssign = 1000;
                         break;

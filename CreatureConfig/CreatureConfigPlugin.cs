@@ -39,12 +39,12 @@ namespace CreatureConfig
             "Keep in mind that changes made to individual creatures below will not take effect unless you select preset 1, Custom. \n" +
             "1 = Custom, any individual changes made below will take effect \n" +
             "2 = Sandbox, all enemies deal 1 damage \n" +
-            "3 = Very Easy, All enemies deal 50% damage \n" +
-            "4 = Easy, All enemies deal 75% damage \n" +
-            "5 = Default, All enemies deal 100% damage \n" +
-            "6 = Hard, All enemies deal 125% damage \n" +
-            "7 = Very Hard, All enemies deal 150% damage \n" +
-            "8 = Sudden Death, All enemies will kill the player in one hit, including vehicles; you have been warned"), 
+            "3 = Very Easy, All enemies deal 50% less damage \n" +
+            "4 = Easy, All enemies deal 25% less damage \n" +
+            "5 = Default, All enemies deal default damage \n" +
+            "6 = Hard, All enemies deal 25% more damage \n" +
+            "7 = Very Hard, All enemies deal 50% more damage \n" +
+            "8 = Sudden Death, All enemies will kill the player in one hit, including vehicles (cyclops takes 2 hits); you have been warned"), 
             OnChange(nameof(PresetChanged))]
         public float DamagePreset = 1.0F;
 
@@ -52,134 +52,198 @@ namespace CreatureConfig
         //Might be good to put this blurb on the modpage
 
         #region Ampeel
-        [Slider("Ampeel Bite Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "AmpeelBiteDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Ampeel Bite Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "AmpeelBiteDmg",
+            Tooltip = "Damage dealt by an Ampeel's bite."),
+            OnChange(nameof(DamageChanged))]
         public float AmpeelBiteDmg = 30F;
-        [Slider("Ampeel Shock Damage", Min = 1F, Max = 100F, DefaultValue = 15F, Step = 1F, Id = "AmpeelShockDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Ampeel Shock Damage", Min = 1F, Max = 100F, DefaultValue = 15F, Step = 1F, Id = "AmpeelShockDmg", 
+            Tooltip = "Damage dealt by an Ampeel's electricity."), 
+            OnChange(nameof(DamageChanged))]
         public float AmpeelShockDmg = 15F;
-        [Slider("Ampeel Cyclops Damage", Min = 5F, Max = 500F, DefaultValue = 50F, Step = 5F, Id = "AmpeelCyclopsDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Ampeel Cyclops Damage", Min = 5F, Max = 500F, DefaultValue = 50F, Step = 5F, Id = "AmpeelCyclopsDmg",
+            Tooltip = "Damage dealt by an Ampeel's bite to a Cyclops."), 
+            OnChange(nameof(DamageChanged))]
         public float AmpeelCyclopsDmg = 50F;
         #endregion
 
         #region Biter
-        [Slider("Biter Damage", Min = 1F, Max = 100F, DefaultValue = 7F, Step = 1F, Id = "BiterDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Biter Damage", Min = 1F, Max = 100F, DefaultValue = 7F, Step = 1F, Id = "BiterDmg",
+            Tooltip = "Damage dealt by a Biter's bite."),
+            OnChange(nameof(DamageChanged))]
         public float BiterDmg = 7F;
         #endregion
 
         #region Bleeder
-        [Slider("Bleeder Damage", Min = 1F, Max = 100F, DefaultValue = 5F, Step = 1F, Id = "BleederDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Bleeder Damage", Min = 1F, Max = 100F, DefaultValue = 5F, Step = 1F, Id = "BleederDmg",
+            Tooltip = "Damage dealt by a Bleeder's grab attack."),
+            OnChange(nameof(DamageChanged))]
         public float BleederDmg = 5F;
         #endregion
 
         #region Blood Crawler
-        [Slider("Blood Crawler Damage", Min = 1F, Max = 100F, DefaultValue = 5F, Step = 1F, Id = "BloodCrawlerDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Blood Crawler Damage", Min = 1F, Max = 100F, DefaultValue = 5F, Step = 1F, Id = "BloodCrawlerDmg", 
+            Tooltip = "Damage dealt by a Blood Crawler's bite."),
+            OnChange(nameof(DamageChanged))]
         public float BloodCrawlerDmg = 5F;
         #endregion
 
         #region Blighter
-        [Slider("Blighter Damage", Min = 1F, Max = 100F, DefaultValue = 7F, Step = 1F, Id = "BlighterDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Blighter Damage", Min = 1F, Max = 100F, DefaultValue = 7F, Step = 1F, Id = "BlighterDmg",
+            Tooltip = "Damage dealt by a Blighter's bite."),
+            OnChange(nameof(DamageChanged))]
         public float BlighterDmg = 7F;
         #endregion
 
         #region Boneshark
-        [Slider("Boneshark Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "BonesharkDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Boneshark Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "BonesharkDmg", 
+            Tooltip = "Damage dealt by a Boneshark's bite."), 
+            OnChange(nameof(DamageChanged))]
         public float BonesharkDmg = 30F;
         #endregion
 
         #region Cave Crawler
-        [Slider("Cave Crawler Damage", Min = 1F, Max = 100F, DefaultValue = 5F, Step = 1F, Id = "CaveCrawlerDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Cave Crawler Damage", Min = 1F, Max = 100F, DefaultValue = 5F, Step = 1F, Id = "CaveCrawlerDmg",
+            Tooltip = "Damage dealt by a Cave Crawler's bite."),
+            OnChange(nameof(DamageChanged))]
         public float CaveCrawlerDmg = 5F;
         #endregion
 
         #region Crabsnake
-        [Slider("Crabsnake Damage", Min = 1F, Max = 100F, DefaultValue = 35F, Step = 1F, Id = "CrabsnakeDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Crabsnake Damage", Min = 1F, Max = 100F, DefaultValue = 35F, Step = 1F, Id = "CrabsnakeDmg",
+            Tooltip = "Damage dealt by a Crabsnake's bite."),
+            OnChange(nameof(DamageChanged))]
         public float CrabsnakeDmg = 35F;
         #endregion
 
         #region Crabsquid
-        [Slider("Crabsquid Damage", Min = 1F, Max = 100F, DefaultValue = 40F, Step = 1F, Id = "CrabsquidDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Crabsquid Damage", Min = 1F, Max = 100F, DefaultValue = 40F, Step = 1F, Id = "CrabsquidDmg",
+            Tooltip = "Damage dealt by a Crabsquid's pincers."),
+            OnChange(nameof(DamageChanged))]
         public float CrabsquidDmg = 40F;
         #endregion
 
         #region Crashfish
-        [Slider("Crashfish Damage", Min = 1F, Max = 100F, DefaultValue = 50F, Step = 1F, Id = "CrashfishDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Crashfish Damage", Min = 1F, Max = 100F, DefaultValue = 50F, Step = 1F, Id = "CrashfishDmg",
+            Tooltip = "Damage dealt by a Crashfish's explosion."),
+            OnChange(nameof(DamageChanged))]
         public float CrashfishDmg = 0F;
         #endregion
 
         #region Gasopod
-        [Slider("Gasopod Gaspod Damage", Min = 1F, Max = 100F, DefaultValue = 10F, Step = 1F, Id = "GasopodGasPodDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Gasopod Gaspod Damage", Min = 1F, Max = 100F, DefaultValue = 10F, Step = 1F, Id = "GasopodGasPodDmg", 
+            Tooltip = "Damage dealt by a Gasopod's poison cloud."), 
+            OnChange(nameof(DamageChanged))]
         public float GasopodGasPodDmg = 10F;
         #endregion
 
         #region Ghost Leviathan
-        [Slider("Ghost Leviathan Damage", Min = 1F, Max = 100F, DefaultValue = 85F, Step = 1F, Id = "GhostLeviathanDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Ghost Leviathan Damage", Min = 1F, Max = 100F, DefaultValue = 85F, Step = 1F, Id = "GhostLeviathanDmg", 
+            Tooltip = "Damage dealt by a Ghost Leviathan's bite."), 
+            OnChange(nameof(DamageChanged))]
         public float GhostLeviathanDmg = 85F;
-        [Slider("Ghost Leviathan Cyclops Damage", Min = 5F, Max = 500F, DefaultValue = 250F, Step = 5F, Id = "GhostLeviathanCyclopsDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Ghost Leviathan Cyclops Damage", Min = 5F, Max = 500F, DefaultValue = 250F, Step = 5F, Id = "GhostLeviathanCyclopsDmg",
+            Tooltip = "Damage dealt by a Ghost Leviathan's bite to a Cyclops."),
+            OnChange(nameof(DamageChanged))]
         public float GhostLeviathanCyclopsDmg = 250F;
         #endregion
 
         #region Ghost Leviathan Juvenile
-        [Slider("Ghost Leviathan Juvenile Damage", Min = 1F, Max = 100F, DefaultValue = 55F, Step = 1F, Id = "GhostLeviathanJuvenileDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Ghost Leviathan Juv. Damage", Min = 1F, Max = 100F, DefaultValue = 55F, Step = 1F, Id = "GhostLeviathanJuvenileDmg", 
+            Tooltip = "Damage dealt by a Juvenile Ghost Leviathan's bite.") ,
+            OnChange(nameof(DamageChanged))]
         public float GhostLeviathanJuvenileDmg = 55F;
-        [Slider("Ghost Leviathan Juvenile Cyclops Damage", Min = 5F, Max = 500F, DefaultValue = 220F, Step = 5F, Id = "GhostLeviathanJuvenileCyclopsDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Ghost Leviathan Juv. Cyclops Damage", Min = 5F, Max = 500F, DefaultValue = 220F, Step = 5F, Id = "GhostLeviathanJuvenileCyclopsDmg", 
+            Tooltip = "Damage dealt by a Juvenile Ghost Leviathan's bite to a Cyclops."), 
+            OnChange(nameof(DamageChanged))]
         public float GhostLeviathanJuvenileCyclopsDmg = 220F;
         #endregion
 
         #region Lava Lizard
-        [Slider("Lava Lizard Bite Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "LavaLizardBiteDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Lava Lizard Bite Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "LavaLizardBiteDmg",
+            Tooltip = "Damage dealt by a Lava Lizard's bite."),
+            OnChange(nameof(DamageChanged))]
         public float LavaLizardBiteDmg = 30F;
-        [Slider("Lava Lizard Lava Rock Projectile Damage", Min = 1F, Max = 100F, DefaultValue = 15F, Step = 1F, Id = "LavaLizardLavaRockDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Lava Lizard Lava Rock Projectile Damage", Min = 1F, Max = 100F, DefaultValue = 15F, Step = 1F, Id = "LavaLizardLavaRockDmg",
+            Tooltip = "Damage dealt by a Lava Lizard's lava rock projectile."),
+            OnChange(nameof(DamageChanged))]
         public float LavaLizardLavaRockDmg = 15F;
         #endregion
 
         #region Mesmer
-        [Slider("Mesmer Damage", Min = 1F, Max = 100F, DefaultValue = 35F, Step = 1F, Id = "MesmerDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Mesmer Damage", Min = 1F, Max = 100F, DefaultValue = 35F, Step = 1F, Id = "MesmerDmg", 
+            Tooltip = "Damage dealt by a Mesmer's bite."),
+            OnChange(nameof(DamageChanged))]
         public float MesmerDmg = 35F;
         #endregion
 
         #region Reaper Leviathan
-        [Slider("Reaper Damage", Min = 1F, Max = 100F, DefaultValue = 80F, Step = 1F, Id = "ReaperDmg", Tooltip = "Damage dealt by a reaper to the player, seamoth & prawn suit"), OnChange(nameof(DamageChanged))]
+        [Slider("Reaper Damage", Min = 1F, Max = 100F, DefaultValue = 80F, Step = 1F, Id = "ReaperDmg", 
+            Tooltip = "Damage dealt by a Reaper Leviathan's bite."), OnChange(nameof(DamageChanged))]
         public float ReaperDmg = 80F;
-        [Slider("Reaper Cyclops Damage", Min = 5F, Max = 500F, DefaultValue = 220F, Step = 5F, Id = "ReaperCyclopsDmg", Tooltip = "Damage dealt by a reaper to the cyclops"), OnChange(nameof(DamageChanged))]
+        [Slider("Reaper Cyclops Damage", Min = 5F, Max = 500F, DefaultValue = 220F, Step = 5F, Id = "ReaperCyclopsDmg", 
+            Tooltip = "Damage dealt by a Reaper Leviathan's bite to a Cyclops."), OnChange(nameof(DamageChanged))]
         public float ReaperCyclopsDmg = 220F;
         #endregion
 
         #region River Prowler
-        [Slider("River Prowler Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "RiverProwlerDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("River Prowler Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "RiverProwlerDmg",
+            Tooltip = "Damage dealt by a River Prowler's bite."),
+            OnChange(nameof(DamageChanged))]
         public float RiverProwlerDmg = 30F;
         #endregion
 
         #region Sand Shark
-        [Slider("Sand Shark Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "SandSharkDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Sand Shark Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "SandSharkDmg",
+            Tooltip = "Damage dealt by a Sandshark's bite."),
+            OnChange(nameof(DamageChanged))]
         public float SandSharkDmg = 30F;
         #endregion
 
         #region Sea Dragon Leviathan
-        [Slider("Sea Dragon Bite Damage", Min = 5F, Max = 500F, DefaultValue = 300F, Step = 5F, Id = "SeaDragonBiteDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Sea Dragon Bite Damage", Min = 5F, Max = 500F, DefaultValue = 300F, Step = 5F, Id = "SeaDragonBiteDmg", 
+            Tooltip = "Damage dealt by a Sea Dragon Leviathan's bite."), 
+            OnChange(nameof(DamageChanged))]
         public float SeaDragonBiteDmg = 300F;
-        [Slider("Sea Dragon Swat Damage", Min = 1F, Max = 100F, DefaultValue = 70F, Step = 1F, Id = "SeaDragonSwatDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Sea Dragon Swat Damage", Min = 1F, Max = 100F, DefaultValue = 70F, Step = 1F, Id = "SeaDragonSwatDmg", 
+            Tooltip = "Damage dealt by a Sea Dragon Leviathan's swat."), 
+            OnChange(nameof(DamageChanged))]
         public float SeaDragonSwatDmg = 70F;
-        [Slider("Sea Dragon Shove Damage", Min = 5F, Max = 500F, DefaultValue = 250F, Step = 5F, Id = "SeaDragonShoveDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Sea Dragon Shove Damage", Min = 5F, Max = 500F, DefaultValue = 250F, Step = 5F, Id = "SeaDragonShoveDmg",
+            Tooltip = "Damage dealt by a Sea Dragon Leviathan shoving a Cyclops."),
+            OnChange(nameof(DamageChanged))]
         public float SeaDragonShoveDmg = 250F;
-        [Slider("Sea Dragon Burning Chunk Projectile Damage", Min = 1F, Max = 100F, DefaultValue = 10F, Step = 1F, Id = "SeaDragonBurningChunkDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Sea Dragon Burning Chunk Projectile Damage", Min = 1F, Max = 100F, DefaultValue = 10F, Step = 1F, Id = "SeaDragonBurningChunkDmg",
+            Tooltip = "Damage dealt by a Sea Dragon Leviathan's burning chunk projectile volley."),
+            OnChange(nameof(DamageChanged))]
         public float SeaDragonBurningChunkDmg = 10F;
-        [Slider("Sea Dragon Lava Meteor Projectile Damage", Min = 1F, Max = 100F, DefaultValue = 40F, Step = 1F, Id = "SeaDragonLavaMeteorDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Sea Dragon Lava Meteor Projectile Damage", Min = 1F, Max = 100F, DefaultValue = 40F, Step = 1F, Id = "SeaDragonLavaMeteorDmg",
+            Tooltip = "Damage dealt by a Sea Dragon Leviathan's lava meteor projectile."),
+            OnChange(nameof(DamageChanged))]
         public float SeaDragonLavaMeteorDmg = 40F;
         #endregion 
 
         #region Sea Treader Leviathan
-        [Slider("Sea Treader Damage", Min = 1F, Max = 100F, DefaultValue = 40F, Step = 1F, Id = "SeaTreaderDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Sea Treader Damage", Min = 1F, Max = 100F, DefaultValue = 40F, Step = 1F, Id = "SeaTreaderDmg",
+            Tooltip = "Damage dealt by a Sea Treader Leviathan's peck."),
+            OnChange(nameof(DamageChanged))]
         public float SeaTreaderDmg = 40F;
         #endregion 
 
         #region Stalker
-        [Slider("Stalker Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "StalkerDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Stalker Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "StalkerDmg",
+            Tooltip = "Damage dealt by a Stalker's bite."),
+            OnChange(nameof(DamageChanged))]
         public float StalkerDmg = 30F;
         #endregion
 
         #region Warper
-        [Slider("Warper Claw Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "WarperClawDmg", Tooltip = "Damage dealt by a warper's claws. Note that the damage is multiplied by the player's infection level, capping at 4x."), OnChange(nameof(DamageChanged))]
+        [Slider("Warper Claw Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "WarperClawDmg", 
+            Tooltip = "Damage dealt by a Warper's claws. Note that the damage is multiplied by the player's infection level, capping at 4x."), 
+            OnChange(nameof(DamageChanged))]
         public float WarperClawDmg = 30F; //Damage increases based on infection level??? Starts at 23??? But biteDamge is 30??? LiveMixin with InfectionMixin to calcualte damage???
-        [Slider("Warper Warp Damage", Min = 1F, Max = 100F, DefaultValue = 10F, Step = 1F, Id = "WarperWarpDmg"), OnChange(nameof(DamageChanged))]
+        [Slider("Warper Warp Damage", Min = 1F, Max = 100F, DefaultValue = 10F, Step = 1F, Id = "WarperWarpDmg", 
+            Tooltip = "Damage dealt by a Warper's teleport projectile."), 
+            OnChange(nameof(DamageChanged))]
         public float WarperWarpDmg = 10F;
         #endregion
 
