@@ -7,8 +7,8 @@
     <ProjectGuid>{AD5E57A1-A1FC-4361-BA5B-5A0DD4C5B914}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CreatureConfig</RootNamespace>
-    <AssemblyName>CreatureConfig</AssemblyName>
+    <RootNamespace>CreatureConfigDamage</RootNamespace>
+    <AssemblyName>CreatureConfigDamage</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -76,8 +76,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Creature Config.cs" />
-    <Compile Include="CreatureConfigPlugin.cs" />
+    <Compile Include="CreatureConfigDamage.cs" />
+    <Compile Include="CreatureConfigDamagePlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

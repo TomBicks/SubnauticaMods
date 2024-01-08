@@ -4,14 +4,14 @@ using HarmonyLib;
 using Nautilus.Handlers;
 using Nautilus.Options.Attributes;
 
-namespace CreatureConfig
+namespace CreatureConfigDamage
 {
     [BepInPlugin(myGUID, pluginName, versionString)]
-    public class CreatureConfigPlugin : BaseUnityPlugin
+    public class CreatureConfigDamagePlugin : BaseUnityPlugin
     {
-        private const string myGUID = "com.jukebox.creatureconfig";
-        private const string pluginName = "Creature Config";
-        private const string versionString = "0.9.0";
+        private const string myGUID = "com.jukebox.creatureconfigdamage";
+        private const string pluginName = "Creature Config - Damage";
+        private const string versionString = "1.0.0";
 
         private static readonly Harmony harmony = new Harmony(myGUID);
 
