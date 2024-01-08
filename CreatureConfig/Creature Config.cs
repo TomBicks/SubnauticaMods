@@ -95,8 +95,8 @@ namespace CreatureConfig
                     break;
 
                 //Handle unique cases (has a unique MeleeAttack component, often with a grab animation and cinematic damage, or shoots a projectile; change case by case)
-                //This includes; Bleeder (Done), Crabsnake (Done), Ghost (done), Juvenile Emperor?, Reaper, Sea Dragon, Sea Trader, Ampeel (Shocker), Warper, Lava Lizard (ranged attack)
-                case TechType.Shocker: //TeechType for Ampeel
+                //This includes; Bleeder, Crabsnake, Ghost, Juvenile Emperor?, Reaper, Sea Dragon, Sea Trader, Ampeel (Shocker), Warper, Lava Lizard (ranged attack)
+                case TechType.Shocker: //TechType for Ampeel
                     ChangeGenericMeleeAttack(__creature, config.AmpeelBiteDmg, "AmpeelBiteDmg");
                     ChangeUniqueAttack(__creature, ref __creature.GetComponent<ShockerMeleeAttack>().electricalDamage, config.AmpeelShockDmg, "AmpeelShockDmg");
                     ChangeUniqueAttack(__creature, ref __creature.GetComponent<ShockerMeleeAttack>().cyclopsDamage, config.AmpeelCyclopsDmg, "AmpeelCyclopsDmg");
@@ -175,9 +175,6 @@ namespace CreatureConfig
             //Check if the method managed to calculate a damage value to assign; -1 if it did not
             if(__dmgValueToAssign != -1)
             {
-                //DEBUG CODE; prints creature type and damage assigned
-                logger.Log(LogLevel.Info, $"Setting {__techType} biteDamage to {__dmgValueToAssign}");
-
                 //Set biteDamage to new damage value
                 __instance.GetComponent<MeleeAttack>().biteDamage = __dmgValueToAssign;
             }
@@ -200,9 +197,6 @@ namespace CreatureConfig
             //Check if the method managed to calculate a damage value to assign; -1 if it did not
             if (__dmgValueToAssign != -1)
             {
-                //DEBUG CODE; prints creature type and damage assigned
-                logger.Log(LogLevel.Info, $"Setting {__techType} {__defaultDmgValueKey} to {__dmgValueToAssign}");
-
                 //Set unique attack damage to new damage value, by reference
                 __uniqueAttackDmg = __dmgValueToAssign;
             }
@@ -229,7 +223,6 @@ namespace CreatureConfig
 
                 //Obtain preset and determine which damage value to assign according to the preset
                 float __preset = config.DamagePreset;
-                //logger.Log(LogLevel.Info, $"Preset = {__preset}");
 
                 switch (__preset)
                 {

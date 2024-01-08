@@ -15,7 +15,7 @@ namespace CreatureConfig
     {
         private const string myGUID = "com.jukebox.creatureconfig";
         private const string pluginName = "Creature Config";
-        private const string versionString = "0.0.1";
+        private const string versionString = "0.9.0";
 
         private static readonly Harmony harmony = new Harmony(myGUID);
 
@@ -48,8 +48,7 @@ namespace CreatureConfig
             OnChange(nameof(PresetChanged))]
         public float DamagePreset = 1.0F;
 
-        //Note!! Seamoth has 200 HP, Prawn Suit has 600 HP, and Cyclops has 1500 HP. As such, some attacks designed for vehicles may do less damage than appears
-        //Might be good to put this blurb on the modpage
+        //NOTE!! Seamoth has 300 HP, Prawn Suit has 600 HP, and Cyclops has 1500 HP. As such, some attacks designed for vehicles may do less damage than appears
 
         #region Ampeel
         [Slider("Ampeel Bite Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "AmpeelBiteDmg",
@@ -247,6 +246,9 @@ namespace CreatureConfig
         public float WarperWarpDmg = 10F;
         #endregion
 
+
+
+        //REMOVE THESE NOT NEEDED!!
         private void PresetChanged(SliderChangedEventArgs e)
         {
             //DamagePreset = e.Value;
