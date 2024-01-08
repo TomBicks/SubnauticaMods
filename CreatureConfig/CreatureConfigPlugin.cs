@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using BepInEx;
+﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 using Nautilus.Handlers;
-using Nautilus.Options;
 using Nautilus.Options.Attributes;
-using UnityEngine;
-using static OVRHaptics;
 
 namespace CreatureConfig
 {

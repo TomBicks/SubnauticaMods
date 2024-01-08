@@ -1,13 +1,8 @@
 ﻿using HarmonyLib;
-using System;
-using System.IO;
 using BepInEx.Logging;
-using Nautilus.Handlers;
 using static CreatureConfig.CreatureConfigPlugin;
-using System.Xml.Serialization;
 using System.Collections.Generic;
 using UnityEngine;
-using Nautilus.Json.Converters;
 
 namespace CreatureConfig
 {
