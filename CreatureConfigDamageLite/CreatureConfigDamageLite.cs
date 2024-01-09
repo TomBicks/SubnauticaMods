@@ -1,13 +1,13 @@
 ﻿using HarmonyLib;
 using BepInEx.Logging;
-using static CreatureConfigDamage.CreatureConfigDamagePlugin;
+using static CreatureConfigDamageLite.CreatureConfigDamageLitePlugin;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CreatureConfigDamage
+namespace CreatureConfigDamageLite
 {
     [HarmonyPatch]
-    internal class CreatureConfigDamage
+    internal class CreatureConfigDamageLite
     {
         static readonly Dictionary<string, float> defaultDamageValues = new Dictionary<string, float>()
         {

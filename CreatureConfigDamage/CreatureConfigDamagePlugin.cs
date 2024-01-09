@@ -27,7 +27,7 @@ namespace CreatureConfigDamage
         }
     }
 
-    [Menu("Creature Config")]
+    [Menu("Creature Config - Damage")]
     public class Config : Nautilus.Json.ConfigFile
     {
         [Slider("Damage Presets", Min = 1F, Max = 8F, DefaultValue = 5F, Step = 1F, Id = "DamagePreset", 
