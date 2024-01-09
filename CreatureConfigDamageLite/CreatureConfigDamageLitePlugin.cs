@@ -39,6 +39,6 @@ namespace CreatureConfigDamageLite
             "6 = Hard, All enemies deal 25% more damage \n" +
             "7 = Very Hard, All enemies deal 50% more damage \n" +
             "8 = Sudden Death, All enemies will kill the player in one hit, including vehicles (cyclops takes 2 hits); you have been warned")]
-        public float DamagePreset = 1.0F;
+        public float DamagePreset = 5.0F;
     }
 }

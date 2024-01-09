@@ -30,7 +30,7 @@ namespace CreatureConfigDamage
     [Menu("Creature Config - Damage")]
     public class Config : Nautilus.Json.ConfigFile
     {
-        [Slider("Damage Presets", Min = 1F, Max = 8F, DefaultValue = 5F, Step = 1F, Id = "DamagePreset", 
+        [Slider("Damage Presets", Min = 1F, Max = 8F, DefaultValue = 1F, Step = 1F, Id = "DamagePreset", 
             Tooltip = "The damage multiplier preset you wish to use if you want to quickly change all damage values. \n" +
             "Keep in mind that changes made to individual creatures below will not take effect unless you select preset 1, Custom. \n" +
             "1 = Custom, any individual changes made below will take effect \n" +
