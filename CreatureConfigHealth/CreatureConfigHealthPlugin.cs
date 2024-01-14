@@ -97,13 +97,13 @@ namespace CreatureConfigHealth
         #endregion
 
         #region Ghost Leviathan
-        [Slider("Ghost Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "GhostHP")]
-        public float GhostHP = 1F;
+        [Slider("Ghost Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "GhostLeviathanHP")]
+        public float GhostLeviathanHP = 1F;
         #endregion
 
         #region Ghost Leviathan Juvenile
-        [Slider("Ghost Leviathan Juv. Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "GhostJuvenileHP")]
-        public float GhostJuvenileHP = 1F;
+        [Slider("Ghost Leviathan Juv. Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "GhostLeviathanJuvenileHP")]
+        public float GhostLeviathanJuvenileHP = 1F;
         #endregion
 
         #region Lava Lizard
@@ -117,8 +117,8 @@ namespace CreatureConfigHealth
         #endregion
 
         #region Reaper Leviathan
-        [Slider("Reaper Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "ReaperHP")]
-        public float ReaperHP = 1F;
+        [Slider("Reaper Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "ReaperLeviathanHP")]
+        public float ReaperLeviathanHP = 1F;
         #endregion
 
         #region River Prowler
@@ -132,13 +132,13 @@ namespace CreatureConfigHealth
         #endregion
 
         #region Sea Dragon Leviathan
-        [Slider("Sea Dragon Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "SeaDragonHP")]
-        public float SeaDragonHP = 1F;
+        [Slider("Sea Dragon Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "SeaDragonLeviathanHP")]
+        public float SeaDragonLeviathanHP = 1F;
         #endregion
 
         #region Sea Treader Leviathan
-        [Slider("Sea Treader Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "SeaTreaderHP")]
-        public float SeaTreaderHP = 1F;
+        [Slider("Sea Treader Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "SeaTreaderLeviathanHP")]
+        public float SeaTreaderLeviathanHP = 1F;
         #endregion
 
         #region Stalker

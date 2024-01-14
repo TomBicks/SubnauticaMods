@@ -12,55 +12,55 @@ namespace CreatureConfigHealth
         static readonly Dictionary<string, float> defaultHealthValues = new Dictionary<string, float>()
         {
             //Edible Fauna
-            { "BladderfishHP",1F },
-            { "BoomerangHP",1F },
-            { "EyeyeHP",1F },
-            { "GarryfishHP",1F },
-            { "HolefishHP",1F },
-            { "HoopfishHP",1F },
-            { "HoverfishHP",1F },
-            { "MagmarangHP",1F },
-            { "OculusHP",1F },
+            { "BladderfishHP",30F },
+            { "BoomerangHP",30F },
+            { "EyeyeHP",30F },
+            { "GarryfishHP",30F },
+            { "HolefishHP",30F },
+            { "HoopfishHP",20F },
+            { "HoverfishHP",30F },
+            { "MagmarangHP",30F },
+            { "OculusHP",20F },
             { "PeeperHP",20F },
-            { "RedEyeyeHP",1F },
-            { "ReginaldHP",1F },
-            { "SpadefishHP",1F },
-            { "SpinefishHP",1F },
+            { "RedEyeyeHP",25F },
+            { "ReginaldHP",30F },
+            { "SpadefishHP",30F },
+            { "SpinefishHP",20F },
 
             //Passive Fauna
             { "CrimsonRayHP",100F },
             { "CuddlefishHP",10000F },
             { "FloaterHP",40F },
-            { "GasopodHP",1F },
-            { "GhostrayHP",1F },
-            { "JellyrayHP",1F },
-            { "LavaLarvaHP",1F },
-            { "RabbitRayHP",1F },
-            { "SeaTreaderHP",1F },
-            { "ShuttlebugHP",1F },
+            { "GasopodHP",300F },
+            { "GhostrayHP",100F },
+            { "JellyrayHP",100F },
+            { "LavaLarvaHP",100F },
+            { "RabbitRayHP",100F },
+            { "SeaTreaderHP",3000F },
+            { "ShuttlebugHP",50F },
             { "SkyrayHP",100F },
 
             //Aggressive Fauna
-            { "AmpeelHP",1F },
+            { "AmpeelHP",3000F },
             { "BiterHP",10F },
-            { "BleederHP",1F },
-            { "BloodCrawlerHP",1F },
-            { "BlighterHP",1F },
-            { "BonesharkHP",1F },
-            { "CaveCrawlerHP",1F },
-            { "CrabsnakeHP",1F },
-            { "CrabsquidHP",1F },
-            { "CrashfishHP",1F },
-            { "GhostLeviathanHP",1F },
-            { "GhostLeviathanJuvenileHP",1F },
-            { "LavaLizardHP",1F },
-            { "MesmerHP",1F },
-            { "ReaperHP",1F },
-            { "RiverProwlerHP",1F },
-            { "SandsharkHP",1F },
-            { "SeaDragonHP",1F },
-            { "StalkerHP", 1F },
-            { "WarperHP", 1F }
+            { "BleederHP",10F }, //Don't think I can truly make these things immortal; death sentencei s they latch on
+            { "BloodCrawlerHP",50F },
+            { "BlighterHP",10F },
+            { "BonesharkHP",200F },
+            { "CaveCrawlerHP",50F },
+            { "CrabsnakeHP",300F },
+            { "CrabsquidHP",500F },
+            { "CrashfishHP",25F },
+            { "GhostLeviathanHP",8000F },
+            { "GhostLeviathanJuvenileHP",8000F },
+            { "LavaLizardHP",200F },
+            { "MesmerHP",100F },
+            { "ReaperHP",5000F },
+            { "RiverProwlerHP",200F },
+            { "SandsharkHP",250F },
+            { "SeaDragonHP",5000F },
+            { "StalkerHP", 300F },
+            { "WarperHP", 100F }
         };
 
         [HarmonyPatch(typeof(Creature), nameof(Creature.Start))]
@@ -78,8 +78,67 @@ namespace CreatureConfigHealth
 
             switch (__techType)
             {
+                //Edible Fauna
+                case TechType.Bladderfish:
+                    ChangeHealth(__creature, config.BladderfishHP, "BladderfishHP");
+                    break;
+                case TechType.Boomerang:
+                    ChangeHealth(__creature, config.BoomerangHP, "BoomerangHP");
+                    break;
+                case TechType.Eyeye:
+                    ChangeHealth(__creature, config.EyeyeHP, "EyeyeHP");
+                    break;
+                case TechType.GarryFish:
+                    ChangeHealth(__creature, config.GarryfishHP, "GarryfishHP");
+                    break;
+                case TechType.HoleFish:
+                    ChangeHealth(__creature, config.HolefishHP, "HolefishHP");
+                    break;
+                case TechType.Hoopfish:
+                    ChangeHealth(__creature, config.HoopfishHP, "HoopfishHP");
+                    break;
+                case TechType.Hoverfish:
+                    ChangeHealth(__creature, config.HoverfishHP, "HoverfishHP");
+                    break;
+                case TechType.LavaBoomerang: //TechType for Magmarang
+                    ChangeHealth(__creature, config.MagmarangHP, "MagmarangHP");
+                    break;
+                case TechType.Oculus:
+                    ChangeHealth(__creature, config.OculusHP, "OculusHP");
+                    break;
+                case TechType.Peeper:
+                    ChangeHealth(__creature, config.PeeperHP, "PeeperHP");
+                    break;
+                case TechType.LavaEyeye: //TechType for Ref Eyeye
+                    ChangeHealth(__creature, config.RedEyeyeHP, "RedEyeyeHP");
+                    break;
+                case TechType.Reginald:
+                    ChangeHealth(__creature, config.ReginaldHP, "ReginaldHP");
+                    break;
+                case TechType.Spadefish:
+                    ChangeHealth(__creature, config.SpadefishHP, "SpadefishHP");
+                    break;
+                case TechType.Spinefish:
+                    ChangeHealth(__creature, config.SpinefishHP, "SpinefishHP");
+                    break;
+
+                //Passive Fauna
+                case TechType.Gasopod:
+                    ChangeHealth(__creature, config.GasopodHP, "GasopodHP");
+                    break;
+                case TechType.SeaTreader:
+                    ChangeHealth(__creature, config.SeaTreaderLeviathanHP, "SeaTreaderLeviathanHP");
+                    break;
+
+                //Aggressive Fauna
+                case TechType.Shocker: //TechType for Ampeel
+                    ChangeHealth(__creature, config.AmpeelHP, "AmpeelHP");
+                    break;
                 case TechType.Biter:
                     ChangeHealth(__creature, config.BiterHP, "BiterHP");
+                    break;
+                case TechType.Bleeder:
+                    ChangeHealth(__creature, config.BleederHP, "BleederHP");
                     break;
                 case TechType.Shuttlebug: //TechType for Blood Crawler
                     ChangeHealth(__creature, config.BloodCrawlerHP, "BloodCrawlerHP");
@@ -93,11 +152,29 @@ namespace CreatureConfigHealth
                 case TechType.CaveCrawler:
                     ChangeHealth(__creature, config.CaveCrawlerHP, "CaveCrawlerHP");
                     break;
+                case TechType.Crabsnake:
+                    ChangeHealth(__creature, config.CrabsnakeHP, "CrabsnakeHP");
+                    break;
                 case TechType.CrabSquid:
                     ChangeHealth(__creature, config.CrabsquidHP, "CrabsquidHP");
                     break;
+                case TechType.Crash: //TechType for Crashfish
+                    ChangeHealth(__creature, config.CrashfishHP, "CrashfishHP");
+                    break;
+                case TechType.GhostLeviathan:
+                    ChangeHealth(__creature, config.GhostLeviathanHP, "GhostLeviathanHP");
+                    break;
+                case TechType.GhostLeviathanJuvenile:
+                    ChangeHealth(__creature, config.GhostLeviathanJuvenileHP, "GhostLeviathanJuvenileHP");
+                    break;
+                case TechType.LavaLizard:
+                    ChangeHealth(__creature, config.LavaLizardHP, "LavaLizardHP");
+                    break;
                 case TechType.Mesmer:
                     ChangeHealth(__creature, config.MesmerHP, "MesmerHP");
+                    break;
+                case TechType.ReaperLeviathan:
+                    ChangeHealth(__creature, config.ReaperLeviathanHP, "ReaperLeviathanHP");
                     break;
                 case TechType.SpineEel: //TechType for River Prowler
                     ChangeHealth(__creature, config.RiverProwlerHP, "RiverProwlerHP");
@@ -114,37 +191,6 @@ namespace CreatureConfigHealth
                 case TechType.Warper:
                     ChangeHealth(__creature, config.WarperHP, "WarperClawHP");
                     break;
-
-                //Handle unique cases (has a unique MeleeAttack component, often with a grab animation and cinematic damage, or shoots a projectile; change case by case)
-                //This includes; Bleeder, Crabsnake, Ghost, Juvenile Emperor?, Reaper, Sea Dragon, Sea Trader, Ampeel (Shocker), Warper, Lava Lizard (ranged attack)
-                case TechType.Shocker: //TechType for Ampeel
-                    ChangeHealth(__creature, config.AmpeelHP, "AmpeelHP");
-                    break;
-                case TechType.Bleeder:
-                    ChangeHealth(__creature, config.BleederHP, "BleederHP");
-                    break;
-                case TechType.Crabsnake:
-                    ChangeHealth(__creature, config.CrabsnakeHP, "CrabsnakeHP");
-                    break;
-                case TechType.Crash: //TechType for Crashfish
-                    ChangeHealth(__creature, config.CrashfishHP, "CrashfishHP");
-                    break;
-                case TechType.LavaLizard:
-                    ChangeHealth(__creature, config.LavaLizardHP, "LavaLizardHP");
-                    break;
-                case TechType.GhostLeviathan:
-                    ChangeHealth(__creature, config.GhostLeviathanHP, "GhostLeviathanHP");
-                    break;
-                case TechType.GhostLeviathanJuvenile:
-                    ChangeHealth(__creature, config.GhostLeviathanJuvenileHP, "GhostLeviathanJuvenileHP");
-                    break;
-                case TechType.ReaperLeviathan:
-                    ChangeHealth(__creature, config.ReaperLeviathanHP, "ReaperLeviathanHP");
-                    break;
-                case TechType.SeaTreader:
-                    ChangeHealth(__creature, config.SeaTreaderLeviathanHP, "SeaTreaderLeviathanHP");
-                    break;
-                
             }
         }
 
