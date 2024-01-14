@@ -11,7 +11,56 @@ namespace CreatureConfigHealth
     {
         static readonly Dictionary<string, float> defaultHealthValues = new Dictionary<string, float>()
         {
-            { "BiterHP",10F }
+            //Edible Fauna
+            { "BladderfishHP",1F },
+            { "BoomerangHP",1F },
+            { "EyeyeHP",1F },
+            { "GarryfishHP",1F },
+            { "HolefishHP",1F },
+            { "HoopfishHP",1F },
+            { "HoverfishHP",1F },
+            { "MagmarangHP",1F },
+            { "OculusHP",1F },
+            { "PeeperHP",20F },
+            { "RedEyeyeHP",1F },
+            { "ReginaldHP",1F },
+            { "SpadefishHP",1F },
+            { "SpinefishHP",1F },
+
+            //Passive Fauna
+            { "CrimsonRayHP",100F },
+            { "CuddlefishHP",10000F },
+            { "FloaterHP",40F },
+            { "GasopodHP",1F },
+            { "GhostrayHP",1F },
+            { "JellyrayHP",1F },
+            { "LavaLarvaHP",1F },
+            { "RabbitRayHP",1F },
+            { "SeaTreaderHP",1F },
+            { "ShuttlebugHP",1F },
+            { "SkyrayHP",100F },
+
+            //Aggressive Fauna
+            { "AmpeelHP",1F },
+            { "BiterHP",10F },
+            { "BleederHP",1F },
+            { "BloodCrawlerHP",1F },
+            { "BlighterHP",1F },
+            { "BonesharkHP",1F },
+            { "CaveCrawlerHP",1F },
+            { "CrabsnakeHP",1F },
+            { "CrabsquidHP",1F },
+            { "CrashfishHP",1F },
+            { "GhostLeviathanHP",1F },
+            { "GhostLeviathanJuvenileHP",1F },
+            { "LavaLizardHP",1F },
+            { "MesmerHP",1F },
+            { "ReaperHP",1F },
+            { "RiverProwlerHP",1F },
+            { "SandsharkHP",1F },
+            { "SeaDragonHP",1F },
+            { "StalkerHP", 1F },
+            { "WarperHP", 1F }
         };
 
         [HarmonyPatch(typeof(Creature), nameof(Creature.Start))]
@@ -30,8 +79,72 @@ namespace CreatureConfigHealth
             switch (__techType)
             {
                 case TechType.Biter:
-                    //ChangeHealth(__creature, config.BiterDmg, "BiterDmg");
+                    ChangeHealth(__creature, config.BiterHP, "BiterHP");
                     break;
+                case TechType.Shuttlebug: //TechType for Blood Crawler
+                    ChangeHealth(__creature, config.BloodCrawlerHP, "BloodCrawlerHP");
+                    break;
+                case TechType.Blighter:
+                    ChangeHealth(__creature, config.BloodCrawlerHP, "BloodCrawlerHP");
+                    break;
+                case TechType.BoneShark:
+                    ChangeHealth(__creature, config.BonesharkHP, "BonesharkHP");
+                    break;
+                case TechType.CaveCrawler:
+                    ChangeHealth(__creature, config.CaveCrawlerHP, "CaveCrawlerHP");
+                    break;
+                case TechType.CrabSquid:
+                    ChangeHealth(__creature, config.CrabsquidHP, "CrabsquidHP");
+                    break;
+                case TechType.Mesmer:
+                    ChangeHealth(__creature, config.MesmerHP, "MesmerHP");
+                    break;
+                case TechType.SpineEel: //TechType for River Prowler
+                    ChangeHealth(__creature, config.RiverProwlerHP, "RiverProwlerHP");
+                    break;
+                case TechType.Sandshark:
+                    ChangeHealth(__creature, config.SandSharkHP, "SandsharkHP");
+                    break;
+                case TechType.SeaDragon:
+                    ChangeHealth(__creature, config.SeaDragonLeviathanHP, "SeaDragonLeviathanHP");
+                    break;
+                case TechType.Stalker:
+                    ChangeHealth(__creature, config.StalkerHP, "StalkerHP");
+                    break;
+                case TechType.Warper:
+                    ChangeHealth(__creature, config.WarperHP, "WarperClawHP");
+                    break;
+
+                //Handle unique cases (has a unique MeleeAttack component, often with a grab animation and cinematic damage, or shoots a projectile; change case by case)
+                //This includes; Bleeder, Crabsnake, Ghost, Juvenile Emperor?, Reaper, Sea Dragon, Sea Trader, Ampeel (Shocker), Warper, Lava Lizard (ranged attack)
+                case TechType.Shocker: //TechType for Ampeel
+                    ChangeHealth(__creature, config.AmpeelHP, "AmpeelHP");
+                    break;
+                case TechType.Bleeder:
+                    ChangeHealth(__creature, config.BleederHP, "BleederHP");
+                    break;
+                case TechType.Crabsnake:
+                    ChangeHealth(__creature, config.CrabsnakeHP, "CrabsnakeHP");
+                    break;
+                case TechType.Crash: //TechType for Crashfish
+                    ChangeHealth(__creature, config.CrashfishHP, "CrashfishHP");
+                    break;
+                case TechType.LavaLizard:
+                    ChangeHealth(__creature, config.LavaLizardHP, "LavaLizardHP");
+                    break;
+                case TechType.GhostLeviathan:
+                    ChangeHealth(__creature, config.GhostLeviathanHP, "GhostLeviathanHP");
+                    break;
+                case TechType.GhostLeviathanJuvenile:
+                    ChangeHealth(__creature, config.GhostLeviathanJuvenileHP, "GhostLeviathanJuvenileHP");
+                    break;
+                case TechType.ReaperLeviathan:
+                    ChangeHealth(__creature, config.ReaperLeviathanHP, "ReaperLeviathanHP");
+                    break;
+                case TechType.SeaTreader:
+                    ChangeHealth(__creature, config.SeaTreaderLeviathanHP, "SeaTreaderLeviathanHP");
+                    break;
+                
             }
         }
 
@@ -90,11 +203,11 @@ namespace CreatureConfigHealth
                         __HPValueToAssign = (__preset - 1) / 4 * __defaultHPValue;
                         break;
 
-                    //Immortal, make all health values 100000
+                    //Invulnerable, make all health values 100000
                     //NOTE!! Instead, what if I just turn on the immortal boolean under LiveMixin? Reefback has that set iirc?
                     //LOOK INTO IT!!
                     case 8:
-                        __HPValueToAssign = 1000;
+                        __HPValueToAssign = 100000;
                         break;
 
                     default:

@@ -30,6 +30,22 @@ namespace CreatureConfigHealth
     [Menu("Creature Config - Health")]
     public class Config : Nautilus.Json.ConfigFile
     {
+        //NOTE!! Maybe have a boolean toggle as to whether the health changes should affect all creatures or just aggressive ones!
+        //Maybe have another that can make the cuddlefish immortal?
+
+        [Slider("Health Presets", Min = 1F, Max = 8F, DefaultValue = 1F, Step = 1F, Id = "HealthPreset",
+            Tooltip = "The health multiplier preset you wish to use if you want to quickly change all damage values. \n" +
+            "Keep in mind that changes made to individual creatures below will not take effect unless you select preset 1, Custom. \n" +
+            "1 = Custom, any individual changes made below will take effect \n" +
+            "2 = One-Hit, Set creatures have 1 health \n" +
+            "3 = Very Easy, Set creatures have 50% less health \n" +
+            "4 = Easy, Set creatures have 25% less health \n" +
+            "5 = Default, Set creatures have default health \n" +
+            "6 = Hard, Set creatures have 25% more health \n" +
+            "7 = Very Hard, Set creatures heave 50% more health \n" +
+            "8 = Invulnerable, Set creatures are invulnerable and cannot be damaged")]
+        public float HealthPreset = 1.0F;
+
         #region Ampeel
         [Slider("Ampeel Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "AmpeelHP")]
         public float AmpeelHP = 1F;
@@ -81,13 +97,13 @@ namespace CreatureConfigHealth
         #endregion
 
         #region Ghost Leviathan
-        [Slider("Ghost Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "GhostLeviathanHP")]
-        public float GhostLeviathanHP = 1F;
+        [Slider("Ghost Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "GhostHP")]
+        public float GhostHP = 1F;
         #endregion
 
         #region Ghost Leviathan Juvenile
-        [Slider("Ghost Leviathan Juv. Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "GhostLeviathanJuvenileHP")]
-        public float GhostLeviathanJuvenileHP = 1F;
+        [Slider("Ghost Leviathan Juv. Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "GhostJuvenileHP")]
+        public float GhostJuvenileHP = 1F;
         #endregion
 
         #region Lava Lizard
@@ -101,8 +117,8 @@ namespace CreatureConfigHealth
         #endregion
 
         #region Reaper Leviathan
-        [Slider("Reaper Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "ReaperLeviathanHP")]
-        public float ReaperLeviathanHP = 1F;
+        [Slider("Reaper Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "ReaperHP")]
+        public float ReaperHP = 1F;
         #endregion
 
         #region River Prowler
@@ -116,13 +132,13 @@ namespace CreatureConfigHealth
         #endregion
 
         #region Sea Dragon Leviathan
-        [Slider("Sea Dragon Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "SeaDragonLeviathanHP")]
-        public float SeaDragonLeviathanHP = 1F;
+        [Slider("Sea Dragon Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "SeaDragonHP")]
+        public float SeaDragonHP = 1F;
         #endregion
 
         #region Sea Treader Leviathan
-        [Slider("Sea Treader Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "SeaTreaderLeviathanHP")]
-        public float SeaTreaderLeviathanHP = 1F;
+        [Slider("Sea Treader Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "SeaTreaderHP")]
+        public float SeaTreaderHP = 1F;
         #endregion
 
         #region Stalker
