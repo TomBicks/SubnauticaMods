@@ -109,7 +109,7 @@ namespace CreatureConfigHealth
                 case TechType.Peeper:
                     ChangeHealth(__creature, config.PeeperHP, "PeeperHP");
                     break;
-                case TechType.LavaEyeye: //TechType for Ref Eyeye
+                case TechType.LavaEyeye: //TechType for Red Eyeye
                     ChangeHealth(__creature, config.RedEyeyeHP, "RedEyeyeHP");
                     break;
                 case TechType.Reginald:
@@ -123,11 +123,38 @@ namespace CreatureConfigHealth
                     break;
 
                 //Passive Fauna
+                case TechType.GhostRayRed: //TechType for Crimson Ray
+                    ChangeHealth(__creature, config.CrimsonRayHP, "CrimsonRayHP");
+                    break;
+                case TechType.Cutefish: //TechType for Cuddlefish
+                    ChangeHealth(__creature, config.CuddlefishHP, "CuddlefishHP");
+                    break;
+                case TechType.Floater:
+                    ChangeHealth(__creature, config.FloaterHP, "FloaterHP");
+                    break;
                 case TechType.Gasopod:
                     ChangeHealth(__creature, config.GasopodHP, "GasopodHP");
                     break;
+                case TechType.GhostRayBlue: //TechType for Ghostray
+                    ChangeHealth(__creature, config.GhostrayHP, "GhostrayHP");
+                    break;
+                case TechType.Jellyray:
+                    ChangeHealth(__creature, config.JellyrayHP, "JellyrayHP");
+                    break;
+                case TechType.LavaLarva:
+                    ChangeHealth(__creature, config.LavaLarvaHP, "LavaLarvaHP");
+                    break;
+                case TechType.RabbitRay:
+                    ChangeHealth(__creature, config.RabbitRayHP, "RabbitRayHP");
+                    break;
                 case TechType.SeaTreader:
                     ChangeHealth(__creature, config.SeaTreaderLeviathanHP, "SeaTreaderLeviathanHP");
+                    break;
+                case TechType.Jumper: //TechType for Shuttlebug; not to be confused with TechType.Shuttlebug which is for Blood Crawlers
+                    ChangeHealth(__creature, config.ShuttlebugHP, "ShuttlebugHP");
+                    break;
+                case TechType.Skyray:
+                    ChangeHealth(__creature, config.SkyrayHP, "SkyrayHP");
                     break;
 
                 //Aggressive Fauna
