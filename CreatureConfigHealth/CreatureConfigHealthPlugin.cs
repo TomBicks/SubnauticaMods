@@ -33,6 +33,12 @@ namespace CreatureConfigHealth
         //NOTE!! Maybe have a boolean toggle as to whether the health changes should affect all creatures or just aggressive ones!
         //Maybe have another that can make the cuddlefish immortal?
 
+        [Toggle("Apply presets to aggressive fauna only?")]
+        public bool ApplyPresetsToAggressiveOnly = false;
+
+        [Toggle("Make Cuddlefish invulnerable?")]
+        public bool CuddlefishInvunerable = false;
+
         [Slider("Health Presets", Min = 1F, Max = 8F, DefaultValue = 1F, Step = 1F, Id = "HealthPreset",
             Tooltip = "The health multiplier preset you wish to use if you want to quickly change all damage values. \n" +
             "Keep in mind that changes made to individual creatures below will not take effect unless you select preset 1, Custom. \n" +
@@ -45,12 +51,6 @@ namespace CreatureConfigHealth
             "7 = Very Hard, Set creatures heave 50% more health \n" +
             "8 = Invulnerable, Set creatures are invulnerable and cannot be damaged")]
         public float HealthPreset = 1.0F;
-
-        [Toggle("Apply presets to aggressive fauna only?")] 
-        public bool ApplyPresetsToAggressiveOnly = false;
-
-        [Toggle("Make Cuddlefish invulnerable?")]
-        public bool CuddlefishInvunerable = false;
 
         #region Ampeel
         [Slider("Ampeel Health", Min = 1F, Max = 1F, DefaultValue = 3000F, Step = 1F, Id = "AmpeelHP")]

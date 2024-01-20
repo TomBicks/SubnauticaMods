@@ -44,8 +44,8 @@ namespace CreatureConfigHealth
             { "AmpeelHP",3000F },
             { "BiterHP",10F },
             { "BleederHP",10F }, //Don't think I can truly make these things immortal; death sentencei s they latch on
-            { "BloodCrawlerHP",50F },
             { "BlighterHP",10F },
+            { "BloodCrawlerHP",50F },
             { "BonesharkHP",200F },
             { "CaveCrawlerHP",50F },
             { "CrabsnakeHP",300F },
@@ -55,10 +55,10 @@ namespace CreatureConfigHealth
             { "GhostLeviathanJuvenileHP",8000F },
             { "LavaLizardHP",200F },
             { "MesmerHP",100F },
-            { "ReaperHP",5000F },
+            { "ReaperLeviathanHP",5000F },
             { "RiverProwlerHP",200F },
             { "SandsharkHP",250F },
-            { "SeaDragonHP",5000F },
+            { "SeaDragonLeviathanHP",5000F },
             { "StalkerHP", 300F },
             { "WarperHP", 100F }
         };
@@ -171,7 +171,7 @@ namespace CreatureConfigHealth
                     ChangeHealth(__creature, config.BloodCrawlerHP, "BloodCrawlerHP");
                     break;
                 case TechType.Blighter:
-                    ChangeHealth(__creature, config.BloodCrawlerHP, "BloodCrawlerHP");
+                    ChangeHealth(__creature, config.BlighterHP, "BlighterHP");
                     break;
                 case TechType.BoneShark:
                     ChangeHealth(__creature, config.BonesharkHP, "BonesharkHP");
