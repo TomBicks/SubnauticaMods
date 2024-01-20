@@ -69,16 +69,16 @@ namespace CreatureConfigDamage
         public float BleederDmg = 5F;
         #endregion
 
+        #region Blighter
+        [Slider("Blighter Damage", Min = 1F, Max = 100F, DefaultValue = 7F, Step = 1F, Id = "BlighterDmg",
+            Tooltip = "Damage dealt by a Blighter's bite.")]
+        public float BlighterDmg = 7F;
+        #endregion
+
         #region Blood Crawler
         [Slider("Blood Crawler Damage", Min = 1F, Max = 100F, DefaultValue = 5F, Step = 1F, Id = "BloodCrawlerDmg", 
             Tooltip = "Damage dealt by a Blood Crawler's bite.")]
         public float BloodCrawlerDmg = 5F;
-        #endregion
-
-        #region Blighter
-        [Slider("Blighter Damage", Min = 1F, Max = 100F, DefaultValue = 7F, Step = 1F, Id = "BlighterDmg", 
-            Tooltip = "Damage dealt by a Blighter's bite.")]
-        public float BlighterDmg = 7F;
         #endregion
 
         #region Boneshark

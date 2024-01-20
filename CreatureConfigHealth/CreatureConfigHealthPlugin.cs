@@ -53,12 +53,12 @@ namespace CreatureConfigHealth
         public bool CuddlefishInvunerable = false;
 
         #region Ampeel
-        [Slider("Ampeel Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "AmpeelHP")]
+        [Slider("Ampeel Health", Min = 1F, Max = 1F, DefaultValue = 3000F, Step = 1F, Id = "AmpeelHP")]
         public float AmpeelHP = 1F;
         #endregion
 
         #region Biter
-        [Slider("Biter Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "BiterHP")]
+        [Slider("Biter Health", Min = 1F, Max = 1F, DefaultValue = 10F, Step = 1F, Id = "BiterHP")]
         public float BiterHP = 1F;
         #endregion
 
@@ -68,12 +68,17 @@ namespace CreatureConfigHealth
         #endregion
 
         #region Bleeder
-        [Slider("Bleeder Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "BleederHP")]
+        [Slider("Bleeder Health", Min = 1F, Max = 1F, DefaultValue = 10F, Step = 1F, Id = "BleederHP")]
         public float BleederHP = 1F;
         #endregion
 
+        #region Blighter
+        [Slider("Blighter Health", Min = 1F, Max = 1F, DefaultValue = 10F, Step = 1F, Id = "BlighterHP")]
+        public float BlighterHP = 1F;
+        #endregion
+
         #region Blood Crawler
-        [Slider("Blood Crawler Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "BloodCrawlerHP")]
+        [Slider("Blood Crawler Health", Min = 1F, Max = 1F, DefaultValue = 50F, Step = 1F, Id = "BloodCrawlerHP")]
         public float BloodCrawlerHP = 1F;
         #endregion
 
