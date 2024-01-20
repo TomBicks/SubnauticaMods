@@ -63,7 +63,7 @@ namespace CreatureConfigHealth
         #endregion
 
         #region Bladderfish
-        [Slider("Bladderfish Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "BladderfishHP")]
+        [Slider("Bladderfish Health", Min = 1F, Max = 1F, DefaultValue = 30F, Step = 1F, Id = "BladderfishHP")]
         public float BladderfishHP = 1F;
         #endregion
 
@@ -83,197 +83,197 @@ namespace CreatureConfigHealth
         #endregion
 
         #region Boneshark
-        [Slider("Boneshark Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "BonesharkHP")]
+        [Slider("Boneshark Health", Min = 1F, Max = 1F, DefaultValue = 200F, Step = 1F, Id = "BonesharkHP")]
         public float BonesharkHP = 1F;
         #endregion
 
         #region Boomerang
-        [Slider("Boomerang Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "BoomerangHP")]
+        [Slider("Boomerang Health", Min = 1F, Max = 1F, DefaultValue = 30F, Step = 1F, Id = "BoomerangHP")]
         public float BoomerangHP = 1F;
         #endregion
 
         #region Cave Crawler
-        [Slider("Cave Crawler Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "CaveCrawlerHP")]
+        [Slider("Cave Crawler Health", Min = 1F, Max = 1F, DefaultValue = 50F, Step = 1F, Id = "CaveCrawlerHP")]
         public float CaveCrawlerHP = 1F;
         #endregion
 
         #region Crabsnake
-        [Slider("Crabsnake Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "CrabsnakeHP")]
+        [Slider("Crabsnake Health", Min = 1F, Max = 1F, DefaultValue = 300F, Step = 1F, Id = "CrabsnakeHP")]
         public float CrabsnakeHP = 1F;
         #endregion
 
         #region Crabsquid
-        [Slider("Crabsquid Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "CrabsquidHP")]
+        [Slider("Crabsquid Health", Min = 1F, Max = 1F, DefaultValue = 500F, Step = 1F, Id = "CrabsquidHP")]
         public float CrabsquidHP = 1F;
         #endregion
 
         #region Crashfish
-        [Slider("Crashfish Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "CrashfishHP")]
+        [Slider("Crashfish Health", Min = 1F, Max = 1F, DefaultValue = 25F, Step = 1F, Id = "CrashfishHP")]
         public float CrashfishHP = 1F;
         #endregion
 
         #region Crimson Ray
-        [Slider("Crimson Ray Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "CrimsonRayHP")]
+        [Slider("Crimson Ray Health", Min = 1F, Max = 1F, DefaultValue = 100F, Step = 1F, Id = "CrimsonRayHP")]
         public float CrimsonRayHP = 1F;
         #endregion
 
         #region Cuddlefish
-        [Slider("Cuddlefish Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "CuddlefishHP")]
+        [Slider("Cuddlefish Health", Min = 1F, Max = 1F, DefaultValue = 10000F, Step = 1F, Id = "CuddlefishHP")]
         public float CuddlefishHP = 1F;
         #endregion
 
         #region Eyeye
-        [Slider("Eyeye Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "EyeyeHP")]
+        [Slider("Eyeye Health", Min = 1F, Max = 1F, DefaultValue = 30F, Step = 1F, Id = "EyeyeHP")]
         public float EyeyeHP = 1F;
         #endregion
 
         #region Floater
-        [Slider("Floater Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "FloaterHP")]
+        [Slider("Floater Health", Min = 1F, Max = 1F, DefaultValue = 40F, Step = 1F, Id = "FloaterHP")]
         public float FloaterHP = 1F;
         #endregion
 
         #region Garryfish
-        [Slider("Garryfish Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "GarryfishHP")]
+        [Slider("Garryfish Health", Min = 1F, Max = 1F, DefaultValue = 30F, Step = 1F, Id = "GarryfishHP")]
         public float GarryfishHP = 1F;
         #endregion
 
         #region Gasopod
-        [Slider("Gasopod Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "GasopodHP")]
+        [Slider("Gasopod Health", Min = 1F, Max = 1F, DefaultValue = 300F, Step = 1F, Id = "GasopodHP")]
         public float GasopodHP = 1F;
         #endregion
 
         #region Ghostray
-        [Slider("Ghostray Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "GhostrayHP")]
+        [Slider("Ghostray Health", Min = 1F, Max = 1F, DefaultValue = 100F, Step = 1F, Id = "GhostrayHP")]
         public float GhostrayHP = 1F;
         #endregion
 
         #region Ghost Leviathan
-        [Slider("Ghost Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "GhostLeviathanHP")]
+        [Slider("Ghost Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 8000F, Step = 1F, Id = "GhostLeviathanHP")]
         public float GhostLeviathanHP = 1F;
         #endregion
 
         #region Ghost Leviathan Juvenile
-        [Slider("Ghost Leviathan Juv. Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "GhostLeviathanJuvenileHP")]
+        [Slider("Ghost Leviathan Juv. Health", Min = 1F, Max = 1F, DefaultValue = 8000F, Step = 1F, Id = "GhostLeviathanJuvenileHP")]
         public float GhostLeviathanJuvenileHP = 1F;
         #endregion
 
         #region Holefish
-        [Slider("Holefish Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "HolefishHP")]
+        [Slider("Holefish Health", Min = 1F, Max = 1F, DefaultValue = 30F, Step = 1F, Id = "HolefishHP")]
         public float HolefishHP = 1F;
         #endregion
 
         #region Hoopfish
-        [Slider("Hoopfish Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "HoopfishHP")]
+        [Slider("Hoopfish Health", Min = 1F, Max = 1F, DefaultValue = 20F, Step = 1F, Id = "HoopfishHP")]
         public float HoopfishHP = 1F;
         #endregion
 
         #region Hoverfish
-        [Slider("Hoverfish Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "HoverfishHP")]
+        [Slider("Hoverfish Health", Min = 1F, Max = 1F, DefaultValue = 30F, Step = 1F, Id = "HoverfishHP")]
         public float HoverfishHP = 1F;
         #endregion
 
         #region Jellyray
-        [Slider("Jellyray Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "JellyrayHP")]
+        [Slider("Jellyray Health", Min = 1F, Max = 1F, DefaultValue = 100F, Step = 1F, Id = "JellyrayHP")]
         public float JellyrayHP = 1F;
         #endregion
 
         #region Lava Larva
-        [Slider("Lava Larva Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "LavaLarvaHP")]
+        [Slider("Lava Larva Health", Min = 1F, Max = 1F, DefaultValue = 100F, Step = 1F, Id = "LavaLarvaHP")]
         public float LavaLarvaHP = 1F;
         #endregion
 
         #region Lava Lizard
-        [Slider("Lava Lizard Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "LavaLizardHP")]
+        [Slider("Lava Lizard Health", Min = 1F, Max = 1F, DefaultValue = 200F, Step = 1F, Id = "LavaLizardHP")]
         public float LavaLizardHP = 1F;
         #endregion
 
         #region Magmarang
-        [Slider("Magmarang Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "MagmarangHP")]
+        [Slider("Magmarang Health", Min = 1F, Max = 1F, DefaultValue = 30F, Step = 1F, Id = "MagmarangHP")]
         public float MagmarangHP = 1F;
         #endregion
 
         #region Mesmer
-        [Slider("Mesmer Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "MesmerHP")]
+        [Slider("Mesmer Health", Min = 1F, Max = 1F, DefaultValue = 100F, Step = 1F, Id = "MesmerHP")]
         public float MesmerHP = 1F;
         #endregion
 
         #region Oculus
-        [Slider("Oculus Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "OculusHP")]
+        [Slider("Oculus Health", Min = 1F, Max = 1F, DefaultValue = 20F, Step = 1F, Id = "OculusHP")]
         public float OculusHP = 1F;
         #endregion
 
         #region Peeper
-        [Slider("Peeper Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "PeeperHP")]
+        [Slider("Peeper Health", Min = 1F, Max = 1F, DefaultValue = 20F, Step = 1F, Id = "PeeperHP")]
         public float PeeperHP = 1F;
         #endregion
 
         #region Rabbit Ray
-        [Slider("Rabbit Ray Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "RabbitRayHP")]
+        [Slider("Rabbit Ray Health", Min = 1F, Max = 1F, DefaultValue = 100F, Step = 1F, Id = "RabbitRayHP")]
         public float RabbitRayHP = 1F;
         #endregion
 
         #region Reaper Leviathan
-        [Slider("Reaper Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "ReaperLeviathanHP")]
+        [Slider("Reaper Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 5000F, Step = 1F, Id = "ReaperLeviathanHP")]
         public float ReaperLeviathanHP = 1F;
         #endregion
 
         #region Red Eyeye
-        [Slider("Red Eyeye Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "RedEyeyeHP")]
+        [Slider("Red Eyeye Health", Min = 1F, Max = 1F, DefaultValue = 25F, Step = 1F, Id = "RedEyeyeHP")]
         public float RedEyeyeHP = 1F;
         #endregion
 
         #region Reginald
-        [Slider("Reginald Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "ReginaldHP")]
+        [Slider("Reginald Health", Min = 1F, Max = 1F, DefaultValue = 30F, Step = 1F, Id = "ReginaldHP")]
         public float ReginaldHP = 1F;
         #endregion
 
         #region River Prowler
-        [Slider("River Prowler Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "RiverProwlerHP")]
+        [Slider("River Prowler Health", Min = 1F, Max = 1F, DefaultValue = 200F, Step = 1F, Id = "RiverProwlerHP")]
         public float RiverProwlerHP = 1F;
         #endregion
 
         #region Sand Shark
-        [Slider("Sand Shark Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "SandSharkHP")]
+        [Slider("Sand Shark Health", Min = 1F, Max = 1F, DefaultValue = 250F, Step = 1F, Id = "SandSharkHP")]
         public float SandSharkHP = 1F;
         #endregion
 
         #region Sea Dragon Leviathan
-        [Slider("Sea Dragon Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "SeaDragonLeviathanHP")]
+        [Slider("Sea Dragon Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 5000F, Step = 1F, Id = "SeaDragonLeviathanHP")]
         public float SeaDragonLeviathanHP = 1F;
         #endregion
 
         #region Sea Treader Leviathan
-        [Slider("Sea Treader Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "SeaTreaderLeviathanHP")]
+        [Slider("Sea Treader Leviathan Health", Min = 1F, Max = 1F, DefaultValue = 3000F, Step = 1F, Id = "SeaTreaderLeviathanHP")]
         public float SeaTreaderLeviathanHP = 1F;
         #endregion
 
         #region Shuttlebug
-        [Slider("Shuttlebug Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "ShuttlebugHP")]
+        [Slider("Shuttlebug Health", Min = 1F, Max = 1F, DefaultValue = 50F, Step = 1F, Id = "ShuttlebugHP")]
         public float ShuttlebugHP = 1F;
         #endregion
 
         #region Spadefish
-        [Slider("Spadefish Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "SpadefishHP")]
+        [Slider("Spadefish Health", Min = 1F, Max = 1F, DefaultValue = 30F, Step = 1F, Id = "SpadefishHP")]
         public float SpadefishHP = 1F;
         #endregion
 
         #region Spinefish
-        [Slider("Spinefish Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "SpinefishHP")]
+        [Slider("Spinefish Health", Min = 1F, Max = 1F, DefaultValue = 20F, Step = 1F, Id = "SpinefishHP")]
         public float SpinefishHP = 1F;
         #endregion
 
         #region Skyray
-        [Slider("Skyray Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "SkyrayHP")]
+        [Slider("Skyray Health", Min = 1F, Max = 1F, DefaultValue = 100F, Step = 1F, Id = "SkyrayHP")]
         public float SkyrayHP = 1F;
         #endregion
 
         #region Stalker
-        [Slider("Stalker Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "StalkerHP")]
+        [Slider("Stalker Health", Min = 1F, Max = 1F, DefaultValue = 300F, Step = 1F, Id = "StalkerHP")]
         public float StalkerHP = 1F;
         #endregion
 
         #region Warper
-        [Slider("Warper Health", Min = 1F, Max = 1F, DefaultValue = 1F, Step = 1F, Id = "WarperHP")]
+        [Slider("Warper Health", Min = 1F, Max = 1F, DefaultValue = 100F, Step = 1F, Id = "WarperHP")]
         public float WarperHP = 1F;
         #endregion
     }
