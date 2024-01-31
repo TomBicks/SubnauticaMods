@@ -127,7 +127,15 @@ namespace CreatureConfigHealth
                     ChangeHealth(__creature, config.CrimsonRayHP, "CrimsonRayHP");
                     break;
                 case TechType.Cutefish: //TechType for Cuddlefish
-                    ChangeHealth(__creature, config.CuddlefishHP, "CuddlefishHP");
+                    //If option to make Cuddlefish invulnerable is ticked, ignore changing the health value of the Cuddlefish
+                    if(config.CuddlefishInvunerable)
+                    {
+                        MakeInvulnerable(__creature);
+                    }
+                    else
+                    {
+                        ChangeHealth(__creature, config.CuddlefishHP, "CuddlefishHP");
+                    }
                     break;
                 case TechType.Floater:
                     ChangeHealth(__creature, config.FloaterHP, "FloaterHP");
@@ -223,22 +231,30 @@ namespace CreatureConfigHealth
 
         public static void ChangeHealth(GameObject __instance, float __customHPValue, string __defaultHPValueKey)
         {
-            //DEBUG CODE; retrieves creature type
-            TechType __techType = CraftData.GetTechType(__instance);
-
-            //Calculate correct health value to assign to creature; returns -1 if no such creature exists in the dictionary
-            float __HPValueToAssign = CalculateHPToAssign(__customHPValue, __defaultHPValueKey);
-
-            //Check if the method managed to calculate a health value to assign; -1 if it did not
-            if (__HPValueToAssign != -1)
+            //If preset is set to 'Invulnerable', then health doesn't matter and we can skip everything else
+            if (config.HealthPreset == 8)
             {
-                //Set health to new health value
-                __instance.GetComponent<LiveMixin>().health = __HPValueToAssign;
+                MakeInvulnerable(__instance);
             }
             else
             {
-                //DEBUG CODE; prints failure in assigning health
-                logger.Log(LogLevel.Error, $"Failed setting {__techType} health");
+                //DEBUG CODE; retrieves creature type
+                TechType __techType = CraftData.GetTechType(__instance);
+
+                //Calculate correct health value to assign to creature; returns -1 if no such creature exists in the dictionary
+                float __HPValueToAssign = CalculateHPToAssign(__customHPValue, __defaultHPValueKey);
+
+                //Check if the method managed to calculate a health value to assign; -1 if it did not
+                if (__HPValueToAssign != -1)
+                {
+                    //Set health to new health value
+                    __instance.GetComponent<LiveMixin>().health = __HPValueToAssign;
+                }
+                else
+                {
+                    //DEBUG CODE; prints failure in assigning health
+                    logger.Log(LogLevel.Error, $"Failed setting {__techType} health");
+                }
             }
         }
 
@@ -276,13 +292,6 @@ namespace CreatureConfigHealth
                         __HPValueToAssign = (__preset - 1) / 4 * __defaultHPValue;
                         break;
 
-                    //Invulnerable, make all health values 100000
-                    //NOTE!! Instead, what if I just turn on the immortal boolean under LiveMixin? Reefback has that set iirc?
-                    //LOOK INTO IT!!
-                    case 8:
-                        __HPValueToAssign = 100000;
-                        break;
-
                     default:
                         logger.Log(LogLevel.Error, $"Preset {__preset} not recognised!");
                         break;
@@ -297,6 +306,12 @@ namespace CreatureConfigHealth
                 logger.Log(LogLevel.Error, $"Default Health Value Key {__defaultHPValueKey} does not exist in the dictionary!");
                 return -1.0f;
             }
+        }
+
+        //Makes the creature invulnerable, thereby ignoring any damage it takes
+        public static void MakeInvulnerable (GameObject __instance)
+        {
+            __instance.GetComponent<LiveMixin>().invincible = true;
         }
     }
 }
