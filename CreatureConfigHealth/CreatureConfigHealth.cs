@@ -76,95 +76,102 @@ namespace CreatureConfigHealth
             //Otherwise, could potnetially run into the issue of damage a fish, unload, come back and its healed
             //Granted, this would only be an issue for leviathans, and even then, how would player know they healed?
 
+            //If set to apply health presets to aggressive fauna only, ignore this section of fauna; the edible and passive
+            if(!config.ApplyPresetsToAggressiveOnly)
+            {
+                switch (__techType)
+                {
+                    //Edible Fauna
+                    case TechType.Bladderfish:
+                        ChangeHealth(__creature, config.BladderfishHP, "BladderfishHP");
+                        break;
+                    case TechType.Boomerang:
+                        ChangeHealth(__creature, config.BoomerangHP, "BoomerangHP");
+                        break;
+                    case TechType.Eyeye:
+                        ChangeHealth(__creature, config.EyeyeHP, "EyeyeHP");
+                        break;
+                    case TechType.GarryFish:
+                        ChangeHealth(__creature, config.GarryfishHP, "GarryfishHP");
+                        break;
+                    case TechType.HoleFish:
+                        ChangeHealth(__creature, config.HolefishHP, "HolefishHP");
+                        break;
+                    case TechType.Hoopfish:
+                        ChangeHealth(__creature, config.HoopfishHP, "HoopfishHP");
+                        break;
+                    case TechType.Hoverfish:
+                        ChangeHealth(__creature, config.HoverfishHP, "HoverfishHP");
+                        break;
+                    case TechType.LavaBoomerang: //TechType for Magmarang
+                        ChangeHealth(__creature, config.MagmarangHP, "MagmarangHP");
+                        break;
+                    case TechType.Oculus:
+                        ChangeHealth(__creature, config.OculusHP, "OculusHP");
+                        break;
+                    case TechType.Peeper:
+                        ChangeHealth(__creature, config.PeeperHP, "PeeperHP");
+                        break;
+                    case TechType.LavaEyeye: //TechType for Red Eyeye
+                        ChangeHealth(__creature, config.RedEyeyeHP, "RedEyeyeHP");
+                        break;
+                    case TechType.Reginald:
+                        ChangeHealth(__creature, config.ReginaldHP, "ReginaldHP");
+                        break;
+                    case TechType.Spadefish:
+                        ChangeHealth(__creature, config.SpadefishHP, "SpadefishHP");
+                        break;
+                    case TechType.Spinefish:
+                        ChangeHealth(__creature, config.SpinefishHP, "SpinefishHP");
+                        break;
+
+                    //Passive Fauna
+                    case TechType.GhostRayRed: //TechType for Crimson Ray
+                        ChangeHealth(__creature, config.CrimsonRayHP, "CrimsonRayHP");
+                        break;
+                    case TechType.Cutefish: //TechType for Cuddlefish
+                                            //If option to make Cuddlefish invulnerable is ticked, ignore changing the health value of the Cuddlefish
+                        if (config.CuddlefishInvunerable)
+                        {
+                            MakeInvulnerable(__creature);
+                        }
+                        else
+                        {
+                            ChangeHealth(__creature, config.CuddlefishHP, "CuddlefishHP");
+                        }
+                        break;
+                    case TechType.Floater:
+                        ChangeHealth(__creature, config.FloaterHP, "FloaterHP");
+                        break;
+                    case TechType.Gasopod:
+                        ChangeHealth(__creature, config.GasopodHP, "GasopodHP");
+                        break;
+                    case TechType.GhostRayBlue: //TechType for Ghostray
+                        ChangeHealth(__creature, config.GhostrayHP, "GhostrayHP");
+                        break;
+                    case TechType.Jellyray:
+                        ChangeHealth(__creature, config.JellyrayHP, "JellyrayHP");
+                        break;
+                    case TechType.LavaLarva:
+                        ChangeHealth(__creature, config.LavaLarvaHP, "LavaLarvaHP");
+                        break;
+                    case TechType.RabbitRay:
+                        ChangeHealth(__creature, config.RabbitRayHP, "RabbitRayHP");
+                        break;
+                    case TechType.SeaTreader:
+                        ChangeHealth(__creature, config.SeaTreaderLeviathanHP, "SeaTreaderLeviathanHP");
+                        break;
+                    case TechType.Jumper: //TechType for Shuttlebug; not to be confused with TechType.Shuttlebug which is for Blood Crawlers
+                        ChangeHealth(__creature, config.ShuttlebugHP, "ShuttlebugHP");
+                        break;
+                    case TechType.Skyray:
+                        ChangeHealth(__creature, config.SkyrayHP, "SkyrayHP");
+                        break;
+                }
+            }
+            
             switch (__techType)
             {
-                //Edible Fauna
-                case TechType.Bladderfish:
-                    ChangeHealth(__creature, config.BladderfishHP, "BladderfishHP");
-                    break;
-                case TechType.Boomerang:
-                    ChangeHealth(__creature, config.BoomerangHP, "BoomerangHP");
-                    break;
-                case TechType.Eyeye:
-                    ChangeHealth(__creature, config.EyeyeHP, "EyeyeHP");
-                    break;
-                case TechType.GarryFish:
-                    ChangeHealth(__creature, config.GarryfishHP, "GarryfishHP");
-                    break;
-                case TechType.HoleFish:
-                    ChangeHealth(__creature, config.HolefishHP, "HolefishHP");
-                    break;
-                case TechType.Hoopfish:
-                    ChangeHealth(__creature, config.HoopfishHP, "HoopfishHP");
-                    break;
-                case TechType.Hoverfish:
-                    ChangeHealth(__creature, config.HoverfishHP, "HoverfishHP");
-                    break;
-                case TechType.LavaBoomerang: //TechType for Magmarang
-                    ChangeHealth(__creature, config.MagmarangHP, "MagmarangHP");
-                    break;
-                case TechType.Oculus:
-                    ChangeHealth(__creature, config.OculusHP, "OculusHP");
-                    break;
-                case TechType.Peeper:
-                    ChangeHealth(__creature, config.PeeperHP, "PeeperHP");
-                    break;
-                case TechType.LavaEyeye: //TechType for Red Eyeye
-                    ChangeHealth(__creature, config.RedEyeyeHP, "RedEyeyeHP");
-                    break;
-                case TechType.Reginald:
-                    ChangeHealth(__creature, config.ReginaldHP, "ReginaldHP");
-                    break;
-                case TechType.Spadefish:
-                    ChangeHealth(__creature, config.SpadefishHP, "SpadefishHP");
-                    break;
-                case TechType.Spinefish:
-                    ChangeHealth(__creature, config.SpinefishHP, "SpinefishHP");
-                    break;
-
-                //Passive Fauna
-                case TechType.GhostRayRed: //TechType for Crimson Ray
-                    ChangeHealth(__creature, config.CrimsonRayHP, "CrimsonRayHP");
-                    break;
-                case TechType.Cutefish: //TechType for Cuddlefish
-                    //If option to make Cuddlefish invulnerable is ticked, ignore changing the health value of the Cuddlefish
-                    if(config.CuddlefishInvunerable)
-                    {
-                        MakeInvulnerable(__creature);
-                    }
-                    else
-                    {
-                        ChangeHealth(__creature, config.CuddlefishHP, "CuddlefishHP");
-                    }
-                    break;
-                case TechType.Floater:
-                    ChangeHealth(__creature, config.FloaterHP, "FloaterHP");
-                    break;
-                case TechType.Gasopod:
-                    ChangeHealth(__creature, config.GasopodHP, "GasopodHP");
-                    break;
-                case TechType.GhostRayBlue: //TechType for Ghostray
-                    ChangeHealth(__creature, config.GhostrayHP, "GhostrayHP");
-                    break;
-                case TechType.Jellyray:
-                    ChangeHealth(__creature, config.JellyrayHP, "JellyrayHP");
-                    break;
-                case TechType.LavaLarva:
-                    ChangeHealth(__creature, config.LavaLarvaHP, "LavaLarvaHP");
-                    break;
-                case TechType.RabbitRay:
-                    ChangeHealth(__creature, config.RabbitRayHP, "RabbitRayHP");
-                    break;
-                case TechType.SeaTreader:
-                    ChangeHealth(__creature, config.SeaTreaderLeviathanHP, "SeaTreaderLeviathanHP");
-                    break;
-                case TechType.Jumper: //TechType for Shuttlebug; not to be confused with TechType.Shuttlebug which is for Blood Crawlers
-                    ChangeHealth(__creature, config.ShuttlebugHP, "ShuttlebugHP");
-                    break;
-                case TechType.Skyray:
-                    ChangeHealth(__creature, config.SkyrayHP, "SkyrayHP");
-                    break;
-
                 //Aggressive Fauna
                 case TechType.Shocker: //TechType for Ampeel
                     ChangeHealth(__creature, config.AmpeelHP, "AmpeelHP");
