@@ -36,14 +36,14 @@ namespace CreatureConfigHealth
             { "JellyrayHP",100F },
             { "LavaLarvaHP",100F },
             { "RabbitRayHP",100F },
-            { "SeaTreaderHP",3000F },
+            { "SeaTreaderLeviathanHP",3000F },
             { "ShuttlebugHP",50F },
             { "SkyrayHP",100F },
 
             //Aggressive Fauna
             { "AmpeelHP",3000F },
             { "BiterHP",10F },
-            { "BleederHP",10F }, //Don't think I can truly make these things immortal; death sentencei s they latch on
+            { "BleederHP",10F }, //Don't think I can truly make these things immortal; death sentence if they latch on
             { "BlighterHP",10F },
             { "BloodCrawlerHP",50F },
             { "BonesharkHP",200F },
@@ -254,6 +254,9 @@ namespace CreatureConfigHealth
                 //Check if the method managed to calculate a health value to assign; -1 if it did not
                 if (__HPValueToAssign != -1)
                 {
+                    //DEBUG CODE; prints info; remove WHEN DONE
+                    logger.Log(LogLevel.Info, $"Setting {__techType} health to {__HPValueToAssign}");
+
                     //Set health to new health value
                     __instance.GetComponent<LiveMixin>().health = __HPValueToAssign;
                 }
