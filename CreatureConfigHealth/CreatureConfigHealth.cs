@@ -130,7 +130,7 @@ namespace CreatureConfigHealth
                         ChangeHealth(__creature, config.CrimsonRayHP, "CrimsonRayHP");
                         break;
                     case TechType.Cutefish: //TechType for Cuddlefish
-                                            //If option to make Cuddlefish invulnerable is ticked, ignore changing the health value of the Cuddlefish
+                        //If option to make Cuddlefish invulnerable is ticked, ignore changing the health value of the Cuddlefish
                         if (config.CuddlefishInvunerable)
                         {
                             MakeInvulnerable(__creature);
@@ -180,7 +180,11 @@ namespace CreatureConfigHealth
                     ChangeHealth(__creature, config.BiterHP, "BiterHP");
                     break;
                 case TechType.Bleeder:
-                    ChangeHealth(__creature, config.BleederHP, "BleederHP");
+                    //If option to exclude Bleeder from health changes is ticked, skip the Bleeder
+                    if (!config.ExcludeBleeder)
+                    {
+                        ChangeHealth(__creature, config.BleederHP, "BleederHP");
+                    }
                     break;
                 case TechType.Shuttlebug: //TechType for Blood Crawler
                     ChangeHealth(__creature, config.BloodCrawlerHP, "BloodCrawlerHP");
