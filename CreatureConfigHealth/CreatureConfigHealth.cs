@@ -235,7 +235,7 @@ namespace CreatureConfigHealth
                     ChangeHealth(__creature, config.StalkerHP, "StalkerHP");
                     break;
                 case TechType.Warper:
-                    ChangeHealth(__creature, config.WarperHP, "WarperClawHP");
+                    ChangeHealth(__creature, config.WarperHP, "WarperHP");
                     break;
             }
         }
