@@ -43,7 +43,7 @@ namespace CreatureConfigHealth
             //Aggressive Fauna
             { "AmpeelHP",3000F },
             { "BiterHP",10F },
-            { "BleederHP",10F }, //Don't think I can truly make these things immortal; death sentence if they latch on
+            { "BleederHP",10F },
             { "BlighterHP",10F },
             { "BloodCrawlerHP",50F },
             { "BonesharkHP",200F },
@@ -71,10 +71,6 @@ namespace CreatureConfigHealth
             GameObject __creature = __instance.gameObject;
 
             TechType __techType = CraftData.GetTechType(__creature);
-
-            //NOTE!! Best case, I can change default health of the creature prefabs, meaning health is changed to the default I set
-            //Otherwise, could potnetially run into the issue of damage a fish, unload, come back and its healed
-            //Granted, this would only be an issue for leviathans, and even then, how would player know they healed?
 
             //If set to apply health presets to aggressive fauna only, ignore this section of fauna; the edible and passive
             if(!config.ApplyPresetsToAggressiveOnly)
@@ -258,9 +254,6 @@ namespace CreatureConfigHealth
                 //Check if the method managed to calculate a health value to assign; -1 if it did not
                 if (__HPValueToAssign != -1)
                 {
-                    //DEBUG CODE; prints info; remove WHEN DONE
-                    logger.Log(LogLevel.Info, $"Setting {__techType} health to {__HPValueToAssign}");
-
                     //Set health to new health value
                     __instance.GetComponent<LiveMixin>().health = __HPValueToAssign;
                 }

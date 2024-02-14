@@ -30,13 +30,10 @@ namespace CreatureConfigHealth
     [Menu("Creature Config - Health")]
     public class Config : Nautilus.Json.ConfigFile
     {
-        //NOTE!! Maybe have a boolean toggle as to whether the health changes should affect all creatures or just aggressive ones!
-        //Maybe have another that can make the cuddlefish immortal?
-
         [Toggle("Apply presets to aggressive fauna only?", Tooltip = "Apply presets to aggressive fauna only, so you can quickly apply sweeping changes without your thermoblade unable to kill a Peeper.")]
         public bool ApplyPresetsToAggressiveOnly = false;
 
-        [Toggle("Make Cuddlefish invulnerable?", Tooltip = "Makes Cuddlefish invulnerable, so you don't have to worry about any ddanger to them.")]
+        [Toggle("Make Cuddlefish invulnerable?", Tooltip = "Makes Cuddlefish invulnerable, so you don't have to worry about any danger to them.")]
         public bool CuddlefishInvunerable = false;
 
         [Toggle("Exclude changes to Bleeders?", Tooltip = "Excludes Bleeders' from health changes, as Bleeder's don't let go without being killed first or using the Propulsion or Repulsion Cannon.")]
