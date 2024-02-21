@@ -65,7 +65,7 @@ namespace CreatureConfigDamage
 
         #region Bleeder
         [Slider("Bleeder Damage", Min = 1F, Max = 100F, DefaultValue = 5F, Step = 1F, Id = "BleederDmg", 
-            Tooltip = "Damage dealt by a Bleeder's grab attack.")]
+            Tooltip = "Damage dealt by a Bleeder's grab attack every few seconds.")]
         public float BleederDmg = 5F;
         #endregion
 
