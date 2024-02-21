@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreatureConfigDamage", "Cre
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreatureConfigDamageLite", "CreatureConfigDamageLite\CreatureConfigDamageLite.csproj", "{6A906B94-9A02-4A66-B212-30D42C741A13}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreatureConfigHealth", "CreatureConfigHealth\CreatureConfigHealth.csproj", "{DE2B6897-1973-406A-9767-7EF9927FF104}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreatureConfigHealthLite", "CreatureConfigHealthLite\CreatureConfigHealthLite.csproj", "{6EBCE3E5-C154-4D1A-B381-E84BCF6EC2DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{6A906B94-9A02-4A66-B212-30D42C741A13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A906B94-9A02-4A66-B212-30D42C741A13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A906B94-9A02-4A66-B212-30D42C741A13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE2B6897-1973-406A-9767-7EF9927FF104}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE2B6897-1973-406A-9767-7EF9927FF104}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE2B6897-1973-406A-9767-7EF9927FF104}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE2B6897-1973-406A-9767-7EF9927FF104}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EBCE3E5-C154-4D1A-B381-E84BCF6EC2DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EBCE3E5-C154-4D1A-B381-E84BCF6EC2DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EBCE3E5-C154-4D1A-B381-E84BCF6EC2DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EBCE3E5-C154-4D1A-B381-E84BCF6EC2DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
