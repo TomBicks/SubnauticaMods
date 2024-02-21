@@ -23,6 +23,7 @@ namespace CreatureConfigDamage
             { "CrabsnakeDmg",35F },
             { "CrabsquidDmg",40F },
             { "CrashfishDmg",50F },
+            { "DroopingStingerDmg", 50F },
             { "GasopodGasPodDmg",10F },
             { "GhostLeviathanDmg",85F },
             { "GhostLeviathanCyclopsDmg",250F },
@@ -42,6 +43,7 @@ namespace CreatureConfigDamage
             { "SeaDragonLeviathanLavaMeteorDmg",40F },
             { "SeaTreaderLeviathanDmg",40F },
             { "StalkerDmg", 30F },
+            { "TigerPlantDmg", 10F },
             { "WarperClawDmg", 30F },
             { "WarperWarpDmg", 10F }
         };
@@ -157,6 +159,35 @@ namespace CreatureConfigDamage
                 //instead it's just spawning GasPods based on the reference to the default GasPod prefab in the files, rather than stating its own custom version
                 //As a result, we need to patch into the function used to spawn the gaspods to alter their damage
             ChangeUniqueAttack(__instance.gameObject, ref __instance.damagePerSecond, config.GasopodGasPodDmg, "GasopodGasPodDmg");
+        }
+
+        /*[HarmonyPatch(typeof(HangingStinger), nameof(HangingStinger.OnCollisionEnter))]
+        [HarmonyPrefix]
+        public static void PrefixHangingStingerCollision(HangingStinger __instance)
+        {
+	        //NOTE!! As Hanging Stinger is considered Flora, we can't patch into it like we did the creatures; it's only one of two damaging plants anyway
+
+	        if (__instance._venomAmount >= 1f && other.gameObject.GetComponentInChildren<LiveMixin>() != null)
+	        {
+		        DamageOverTime damageOverTime = other.gameObject.AddComponent<DamageOverTime>();
+		        damageOverTime.doer = base.gameObject;
+		        damageOverTime.totalDamage = 30f;
+		        damageOverTime.duration = 2.5f * (float)__instance.size;
+		        damageOverTime.damageType = DamageType.Poison;
+		        damageOverTime.ActivateInterval(0.5f);
+		        __instance._venomAmount = 0f;
+		        __instance.venomRechargeTime = UnityEngine.Random.value * 5f + 5f;
+	        }
+        }*/
+
+        [HarmonyPatch(typeof(SpikePlant), nameof(SpikePlant.Start))]
+        [HarmonyPrefix]
+        public static void PrefixTigerPlant(SpikePlant __instance)
+        {
+            //NOTE!! As Tiger Plant is considered Flora, we can't patch into it exactly like we did the creatures; it's only one of two damaging plants anyway
+            //However, unlike the Drooping Stinger, the Tiger Plant has a component with a damage value we can change relatively easily
+            logger.Log(LogLevel.Error, "Tiger Plant Found");
+            ChangeUniqueAttack(__instance.gameObject, ref __instance.GetComponent<RangeAttacker>().damage, config.TigerPlantDmg, "TigerPlantDmg");
         }
 
         public static void ChangeGenericMeleeAttack(GameObject __instance, float __customDmgValue, string __defaultDmgValueKey)

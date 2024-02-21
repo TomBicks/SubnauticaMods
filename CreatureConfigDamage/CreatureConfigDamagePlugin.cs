@@ -111,6 +111,12 @@ namespace CreatureConfigDamage
         public float CrashfishDmg = 0F;
         #endregion
 
+        #region Drooping Stinger
+        [Slider("Drooping Stinger Damage", Min = 1F, Max = 100F, DefaultValue = 50F, Step = 1F, Id = "DroopingStingerDmg",
+            Tooltip = "Damage dealt by a Drooping Stinger's venom over a few seconds.")]
+        public float DroopingStingerDmg = 50F;
+        #endregion
+
         #region Gasopod
         [Slider("Gasopod Gaspod Damage", Min = 1F, Max = 100F, DefaultValue = 10F, Step = 1F, Id = "GasopodGasPodDmg", 
             Tooltip = "Damage dealt per second by a Gasopod's poison cloud.")]
@@ -163,6 +169,12 @@ namespace CreatureConfigDamage
         [Slider("River Prowler Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "RiverProwlerDmg", 
             Tooltip = "Damage dealt by a River Prowler's bite.")]
         public float RiverProwlerDmg = 30F;
+        #endregion
+
+        #region Tiger Plant
+        [Slider("Tiger Plant Damage", Min = 1F, Max = 100F, DefaultValue = 10F, Step = 1F, Id = "TigerPlantDmg",
+            Tooltip = "Damage dealt by a Tiger Plant's barb projectile.")]
+        public float TigerPlantDmg = 10F;
         #endregion
 
         #region Sand Shark
