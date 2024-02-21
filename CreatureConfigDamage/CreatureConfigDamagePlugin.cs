@@ -113,7 +113,7 @@ namespace CreatureConfigDamage
 
         #region Gasopod
         [Slider("Gasopod Gaspod Damage", Min = 1F, Max = 100F, DefaultValue = 10F, Step = 1F, Id = "GasopodGasPodDmg", 
-            Tooltip = "Damage dealt by a Gasopod's poison cloud.")]
+            Tooltip = "Damage dealt per second by a Gasopod's poison cloud.")]
         public float GasopodGasPodDmg = 10F;
         #endregion
 
@@ -139,7 +139,7 @@ namespace CreatureConfigDamage
         [Slider("Lava Lizard Bite Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "LavaLizardBiteDmg", 
             Tooltip = "Damage dealt by a Lava Lizard's bite.")]
         public float LavaLizardBiteDmg = 30F;
-        [Slider("Lava Lizard Lava Rock Projectile Damage", Min = 1F, Max = 100F, DefaultValue = 15F, Step = 1F, Id = "LavaLizardLavaRockDmg", 
+        [Slider("Lava Lizard Lava Rock Damage", Min = 1F, Max = 100F, DefaultValue = 15F, Step = 1F, Id = "LavaLizardLavaRockDmg", 
             Tooltip = "Damage dealt by a Lava Lizard's lava rock projectile.")]
         public float LavaLizardLavaRockDmg = 15F;
         #endregion
@@ -151,12 +151,12 @@ namespace CreatureConfigDamage
         #endregion
 
         #region Reaper Leviathan
-        [Slider("Reaper Damage", Min = 1F, Max = 100F, DefaultValue = 80F, Step = 1F, Id = "ReaperDmg", 
+        [Slider("Reaper Damage", Min = 1F, Max = 100F, DefaultValue = 80F, Step = 1F, Id = "ReaperLeviathanDmg", 
             Tooltip = "Damage dealt by a Reaper Leviathan's bite.")]
-        public float ReaperDmg = 80F;
-        [Slider("Reaper Cyclops Damage", Min = 5F, Max = 500F, DefaultValue = 220F, Step = 5F, Id = "ReaperCyclopsDmg", 
+        public float ReaperLeviathanDmg = 80F;
+        [Slider("Reaper Cyclops Damage", Min = 5F, Max = 500F, DefaultValue = 220F, Step = 5F, Id = "ReaperLeviathanCyclopsDmg", 
             Tooltip = "Damage dealt by a Reaper Leviathan's bite to a Cyclops.")]
-        public float ReaperCyclopsDmg = 220F;
+        public float ReaperLeviathanCyclopsDmg = 220F;
         #endregion
 
         #region River Prowler
@@ -172,27 +172,27 @@ namespace CreatureConfigDamage
         #endregion
 
         #region Sea Dragon Leviathan
-        [Slider("Sea Dragon Bite Damage", Min = 5F, Max = 500F, DefaultValue = 300F, Step = 5F, Id = "SeaDragonBiteDmg", 
+        [Slider("Sea Dragon Bite Damage", Min = 5F, Max = 500F, DefaultValue = 300F, Step = 5F, Id = "SeaDragonLeviathanBiteDmg", 
             Tooltip = "Damage dealt by a Sea Dragon Leviathan's bite.")]
-        public float SeaDragonBiteDmg = 300F;
-        [Slider("Sea Dragon Swat Damage", Min = 1F, Max = 100F, DefaultValue = 70F, Step = 1F, Id = "SeaDragonSwatDmg", 
+        public float SeaDragonLeviathanBiteDmg = 300F;
+        [Slider("Sea Dragon Swat Damage", Min = 1F, Max = 100F, DefaultValue = 70F, Step = 1F, Id = "SeaDragonLeviathanSwatDmg", 
             Tooltip = "Damage dealt by a Sea Dragon Leviathan's swat.")]
-        public float SeaDragonSwatDmg = 70F;
-        [Slider("Sea Dragon Shove Damage", Min = 5F, Max = 500F, DefaultValue = 250F, Step = 5F, Id = "SeaDragonShoveDmg", 
+        public float SeaDragonLeviathanSwatDmg = 70F;
+        [Slider("Sea Dragon Shove Damage", Min = 5F, Max = 500F, DefaultValue = 250F, Step = 5F, Id = "SeaDragonLeviathanShoveDmg", 
             Tooltip = "Damage dealt by a Sea Dragon Leviathan shoving a Cyclops.")]
-        public float SeaDragonShoveDmg = 250F;
-        [Slider("Sea Dragon Burning Chunk Projectile Damage", Min = 1F, Max = 100F, DefaultValue = 10F, Step = 1F, Id = "SeaDragonBurningChunkDmg", 
+        public float SeaDragonLeviathanShoveDmg = 250F;
+        [Slider("Sea Dragon Burning Chunk Damage", Min = 1F, Max = 100F, DefaultValue = 10F, Step = 1F, Id = "SeaDragonLeviathanBurningChunkDmg", 
             Tooltip = "Damage dealt by a Sea Dragon Leviathan's burning chunk projectile volley.")]
-        public float SeaDragonBurningChunkDmg = 10F;
-        [Slider("Sea Dragon Lava Meteor Projectile Damage", Min = 1F, Max = 100F, DefaultValue = 40F, Step = 1F, Id = "SeaDragonLavaMeteorDmg", 
+        public float SeaDragonLeviathanBurningChunkDmg = 10F;
+        [Slider("Sea Dragon Lava Meteor Damage", Min = 1F, Max = 100F, DefaultValue = 40F, Step = 1F, Id = "SeaDragonLeviathanLavaMeteorDmg", 
             Tooltip = "Damage dealt by a Sea Dragon Leviathan's lava meteor projectile.")]
-        public float SeaDragonLavaMeteorDmg = 40F;
+        public float SeaDragonLeviathanLavaMeteorDmg = 40F;
         #endregion 
 
         #region Sea Treader Leviathan
-        [Slider("Sea Treader Damage", Min = 1F, Max = 100F, DefaultValue = 40F, Step = 1F, Id = "SeaTreaderDmg", 
+        [Slider("Sea Treader Damage", Min = 1F, Max = 100F, DefaultValue = 40F, Step = 1F, Id = "SeaTreaderLeviathanDmg", 
             Tooltip = "Damage dealt by a Sea Treader Leviathan's peck.")]
-        public float SeaTreaderDmg = 40F;
+        public float SeaTreaderLeviathanDmg = 40F;
         #endregion 
 
         #region Stalker

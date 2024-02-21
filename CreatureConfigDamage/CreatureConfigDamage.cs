@@ -31,16 +31,16 @@ namespace CreatureConfigDamage
             { "LavaLizardBiteDmg",30F },
             { "LavaLizardLavaRockDmg",15F },
             { "MesmerDmg",35F },
-            { "ReaperDmg",80F },
-            { "ReaperCyclopsDmg",220F },
+            { "ReaperLeviathanDmg",80F },
+            { "ReaperLeviathanCyclopsDmg",220F },
             { "RiverProwlerDmg",30F },
             { "SandsharkDmg",30F },
-            { "SeaDragonBiteDmg",300F },
-            { "SeaDragonSwatDmg",70F },
-            { "SeaDragonShoveDmg",250F },
-            { "SeaDragonBurningChunkDmg",10F },
-            { "SeaDragonLavaMeteorDmg",40F },
-            { "SeaTreaderDmg",40F },
+            { "SeaDragonLeviathanBiteDmg",300F },
+            { "SeaDragonLeviathanSwatDmg",70F },
+            { "SeaDragonLeviathanShoveDmg",250F },
+            { "SeaDragonLeviathanBurningChunkDmg",10F },
+            { "SeaDragonLeviathanLavaMeteorDmg",40F },
+            { "SeaTreaderLeviathanDmg",40F },
             { "StalkerDmg", 30F },
             { "WarperClawDmg", 30F },
             { "WarperWarpDmg", 10F }
@@ -121,17 +121,17 @@ namespace CreatureConfigDamage
                     ChangeUniqueAttack(__creature, ref __creature.GetComponent<GhostLeviathanMeleeAttack>().cyclopsDamage, config.GhostLeviathanJuvenileCyclopsDmg, "GhostLeviathanJuvenileCyclopsDmg"); //220; Damage dealt to cyclops
                     break;
                 case TechType.ReaperLeviathan:
-                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<ReaperMeleeAttack>().biteDamage, config.ReaperDmg, "ReaperDmg"); //80; Damage dealt to player, seamoth and prawn suit
-                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<ReaperMeleeAttack>().cyclopsDamage, config.ReaperCyclopsDmg, "ReaperCyclopsDmg"); //220; Damage dealt to cyclops
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<ReaperMeleeAttack>().biteDamage, config.ReaperLeviathanDmg, "ReaperDmg"); //80; Damage dealt to player, seamoth and prawn suit
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<ReaperMeleeAttack>().cyclopsDamage, config.ReaperLeviathanCyclopsDmg, "ReaperCyclopsDmg"); //220; Damage dealt to cyclops
                     break;
                 case TechType.SeaDragon:
-                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaDragonMeleeAttack>().biteDamage, config.SeaDragonBiteDmg, "SeaDragonBiteDmg"); //300; Bite (so far for player and seamoth; untested on prawn suit)
-                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaDragonMeleeAttack>().swatAttackDamage, config.SeaDragonSwatDmg, "SeaDragonSwatDmg"); //70; Swatted with arms (only for player, seamoth and prawn suit)
-                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaDragonMeleeAttack>().shoveAttackDamage, config.SeaDragonShoveDmg, "SeaDragonShoveDmg"); //250; Shove when shoving into the cyclops
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaDragonMeleeAttack>().biteDamage, config.SeaDragonLeviathanBiteDmg, "SeaDragonBiteDmg"); //300; Bite (so far for player and seamoth; untested on prawn suit)
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaDragonMeleeAttack>().swatAttackDamage, config.SeaDragonLeviathanSwatDmg, "SeaDragonSwatDmg"); //70; Swatted with arms (only for player, seamoth and prawn suit)
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaDragonMeleeAttack>().shoveAttackDamage, config.SeaDragonLeviathanShoveDmg, "SeaDragonShoveDmg"); //250; Shove when shoving into the cyclops
                     GameObject __SD_projectile1 = __creature.GetComponent<RangedAttackLastTarget>().attackTypes[0].ammoPrefab;
-                    ChangeUniqueAttack(__creature, ref __SD_projectile1.GetComponent<BurningChunk>().fireDamage, config.SeaDragonBurningChunkDmg, "SeaDragonBurningChunkDmg");
+                    ChangeUniqueAttack(__creature, ref __SD_projectile1.GetComponent<BurningChunk>().fireDamage, config.SeaDragonLeviathanBurningChunkDmg, "SeaDragonBurningChunkDmg");
                     GameObject __SD_projectile2 = __creature.GetComponent<RangedAttackLastTarget>().attackTypes[1].ammoPrefab;
-                    ChangeUniqueAttack(__creature, ref __SD_projectile2.GetComponent<LavaMeteor>().damage, config.SeaDragonLavaMeteorDmg, "SeaDragonLavaMeteorDmg");
+                    ChangeUniqueAttack(__creature, ref __SD_projectile2.GetComponent<LavaMeteor>().damage, config.SeaDragonLeviathanLavaMeteorDmg, "SeaDragonLavaMeteorDmg");
                     //NOTE!! Spawns fireballs; posisbly two types; 1 LavaMeteor or <=80 BurningChunks
                         // The LavaMeteor as a prefab has a default of 10 damage; 40 when spawned by the seadragon (as this is what it is in their ammoPrefab)...
                         // ...yet one-shot a seamoth and left the player on 20 health (80 damage from inside). However, a second attempt caused 60 damage to the Seamoth
@@ -139,7 +139,7 @@ namespace CreatureConfigDamage
                         // ...yet appears to do no damage to a player, seamoth or cyclops (just a bunch of sounds akin to schools of fish hitting the screen)
                     break;
                 case TechType.SeaTreader:
-                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaTreaderMeleeAttack>().damage, config.SeaTreaderDmg, "SeaTreaderDmg");
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaTreaderMeleeAttack>().damage, config.SeaTreaderLeviathanDmg, "SeaTreaderDmg");
                     break;
                 case TechType.Warper:
                     ChangeUniqueAttack(__creature, ref __creature.GetComponent<WarperMeleeAttack>().biteDamage, config.WarperClawDmg, "WarperClawDmg");
