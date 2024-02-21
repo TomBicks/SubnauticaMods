@@ -61,11 +61,11 @@ namespace CreatureConfigDamage
                 case TechType.Biter:
                     ChangeGenericMeleeAttack(__creature, config.BiterDmg, "BiterDmg");
                     break;
-                case TechType.Shuttlebug: //TechType for Blood Crawler
-                    ChangeGenericMeleeAttack(__creature, config.BloodCrawlerDmg, "BloodCrawlerDmg");
-                    break;
                 case TechType.Blighter:
                     ChangeGenericMeleeAttack(__creature, config.BlighterDmg, "BlighterDmg");
+                    break;
+                case TechType.Shuttlebug: //TechType for Blood Crawler
+                    ChangeGenericMeleeAttack(__creature, config.BloodCrawlerDmg, "BloodCrawlerDmg");
                     break;
                 case TechType.BoneShark:
                     ChangeGenericMeleeAttack(__creature, config.BonesharkDmg, "BonesharkDmg");
