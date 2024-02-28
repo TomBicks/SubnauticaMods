@@ -15,7 +15,7 @@ namespace CreatureConfigDamage
 
         private static readonly Harmony harmony = new Harmony(myGUID);
 
-        public static ManualLogSource logger;
+        internal static ManualLogSource logger { get; private set; }
 
         internal static Config config { get; } = OptionsPanelHandler.RegisterModOptions<Config>();
 
@@ -45,6 +45,8 @@ namespace CreatureConfigDamage
 
         //NOTE!! Seamoth has 300 HP, Prawn Suit has 600 HP, and Cyclops has 1500 HP. As such, some attacks designed for vehicles may do less damage than appears
 
+        //NOTE!! Do any of these sliders actually need the ID variable to function? Am I just wasting space and code?
+        //Isn't that what the variable below is for?
         #region Ampeel
         [Slider("Ampeel Bite Damage", Min = 1F, Max = 100F, DefaultValue = 30F, Step = 1F, Id = "AmpeelBiteDmg", 
             Tooltip = "Damage dealt by an Ampeel's bite.")]

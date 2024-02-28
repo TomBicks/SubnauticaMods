@@ -15,7 +15,7 @@ namespace CreatureConfigDamageLite
 
         private static readonly Harmony harmony = new Harmony(myGUID);
 
-        public static ManualLogSource logger;
+        internal static ManualLogSource logger { get; private set; }
 
         internal static Config config { get; } = OptionsPanelHandler.RegisterModOptions<Config>();
 
