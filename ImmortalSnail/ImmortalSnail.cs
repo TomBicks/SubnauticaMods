@@ -55,8 +55,14 @@ namespace ImmortalSnail
 
         private static void EditBombPrefab(GameObject bombPrefab)
         {
+            //NOTE!! logger.LogInfo() breaks this function; perhaps doesn't like being asynchronous?
+
             var bombColliders = bombPrefab.FindChild("colliders");
+            ErrorMessage.AddMessage("Registering bomb collider");
             var bombCoreController = bombPrefab.FindChild("alien_relic_02_core_ctrl");
+            ErrorMessage.AddMessage("Registering bomb core controller");
+            var bombCore = bombCoreController.FindChild("alien_relic_02_core");
+            ErrorMessage.AddMessage("Registering bomb core");
 
             //Edit originalPrefab and then instantiate it?
             //CapsuleCollider seems to specify the range at which the animation is triggered
@@ -76,11 +82,21 @@ namespace ImmortalSnail
 
             //Access how to make the bomb glow (planning on having it glow more the closer it is to the player
             //Blinding 100% glow for when it goes critical and explodes
-            Material coreMaterial = bombCoreController.FindChild("alien_relic_02_core").GetComponent<MeshRenderer>().material;
+            Material coreMaterial = bombCore.GetComponent<MeshRenderer>().material;
 
             //Set core to be green at 20% glow
             coreMaterial.SetColor(ShaderPropertyID._GlowColor, Color.green);
             coreMaterial.SetFloat(ShaderPropertyID._GlowStrength, 20F);
+
+            ErrorMessage.AddMessage("Iterating through bomb sliders...");
+            //Iterate through each of the 8 outer sections of the bomb; make them each glow slightly, for visibility
+            for (int i = 1; i < 9; i++)
+            {
+                ErrorMessage.AddMessage($"Finding alien_relic_02_slider_ctrl({i}).alien_relic_02_slider_0{i}");
+                GameObject sliderObject = bombCore.FindChild($"alien_relic_02_slider_ctrl({i})").FindChild($"alien_relic_02_slider_0{i}");
+                Material sliderMaterial = sliderObject.GetComponent<MeshRenderer>().material;
+                sliderMaterial.SetFloat(ShaderPropertyID._GlowStrength, 6F);
+            }
         }
     }
 }
