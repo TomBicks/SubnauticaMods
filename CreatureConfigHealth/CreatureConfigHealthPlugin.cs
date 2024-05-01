@@ -149,7 +149,7 @@ namespace CreatureConfigHealth
         #endregion
 
         #region Ghostray
-        [Slider("Ghostray Health", Min = 1F, Max = 1F, DefaultValue = 100F, Step = 1F, Id = "GhostrayHP")]
+        [Slider("Ghostray Health", Min = 1F, Max = 500F, DefaultValue = 100F, Step = 5F, Id = "GhostrayHP")]
         public float GhostrayHP = 100F;
         #endregion
 
