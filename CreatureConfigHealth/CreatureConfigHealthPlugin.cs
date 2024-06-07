@@ -244,7 +244,7 @@ namespace CreatureConfigHealth
         #endregion
 
         #region Sea Dragon Leviathan
-        [Slider("Sea Dragon Leviathan Health", Min = 1F, Max = 125F, DefaultValue = 5000F, Step = 125F, Id = "SeaDragonLeviathanHP")]
+        [Slider("Sea Dragon Leviathan Health", Min = 1F, Max = 12500F, DefaultValue = 5000F, Step = 125F, Id = "SeaDragonLeviathanHP")]
         public float SeaDragonLeviathanHP = 5000F;
         #endregion
 
