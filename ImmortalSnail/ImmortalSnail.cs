@@ -6,6 +6,9 @@ using static ImmortalSnail.ImmortalSnailPlugin;
 using UnityEngine;
 using System.Collections;
 using UWE;
+using Nautilus.Handlers;
+using Story;
+using System.Runtime.CompilerServices;
 
 namespace ImmortalSnail
 {
@@ -21,14 +24,51 @@ namespace ImmortalSnail
             CoroutineHost.StartCoroutine(GetBombPrefab());
         }
 
-        //If this doesn't work, and I can't hook into its BroadcastMessage of 'OnShipExplode', perhaps I could just postfix it? That feels iffy though
-        public void OnShipExplode()
+        [HarmonyPatch(typeof(StoryGoal), nameof(StoryGoal.Trigger))]
+        [HarmonyPostfix]
+        public static void PostfixStoryGoal(StoryGoal __instance)
         {
-            ErrorMessage.AddMessage("Testing Explosion Hook");
-            logger.LogDebug("Testing Explosion Hook");
+            logger.LogWarning($"key = {__instance.key}, goal type = {__instance.goalType}, delay = {__instance.delay}");
+            ErrorMessage.AddDebug($"key = {__instance.key}, goal type = {__instance.goalType}, delay = {__instance.delay}");
         }
 
-        [HarmonyPatch(typeof(CrashedShipExploder), nameof(CrashedShipExploder.Update))]
+        //NOTE!! The 'RadioRadiationSuit' message is triggered as soon as the player leaves the lifepod, with a delay of '21600'.
+        //This is likely the same amount of time it takes for the Aurora to explode.
+        //Then, when it has exploded, a 'UnlockRadiationSuit' Story goal triggers with a delay of 40
+        //a 'RadSuit' Encyclopedia goal triggers with a delay of 3
+        //a 'Goal_UnlockRadSuit' PDA goal triggers with a delay of 0
+        //So, what this means is; after 21600 ticks, the Aurora explodes, triggering whatever this radio message is???
+        //Then, it plays the PDA message immediately, followed 3 seconds later by the recipe unlocking.
+
+        //It's unclear where the 40 delay one triggers though, or what its purpose is?
+        //Perhaps it is started as the explosion begins, so 40 seconds after the explosion, the other two goals are triggered?
+
+        //So, if I want the message to be sent a bit after the explosion, even after the radiation suit unlock, I'd set it later than that???
+        //I do want to release the bomb right after the explosion though; the PDA message just won't occur immediately as it happens.
+
+        private void RegisterStoryGoals()
+        {
+            // Register the goal to the BiomeGoalTracker. A GoalType of PDA means that this goal will trigger a PDA line and add it to the log on completion:
+            //StoryGoalHandler.RegisterBiomeGoal("AlienBombReleased", GoalType.PDA, biomeName: "kelpForest", minStayDuration: 30f, delay: 3f);
+            // Register the PDA voice line. Note how the key matches the key of the story goal:
+            //PDAHandler.AddLogEntry("AlienBombReleased", "AlienBombReleased", sound);
+            // Set the English translation for PDA message's subtitles:
+            LanguageHandler.SetLanguageLine("AlienBombReleased", "Congratulations for staying in the Kelp Forest for 30 seconds!", "English");
+
+            // Add a custom event that kills the player when this goal is completed:
+            StoryGoalHandler.RegisterCustomEvent("AlienBombReleased", () =>
+            {
+                Player.main.liveMixin.TakeDamage(10000f);
+            });
+
+            // Unlock the seamoth on completion of this goal:
+            StoryGoalHandler.RegisterOnGoalUnlockData("AlienBombReleased", blueprints: new Story.UnlockBlueprintData[]
+            {
+                new Story.UnlockBlueprintData() {techType = TechType.Seamoth, unlockType = Story.UnlockBlueprintData.UnlockType.Available},
+            });
+        }
+
+        /*[HarmonyPatch(typeof(CrashedShipExploder), nameof(CrashedShipExploder.Update))]
         [HarmonyPostfix]
         //NOTE!! DON'T USE THIS; use Story Goals https://subnauticamodding.github.io/Nautilus/tutorials/story-goals.html
         public static void PostfixCrashedShip(CrashedShipExploder __instance)
@@ -38,7 +78,7 @@ namespace ImmortalSnail
                 ErrorMessage.AddMessage("Testing Explosion Hook");
                 logger.LogDebug("Testing Explosion Hook");
             }
-        }
+        }*/
 
         private static IEnumerator GetBombPrefab()
         {
