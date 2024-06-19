@@ -38,6 +38,7 @@ namespace ImmortalSnail
             [ConsoleCommand("testshake")]
             public static void TestShake()
             {
+                //NOTE!! Works perfectly!
                 ErrorMessage.AddMessage("Testing shake FX");
                 logger.LogDebug("Testing shake FX");
                 MainCameraControl.main.ShakeCamera(4f, 8f, MainCameraControl.ShakeMode.Quadratic, 1.2f);
@@ -45,9 +46,12 @@ namespace ImmortalSnail
             [ConsoleCommand("testboom")]
             public static void TestExplosion()
             {
+                //NOTE!! Doesn't appear to do anything
                 ErrorMessage.AddMessage("Testing explosion FX");
                 logger.LogDebug("Testing explosion FX");
                 WorldForces.AddExplosion(new Vector3(0f, 0f, 0f), (double)new Utils.ScalarMonitor(0f).Get(), 8f, 5000f);
+                //This is the actual damage code; needs to have a reference to the snail's position and gameObject
+                //DamageSystem.RadiusDamage(2000f, base.transform.position, 500f, DamageType.Explosive, base.gameObject);
             }
         }
     }

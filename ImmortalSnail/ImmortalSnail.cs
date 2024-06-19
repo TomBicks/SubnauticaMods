@@ -21,10 +21,29 @@ namespace ImmortalSnail
             CoroutineHost.StartCoroutine(GetBombPrefab());
         }
 
+        //If this doesn't work, and I can't hook into its BroadcastMessage of 'OnShipExplode', perhaps I could just postfix it? That feels iffy though
+        public void OnShipExplode()
+        {
+            ErrorMessage.AddMessage("Testing Explosion Hook");
+            logger.LogDebug("Testing Explosion Hook");
+        }
+
+        [HarmonyPatch(typeof(CrashedShipExploder), nameof(CrashedShipExploder.Update))]
+        [HarmonyPostfix]
+        //NOTE!! DON'T USE THIS; use Story Goals https://subnauticamodding.github.io/Nautilus/tutorials/story-goals.html
+        public static void PostfixCrashedShip(CrashedShipExploder __instance)
+        {
+            if (__instance.IsExploded())
+            {
+                ErrorMessage.AddMessage("Testing Explosion Hook");
+                logger.LogDebug("Testing Explosion Hook");
+            }
+        }
+
         private static IEnumerator GetBombPrefab()
         {
             ErrorMessage.AddMessage("Registering Bomb");
-            //logger.LogDebug("Registering Bomb");
+            logger.LogDebug("Registering Bomb");
 
             //WorldEntities/Doodads/Precursor/Prison/Relics/Alien_relic_06.prefab
             //IPrefabRequest request = PrefabDatabase.GetPrefabAsync("3c5abaf7-b18e-4835-8282-874763343d57");
@@ -59,18 +78,17 @@ namespace ImmortalSnail
 
         private static void EditBombPrefab(GameObject bombPrefab)
         {
-            //NOTE!! logger.LogInfo() breaks this function; perhaps doesn't like being asynchronous?
-            //ORRRR It has something to do with the fact I can't get my commands to register? Perhaps it can't find logger properly?
+            //NOTE!! logger.LogInfo() doesn't seem to work here? Unsure why
 
             var bombColliders = bombPrefab.FindChild("colliders");
             ErrorMessage.AddMessage("Registering bomb collider");
-            //logger.LogDebug("Registering bomb collider");
+            logger.LogDebug("Registering bomb collider");
             var bombCoreController = bombPrefab.FindChild("alien_relic_02_core_ctrl");
             ErrorMessage.AddMessage("Registering bomb core controller");
-            //logger.LogDebug("Registering bomb core controller");
+            logger.LogDebug("Registering bomb core controller");
             var bombCore = bombCoreController.FindChild("alien_relic_02_core");
             ErrorMessage.AddMessage("Registering bomb core");
-            //logger.LogDebug("Registering bomb core");
+            logger.LogDebug("Registering bomb core");
 
             //Edit originalPrefab and then instantiate it?
             //CapsuleCollider seems to specify the range at which the animation is triggered
@@ -97,12 +115,12 @@ namespace ImmortalSnail
             coreMaterial.SetFloat(ShaderPropertyID._GlowStrength, 20F);
 
             ErrorMessage.AddMessage("Iterating through bomb sliders...");
-            //logger.LogDebug("Iterating through bomb sliders...");
+            logger.LogDebug("Iterating through bomb sliders...");
             //Iterate through each of the 8 outer sections of the bomb; make them each glow slightly, for visibility
             for (int i = 1; i < 9; i++)
             {
                 ErrorMessage.AddMessage($"Finding alien_relic_02_slider_ctrl({i}).alien_relic_02_slider_0{i}");
-                //logger.LogDebug($"Finding alien_relic_02_slider_ctrl({i}).alien_relic_02_slider_0{i}");
+                logger.LogDebug($"Finding alien_relic_02_slider_ctrl({i}).alien_relic_02_slider_0{i}");
                 GameObject sliderObject = bombCore.FindChild($"alien_relic_02_slider_ctrl({i})").FindChild($"alien_relic_02_slider_0{i}");
                 Material sliderMaterial = sliderObject.GetComponent<MeshRenderer>().material;
                 sliderMaterial.SetFloat(ShaderPropertyID._GlowStrength, 6F);
