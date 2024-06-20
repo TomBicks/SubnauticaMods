@@ -66,7 +66,7 @@ namespace ImmortalSnail
 
             #region Alien Bomb Released
             //Register goal to display PDA warning message about the bomb a little bit after the Aurora explosion
-            StoryGoalHandler.RegisterCompoundGoal("AlienBombReleased", GoalType.PDA, delay: 30f, requiredGoals: "auroraWarning4");
+            StoryGoalHandler.RegisterCompoundGoal("AlienBombReleased", Story.GoalType.PDA, delay: 30f, requiredGoals: "auroraWarning4");
             //Register PDA warning voice line (if I ever make a voice line; unlikely)
             //PDAHandler.AddLogEntry("AlienBombReleased", "AlienBombReleased", sound);
             //Set the English translation for PDA bomb warning
@@ -82,12 +82,13 @@ namespace ImmortalSnail
             //ERROR!! There is no goal for scans; have to determine another way to check if the bomb has been scanned
             //This will likely require a story goal, that I trigger once a manual check if its been scanned or not completes.
             //Register goal to display PDA message about the fact the approaching signal is the doomsday device
-            StoryGoalHandler.RegisterCompoundGoal("AlienBombScanned", GoalType.PDA, delay: 30f, requiredGoals: "AlienBombReleased");
+            StoryGoalHandler.RegisterCompoundGoal("AlienBombScanned", Story.GoalType.PDA, delay: 30f, requiredGoals: "AlienBombReleased");
             //Unlock the bomb detector HUD chip if the bomb has been released AND the player has scanned the bomb eariler, when it was in the case.
             StoryGoalHandler.RegisterOnGoalUnlockData("AlienBombScanned", blueprints: new Story.UnlockBlueprintData[]
             {
                 new UnlockBlueprintData() {techType = TechType.Seamoth, unlockType = Story.UnlockBlueprintData.UnlockType.Available},
             });
+            #endregion
         }
 
         /*[HarmonyPatch(typeof(CrashedShipExploder), nameof(CrashedShipExploder.Update))]
