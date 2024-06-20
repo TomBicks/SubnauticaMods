@@ -8,7 +8,6 @@ using System.Collections;
 using UWE;
 using Nautilus.Handlers;
 using Story;
-using System.Runtime.CompilerServices;
 
 namespace ImmortalSnail
 {
@@ -22,6 +21,9 @@ namespace ImmortalSnail
             MainCameraControl.main.ShakeCamera(4f, 8f, MainCameraControl.ShakeMode.Quadratic, 1.2f); //This Works!
             WorldForces.AddExplosion(new Vector3(0f, 0f, 0f), (double)new Utils.ScalarMonitor(0f).Get(), 8f, 5000f);
             CoroutineHost.StartCoroutine(GetBombPrefab());
+
+            //If bomb has been released, make sure it's not in the glass case, and that the glass case is breached
+            BreakContainer();
         }
 
         [HarmonyPatch(typeof(StoryGoal), nameof(StoryGoal.Trigger))]
@@ -30,6 +32,12 @@ namespace ImmortalSnail
         {
             logger.LogWarning($"key = {__instance.key}, goal type = {__instance.goalType}, delay = {__instance.delay}");
             ErrorMessage.AddDebug($"key = {__instance.key}, goal type = {__instance.goalType}, delay = {__instance.delay}");
+        }
+
+        public static void BreakContainer()
+        {
+            //prefabKey for the basic alien container is 'WorldEntities/Doodads/Precursor/Precursor_lab_container_01.prefab'
+            //Unsure if there's a broken version of it though'
         }
 
         //NOTE!! The 'RadioRadiationSuit' message is triggered as soon as the player leaves the lifepod, with a delay of '21600'.
@@ -48,23 +56,37 @@ namespace ImmortalSnail
 
         private void RegisterStoryGoals()
         {
-            // Register the goal to the BiomeGoalTracker. A GoalType of PDA means that this goal will trigger a PDA line and add it to the log on completion:
-            //StoryGoalHandler.RegisterBiomeGoal("AlienBombReleased", GoalType.PDA, biomeName: "kelpForest", minStayDuration: 30f, delay: 3f);
-            // Register the PDA voice line. Note how the key matches the key of the story goal:
-            //PDAHandler.AddLogEntry("AlienBombReleased", "AlienBombReleased", sound);
-            // Set the English translation for PDA message's subtitles:
-            LanguageHandler.SetLanguageLine("AlienBombReleased", "Congratulations for staying in the Kelp Forest for 30 seconds!", "English");
+            /*Story progression will be
+             - Aurora explodes; thus condition is met to release and spawn the bomb
+             - PDA warning about the bomb will also be complete, with a delay
+             - After the warning, if the player has *also* scanned the bomb already, another PDA message will play,
+               telling the player that it's the bomb approaching them. Also grants them the HUD chip to locate it.  
+             */
+            //BUT!! What if the player hasn't scanned the bomb before it's released? Should I give the research to them after a set amount of time?
 
-            // Add a custom event that kills the player when this goal is completed:
+            #region Alien Bomb Released
+            //Register goal to display PDA warning message about the bomb a little bit after the Aurora explosion
+            StoryGoalHandler.RegisterCompoundGoal("AlienBombReleased", GoalType.PDA, delay: 30f, requiredGoals: "auroraWarning4");
+            //Register PDA warning voice line (if I ever make a voice line; unlikely)
+            //PDAHandler.AddLogEntry("AlienBombReleased", "AlienBombReleased", sound);
+            //Set the English translation for PDA bomb warning
+            LanguageHandler.SetLanguageLine("AlienBombReleased", "Warning. Detecting massive energy signature steadily approaching. Exercise caution.", "English");
+            //Spawn in the bomb at the mountains once the aurora has exploded
             StoryGoalHandler.RegisterCustomEvent("AlienBombReleased", () =>
             {
-                Player.main.liveMixin.TakeDamage(10000f);
+                //Code to spawn in the bomb at the mountains; will need to simulate it when not nearby the player, not unlike Persistent Reapers
             });
+            #endregion
 
-            // Unlock the seamoth on completion of this goal:
-            StoryGoalHandler.RegisterOnGoalUnlockData("AlienBombReleased", blueprints: new Story.UnlockBlueprintData[]
+            #region Alien Bomb Scanned
+            //ERROR!! There is no goal for scans; have to determine another way to check if the bomb has been scanned
+            //This will likely require a story goal, that I trigger once a manual check if its been scanned or not completes.
+            //Register goal to display PDA message about the fact the approaching signal is the doomsday device
+            StoryGoalHandler.RegisterCompoundGoal("AlienBombScanned", GoalType.PDA, delay: 30f, requiredGoals: "AlienBombReleased");
+            //Unlock the bomb detector HUD chip if the bomb has been released AND the player has scanned the bomb eariler, when it was in the case.
+            StoryGoalHandler.RegisterOnGoalUnlockData("AlienBombScanned", blueprints: new Story.UnlockBlueprintData[]
             {
-                new Story.UnlockBlueprintData() {techType = TechType.Seamoth, unlockType = Story.UnlockBlueprintData.UnlockType.Available},
+                new UnlockBlueprintData() {techType = TechType.Seamoth, unlockType = Story.UnlockBlueprintData.UnlockType.Available},
             });
         }
 
