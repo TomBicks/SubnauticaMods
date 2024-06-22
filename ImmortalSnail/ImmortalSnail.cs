@@ -8,6 +8,7 @@ using System.Collections;
 using UWE;
 using Nautilus.Handlers;
 using Story;
+using static GameInput;
 
 namespace ImmortalSnail
 {
@@ -21,6 +22,9 @@ namespace ImmortalSnail
             MainCameraControl.main.ShakeCamera(4f, 8f, MainCameraControl.ShakeMode.Quadratic, 1.2f); //This Works!
             WorldForces.AddExplosion(new Vector3(0f, 0f, 0f), (double)new Utils.ScalarMonitor(0f).Get(), 8f, 5000f);
             CoroutineHost.StartCoroutine(GetBombPrefab());
+
+            //Register Story Goals for the mod
+            RegisterStoryGoals();
 
             //If bomb has been released, make sure it's not in the glass case, and that the glass case is breached
             BreakContainer();
@@ -54,54 +58,59 @@ namespace ImmortalSnail
         //So, if I want the message to be sent a bit after the explosion, even after the radiation suit unlock, I'd set it later than that???
         //I do want to release the bomb right after the explosion though; the PDA message just won't occur immediately as it happens.
 
-        private void RegisterStoryGoals()
+        private static void RegisterStoryGoals()
         {
             /*Story progression will be
              - Aurora explodes; thus condition is met to release and spawn the bomb
-             - PDA warning about the bomb will also be complete, with a delay
-             - After the warning, if the player has *also* scanned the bomb already, another PDA message will play,
-               telling the player that it's the bomb approaching them. Also grants them the HUD chip to locate it.  
+             - PDA warning about the bomb (though with no idea what it is) will also be complete, with a delay
+             - After the warning, once the bomb has gotten close enough to be rendered as an object, then a second PDA warning will be triggered,
+               telling the player that the PDA recognises it's a bomb and to avoid it at all costs
              */
-            //BUT!! What if the player hasn't scanned the bomb before it's released? Should I give the research to them after a set amount of time?
 
             #region Alien Bomb Released
-            //Register goal to display PDA warning message about the bomb a little bit after the Aurora explosion
-            StoryGoalHandler.RegisterCompoundGoal("AlienBombReleased", Story.GoalType.PDA, delay: 30f, requiredGoals: "auroraWarning4");
-            //Register PDA warning voice line (if I ever make a voice line; unlikely)
+            //Register story goal for when the bomb is released as a result of the Aurora exploding ('Story_AuroraWarning4' is the story goal for that)
+            StoryGoalHandler.RegisterCompoundGoal("AlienBombReleased", Story.GoalType.PDA, delay: 30f, requiredGoals: "Story_AuroraWarning4");
+            
+            //Set PDA message and voiceline to play when the bomb is released, warning *something* is coming
             //PDAHandler.AddLogEntry("AlienBombReleased", "AlienBombReleased", sound);
-            //Set the English translation for PDA bomb warning
-            LanguageHandler.SetLanguageLine("AlienBombReleased", "Warning. Detecting massive energy signature steadily approaching. Exercise caution.", "English");
-            //Spawn in the bomb at the mountains once the aurora has exploded
+            LanguageHandler.SetLanguageLine("AlienBombReleased", "Warning. Detecting massive energy signature steadily approaching. Continuing to monitor.", "English");
+            
+            //Activate the bomb tracking the player once it's released
             StoryGoalHandler.RegisterCustomEvent("AlienBombReleased", () =>
             {
-                //Code to spawn in the bomb at the mountains; will need to simulate it when not nearby the player, not unlike Persistent Reapers
+                //Code to activate/spawn in the bomb at the mountains; will need to simulate it when not nearby the player, not unlike Persistent Reapers
             });
             #endregion
 
-            #region Alien Bomb Scanned
-            //ERROR!! There is no goal for scans; have to determine another way to check if the bomb has been scanned
-            //This will likely require a story goal, that I trigger once a manual check if its been scanned or not completes.
-            //Register goal to display PDA message about the fact the approaching signal is the doomsday device
-            StoryGoalHandler.RegisterCompoundGoal("AlienBombScanned", Story.GoalType.PDA, delay: 30f, requiredGoals: "AlienBombReleased");
-            //Unlock the bomb detector HUD chip if the bomb has been released AND the player has scanned the bomb eariler, when it was in the case.
-            StoryGoalHandler.RegisterOnGoalUnlockData("AlienBombScanned", blueprints: new Story.UnlockBlueprintData[]
+            #region Alien Bomb Near
+            //Register story goal for when the bomb is near enough as to be rendered in for the first time (goal will be manually triggered by the bomb's tracking code)
+            //StoryGoalHandler.RegisterCompoundGoal("AlienBombNearby", Story.GoalType.PDA, delay: 5f, requiredGoals: "AlienBombReleased");
+            new StoryGoal("AlienBombNearby", Story.GoalType.PDA, delay: 5f);
+
+            //Set PDA message and voiceline to play when the bomb is nearby for the first time, warning the play to stay away from *whatever it is*
+            //PDAHandler.AddLogEntry("AlienBombNearby", "AlienBombNearby", sound);
+            LanguageHandler.SetLanguageLine("AlienBombNearby", "Emergency. Scans indicate approaching energy signature is locked onto your position and carries enough potential energy to destroy the entire planet. Avoid at all costs.", "English");
+            #endregion
+
+            #region Alien Bomb HUD Chip Ready
+            //Register story goal for when the bomb is first nearby, after a large delay
+            //NOTE!! delay will be larger than 120; just for testing purposes right now
+            StoryGoalHandler.RegisterCompoundGoal("AlienBombHUDChipReady", Story.GoalType.PDA, delay: 120f, requiredGoals: "AlienBombNearby");
+
+            //Unlock the bomb detector HUD chip, after a large delay of the player having to first deal with them being nearby
+            StoryGoalHandler.RegisterOnGoalUnlockData("AlienBombHUDChipReady", blueprints: new UnlockBlueprintData[]
             {
-                new UnlockBlueprintData() {techType = TechType.Seamoth, unlockType = Story.UnlockBlueprintData.UnlockType.Available},
+                //new UnlockBlueprintData() {techType = TechType.AlienBombHUDChip, unlockType = UnlockBlueprintData.UnlockType.Available}
+                new UnlockBlueprintData() {techType = TechType.MapRoomHUDChip, unlockType = UnlockBlueprintData.UnlockType.Available}
             });
+            #endregion
+
+            #region Alien Bomb HUD Chip Built
+            //Register story goal for when the HUD chip to track the bomb has been created, warning it can't accurately track its location, but can provide a roguh estimate every 30 minutes.
+            //StoryGoalHandler.RegisterItemGoal("AlienBombHUDChipBuilt", Story.GoalType.PDA, TechType.AlienBombHUDChip);
+            StoryGoalHandler.RegisterItemGoal("AlienBombHUDChipBuilt", Story.GoalType.PDA, TechType.MapRoomHUDChip);
             #endregion
         }
-
-        /*[HarmonyPatch(typeof(CrashedShipExploder), nameof(CrashedShipExploder.Update))]
-        [HarmonyPostfix]
-        //NOTE!! DON'T USE THIS; use Story Goals https://subnauticamodding.github.io/Nautilus/tutorials/story-goals.html
-        public static void PostfixCrashedShip(CrashedShipExploder __instance)
-        {
-            if (__instance.IsExploded())
-            {
-                ErrorMessage.AddMessage("Testing Explosion Hook");
-                logger.LogDebug("Testing Explosion Hook");
-            }
-        }*/
 
         private static IEnumerator GetBombPrefab()
         {
