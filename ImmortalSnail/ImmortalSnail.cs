@@ -139,17 +139,32 @@ namespace ImmortalSnail
             ErrorMessage.AddMessage($"{enterCollider} collided with bomb.");
             logger.LogDebug($"{enterCollider} collided with bomb.");
 
-            //Player collider (UnityEngine.CapsuleCollider) is a component of the player GameObject
-            //So, how to detect it's the player colliding?
-            if(enterCollider == Player.mainCollider)
+            ErrorMessage.AddMessage($"{enterCollider.GetComponentInParent<Transform>().tag}");
+
+            //This detects the player in the water, but not on land; different colliders
+            /*if (enterCollider == Player.mainCollider)
             {
                 ErrorMessage.AddMessage("Can confirm it was the player!");
                 MainCameraControl.main.ShakeCamera(4f, 8f, MainCameraControl.ShakeMode.Quadratic, 1.2f); //This Works!
                 WorldForces.AddExplosion(new Vector3(0f, 0f, 0f), (double)new Utils.ScalarMonitor(0f).Get(), 8f, 5000f);
+                WorldForces.AddExplosion(default(Vector3), DayNightCycle.main.timePassed, 100f, 20f);
             }
             else
             {
                 ErrorMessage.AddMessage("Wasn't the player!");
+            }*/
+
+            if (enterCollider.GetComponentInParent<Transform>().tag == "Player")
+            {
+                ErrorMessage.AddMessage("Can confirm it was the player!");
+                MainCameraControl.main.ShakeCamera(4f, 8f, MainCameraControl.ShakeMode.Quadratic, 1.2f); //This Works!
+                WorldForces.AddExplosion(new Vector3(0f, 0f, 0f), (double)new Utils.ScalarMonitor(0f).Get(), 8f, 5000f);
+                WorldForces.AddExplosion(default(Vector3), DayNightCycle.main.timePassed, 100f, 20f);
+            }
+            else
+            {
+                ErrorMessage.AddMessage("Wasn't the player!");
+
             }
         }
 
