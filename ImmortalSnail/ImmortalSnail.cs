@@ -3,12 +3,12 @@ using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
 using static ImmortalSnail.ImmortalSnailPlugin;
+using static ImmortalSnail.AlienBombManager;
 using UnityEngine;
 using System.Collections;
 using UWE;
 using Nautilus.Handlers;
 using Story;
-using static GameInput;
 
 namespace ImmortalSnail
 {
@@ -42,21 +42,8 @@ namespace ImmortalSnail
         {
             //prefabKey for the basic alien container is 'WorldEntities/Doodads/Precursor/Precursor_lab_container_01.prefab'
             //Unsure if there's a broken version of it though'
+            //Can probably disable the glass of the lab container and rotate the top half to be on the ground nearby, as if the glass broke and the top 'fell off'?
         }
-
-        //NOTE!! The 'RadioRadiationSuit' message is triggered as soon as the player leaves the lifepod, with a delay of '21600'.
-        //This is likely the same amount of time it takes for the Aurora to explode.
-        //Then, when it has exploded, a 'UnlockRadiationSuit' Story goal triggers with a delay of 40
-        //a 'RadSuit' Encyclopedia goal triggers with a delay of 3
-        //a 'Goal_UnlockRadSuit' PDA goal triggers with a delay of 0
-        //So, what this means is; after 21600 ticks, the Aurora explodes, triggering whatever this radio message is???
-        //Then, it plays the PDA message immediately, followed 3 seconds later by the recipe unlocking.
-
-        //It's unclear where the 40 delay one triggers though, or what its purpose is?
-        //Perhaps it is started as the explosion begins, so 40 seconds after the explosion, the other two goals are triggered?
-
-        //So, if I want the message to be sent a bit after the explosion, even after the radiation suit unlock, I'd set it later than that???
-        //I do want to release the bomb right after the explosion though; the PDA message just won't occur immediately as it happens.
 
         private static void RegisterStoryGoals()
         {
@@ -79,6 +66,8 @@ namespace ImmortalSnail
             StoryGoalHandler.RegisterCustomEvent("AlienBombReleased", () =>
             {
                 //Code to activate/spawn in the bomb at the mountains; will need to simulate it when not nearby the player, not unlike Persistent Reapers
+                //This effectively activates the mod altogether
+
             });
             #endregion
 
@@ -138,6 +127,9 @@ namespace ImmortalSnail
 
             //Register the Immortal Snail to the game
             immortalSnail.Register();
+
+            //Set the prefab for the bomb
+            bombPrefab = resultPrefab;
         }
 
         [HarmonyPatch(typeof(PlayerTriggerAnimation), nameof(PlayerTriggerAnimation.OnTriggerEnter))]

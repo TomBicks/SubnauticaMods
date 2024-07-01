@@ -72,6 +72,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlienBombManager.cs" />
     <Compile Include="ImmortalSnailPlugin.cs" />
     <Compile Include="ImmortalSnail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
