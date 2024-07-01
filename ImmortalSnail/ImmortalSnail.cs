@@ -19,8 +19,6 @@ namespace ImmortalSnail
         [HarmonyPostfix]
         public static void PostfixPlayer(Player __instance)
         {
-            MainCameraControl.main.ShakeCamera(4f, 8f, MainCameraControl.ShakeMode.Quadratic, 1.2f); //This Works!
-            WorldForces.AddExplosion(new Vector3(0f, 0f, 0f), (double)new Utils.ScalarMonitor(0f).Get(), 8f, 5000f);
             CoroutineHost.StartCoroutine(GetBombPrefab());
 
             //Register Story Goals for the mod
@@ -128,8 +126,10 @@ namespace ImmortalSnail
             //Register the Immortal Snail to the game
             immortalSnail.Register();
 
-            //Set the prefab for the bomb
+            //Set the prefab for the bomb for the bomb manager
             bombPrefab = resultPrefab;
+
+            SpawnBomb();
         }
 
         [HarmonyPatch(typeof(PlayerTriggerAnimation), nameof(PlayerTriggerAnimation.OnTriggerEnter))]
@@ -138,6 +138,19 @@ namespace ImmortalSnail
         {
             ErrorMessage.AddMessage($"{enterCollider} collided with bomb.");
             logger.LogDebug($"{enterCollider} collided with bomb.");
+
+            //Player collider (UnityEngine.CapsuleCollider) is a component of the player GameObject
+            //So, how to detect it's the player colliding?
+            if(enterCollider == Player.mainCollider)
+            {
+                ErrorMessage.AddMessage("Can confirm it was the player!");
+                MainCameraControl.main.ShakeCamera(4f, 8f, MainCameraControl.ShakeMode.Quadratic, 1.2f); //This Works!
+                WorldForces.AddExplosion(new Vector3(0f, 0f, 0f), (double)new Utils.ScalarMonitor(0f).Get(), 8f, 5000f);
+            }
+            else
+            {
+                ErrorMessage.AddMessage("Wasn't the player!");
+            }
         }
 
         private static void EditBombPrefab(GameObject bombPrefab)
