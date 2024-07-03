@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreatureConfigHealthLite", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImmortalSnail", "ImmortalSnail\ImmortalSnail.csproj", "{55531F4B-243B-4E45-9031-630CF58E7445}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreatureConfigSize", "CreatureConfigSize\CreatureConfigSize.csproj", "{2234052C-2AD9-4A16-B7E9-B6F82619F9AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{55531F4B-243B-4E45-9031-630CF58E7445}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55531F4B-243B-4E45-9031-630CF58E7445}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55531F4B-243B-4E45-9031-630CF58E7445}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2234052C-2AD9-4A16-B7E9-B6F82619F9AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2234052C-2AD9-4A16-B7E9-B6F82619F9AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2234052C-2AD9-4A16-B7E9-B6F82619F9AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2234052C-2AD9-4A16-B7E9-B6F82619F9AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
