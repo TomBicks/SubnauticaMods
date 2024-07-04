@@ -8,12 +8,17 @@ namespace CreatureConfigSize
     [HarmonyPatch]
     internal class CreatureConfigSize
     {
-        //NOTE!! Whilst this will require less lines of code, it won't make it more efficient by any means; likely worse! So, don't continue with this jagged array; use the switch case
-        /*static readonly TechType[][] CreatureSizeReference = {
-            new TechType[] {TechType.Peeper, TechType.Bladderfish},
-            new TechType[] {TechType.Sandshark, TechType.Stalker},
-            new TechType[] {TechType.ReaperLeviathan, TechType.GhostLeviathan}
-        };*/
+        //NOTE!! Whilst this won't make it more efficient, requiring more checks, surely making the code cleaner and more legible is better (can't imagine this would even remotely tank performance)
+        //NOTE!! However, I won't be using it forever until I'm sure the switch case statement isn't more helpful, for things unique to each creature
+        static readonly TechType[][] CreatureSizeReference = {
+            new TechType[] {TechType.Biter, TechType.Bladderfish, TechType.Bleeder, TechType.Blighter, TechType.Shuttlebug, TechType.Boomerang, TechType.CaveCrawler, TechType.Crash, 
+                TechType.Eyeye, TechType.Floater, TechType.GarryFish, TechType.HoleFish, TechType.Hoopfish, TechType.Hoverfish, TechType.LavaBoomerang, TechType.LavaLarva, TechType.Mesmer, 
+                TechType.Oculus, TechType.Peeper, TechType.LavaEyeye, TechType.Reginald, TechType.Skyray, TechType.Spadefish, TechType.Spinefish, TechType.Jumper},
+            new TechType[] {TechType.Shocker, TechType.BoneShark, TechType.Crabsnake, TechType.CrabSquid, TechType.Cutefish, TechType.GhostRayRed, TechType.Gasopod, TechType.GhostRayBlue, 
+                TechType.Jellyray, TechType.LavaLizard, TechType.RabbitRay, TechType.SpineEel, TechType.Sandshark, TechType.SeaEmperorBaby, TechType.Stalker, TechType.Warper},
+            new TechType[] {TechType.GhostLeviathan, TechType.GhostLeviathanJuvenile, TechType.ReaperLeviathan, TechType.SeaDragon, TechType.SeaEmperor, TechType.SeaEmperorJuvenile, 
+                TechType.SeaTreader}
+        };
 
     [HarmonyPatch(typeof(Creature), nameof(Creature.Start))]
         [HarmonyPostfix] //Postfix means less chance of missing setting any creatures' size
@@ -32,10 +37,11 @@ namespace CreatureConfigSize
                 float modifier = 1.0f;
 
                 //Use switch to determine the size of the creature and what modifier to retrieve (as different sizes use different min and max range)
+                //NOTE!! If i use the reference array above, this switch statement would *only* be for unique changes made!
                 //NOTE!! Can also use this for any changes unique to the creature we need to make, if any; probably jsut for leviathans
                 switch (techType)
                 {
-                    //Small Fauna
+                    #region Small Fauna
                     case TechType.Bladderfish:
                         modifier = GetSmallSizeModifier();
                         break;
@@ -78,6 +84,7 @@ namespace CreatureConfigSize
                     case TechType.Spinefish:
                         modifier = GetSmallSizeModifier();
                         break;
+                    #endregion
 
                     case TechType.ReaperLeviathan:
                         //NOTE!! If I want to deal with velocity, will have to deal with leash movement of leviathans too
@@ -105,11 +112,8 @@ namespace CreatureConfigSize
             //We'll divide them back down by 10 after we've gotten a random integer
             ErrorMessage.AddDebug($"Generating random size for small creature, between {config.SmallCreatureMinSize} and {config.SmallCreatureMaxSize}");
             var modifierByTen = rand.Next((int)config.SmallCreatureMinSize * 10, (int)config.SmallCreatureMaxSize * 10);
-            ErrorMessage.AddDebug($"{modifierByTen}");
-
             //Divide the modifier back down by 10, meaning we have a modifier to 1 decimal place.
             var modifier = (float)modifierByTen / 10;
-            ErrorMessage.AddDebug($"{modifier}");
 
             return modifier;
         }
@@ -124,10 +128,8 @@ namespace CreatureConfigSize
             ErrorMessage.AddDebug($"Generating random size for medium creature, between {config.MedCreatureMinSize} and {config.MedCreatureMaxSize}");
             var modifierByTen = rand.Next((int)config.MedCreatureMinSize * 10, (int)config.MedCreatureMaxSize * 10);
 
-            ErrorMessage.AddDebug($"{modifierByTen}");
             //Divide the modifier back down by 10, meaning we have a modifier to 1 decimal place.
             var modifier = (float)modifierByTen / 10;
-            ErrorMessage.AddDebug($"{modifier}");
 
             return modifier;
         }
@@ -141,15 +143,9 @@ namespace CreatureConfigSize
             //We'll divide them back down by 10 after we've gotten a random integer
             ErrorMessage.AddDebug($"Generating random size for large creature, between {config.LargeCreatureMinSize} and {config.LargeCreatureMaxSize}");
             var modifierByTen = rand.Next((int)config.LargeCreatureMinSize * 10, (int)config.LargeCreatureMaxSize * 10);
-            ErrorMessage.AddDebug($"{modifierByTen}");
+
             //Divide the modifier back down by 10, meaning we have a modifier to 1 decimal place.
             var modifier = (float)modifierByTen / 10;
-            ErrorMessage.AddDebug($"{modifier}");
-
-
-            //This returns a value between 0.1 and 1
-            //var roundResult = Math.Round(rand.NextDouble(), 1, MidpointRounding.AwayFromZero);
-            //ErrorMessage.AddDebug($"{roundResult}");
 
             return modifier;
         }
