@@ -20,7 +20,7 @@ namespace CreatureConfigSize
                 TechType.SeaTreader}
         };
 
-    [HarmonyPatch(typeof(Creature), nameof(Creature.Start))]
+        [HarmonyPatch(typeof(Creature), nameof(Creature.Start))]
         [HarmonyPostfix] //Postfix means less chance of missing setting any creatures' size
         public static void PostCreatureStart(Creature __instance)
         {
@@ -36,65 +36,35 @@ namespace CreatureConfigSize
 
                 float modifier = 1.0f;
 
-                //Use switch to determine the size of the creature and what modifier to retrieve (as different sizes use different min and max range)
+                int sizeClass = GetCreatureSizeClass(techType);
+
+                switch(sizeClass)
+                {
+                    case (int)SizeClass.Small:
+                        modifier = GetSmallSizeModifier();
+                        break;
+                    case (int)SizeClass.Medium:
+                        modifier = GetMedSizeModifier();
+                        break;
+                    case (int)SizeClass.Large:
+                        modifier = GetLargeSizeModifier();
+                        break;
+                    default:
+                        logger.LogWarning($"Error! Could not retrieve size class for TechType {techType}!");
+                        break;
+                }
+
                 //NOTE!! If i use the reference array above, this switch statement would *only* be for unique changes made!
                 //NOTE!! Can also use this for any changes unique to the creature we need to make, if any; probably jsut for leviathans
                 switch (techType)
                 {
-                    #region Small Fauna
-                    case TechType.Bladderfish:
-                        modifier = GetSmallSizeModifier();
-                        break;
-                    case TechType.Boomerang:
-                        modifier = GetSmallSizeModifier();
-                        break;
-                    case TechType.Eyeye:
-                        modifier = GetSmallSizeModifier();
-                        break;
-                    case TechType.GarryFish:
-                        modifier = GetSmallSizeModifier();
-                        break;
-                    case TechType.HoleFish:
-                        modifier = GetSmallSizeModifier();
-                        break;
-                    case TechType.Hoopfish:
-                        modifier = GetSmallSizeModifier();
-                        break;
-                    case TechType.Hoverfish:
-                        modifier = GetSmallSizeModifier();
-                        break;
-                    case TechType.LavaBoomerang: //TechType for Magmarang
-                        modifier = GetSmallSizeModifier();
-                        break;
-                    case TechType.Oculus:
-                        modifier = GetSmallSizeModifier();
-                        break;
-                    case TechType.Peeper:
-                        modifier = GetSmallSizeModifier();
-                        break;
-                    case TechType.LavaEyeye: //TechType for Red Eyeye
-                        modifier = GetSmallSizeModifier();
-                        break;
-                    case TechType.Reginald:
-                        modifier = GetSmallSizeModifier();
-                        break;
-                    case TechType.Spadefish:
-                        modifier = GetSmallSizeModifier();
-                        break;
-                    case TechType.Spinefish:
-                        modifier = GetSmallSizeModifier();
-                        break;
-                    #endregion
-
                     case TechType.ReaperLeviathan:
                         //NOTE!! If I want to deal with velocity, will have to deal with leash movement of leviathans too
                         //NOTE!! Perhaps I can increase the speed of the leviathan, whilst inversely decreasing the turning speed of it, as it gets larger?
                         //Probably no need to increase the turning speed of smaller leviathans; they seem to get buggy when it's put above 3
                         //If they're faster larger, do I need to increase their leash distance a bit? Is that dangerous?
-                        modifier = GetLargeSizeModifier();
                         break;
                     default:
-                        modifier = 3.0f;
                         break;
                 }
 
@@ -103,7 +73,35 @@ namespace CreatureConfigSize
             }
         }
 
-        private static float GetSmallSizeModifier()
+        //Just an easier way to read the sizeClass of the creatures
+        public enum SizeClass { Small, Medium, Large }
+
+        private static int GetCreatureSizeClass(TechType techType)
+        {
+            //Return -1 if no size class can be found in the reference array
+            var size = -1;
+
+            //Try to get the size class of the given TechType
+            for(var i = 0; i < 3; i++)
+            {
+                for(var j = 0; j < CreatureSizeReference[i].Length; j++)
+                {
+                    if (CreatureSizeReference[i][j] == techType)
+                    {
+                        //We return i as the size class, as it refers to which of the 3 size arrays we found the TechType match in
+                        //We use the SizeClass array in future references, for legibility
+                        size = i;
+                        break;
+                    }
+                }
+                //No need to continue the loop if we've found our match
+                if (size != -1) { break; }
+            }
+
+            return size;
+        }
+
+    private static float GetSmallSizeModifier()
         {
             //Return a random size between the min and max set for leviathan-size creatures
             System.Random rand = new System.Random();
