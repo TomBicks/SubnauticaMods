@@ -43,10 +43,25 @@ namespace CreatureConfigSize
                 switch (techType)
                 {
                     case TechType.ReaperLeviathan:
+                        #region Notes about creature properties
                         //NOTE!! If I want to deal with velocity, will have to deal with leash movement of leviathans too
                         //NOTE!! Perhaps I can increase the speed of the leviathan, whilst inversely decreasing the turning speed of it, as it gets larger?
                         //Probably no need to increase the turning speed of smaller leviathans; they seem to get buggy when it's put above 3
                         //If they're faster larger, do I need to increase their leash distance a bit? Is that dangerous?
+
+                        //Regarding pitch, which can be set, 0.8 is the deepest without being ridiculous I think, same for 1.4 or 1.3 for highest
+                        //Volume can be changed too
+                        //Only issue with pitch is the audio is quicker or slower based on it, so it can loop back on itself by the looks
+                        //Under FMOD CustomLoopingEventWithCallback, triggering on the Roar animation
+                        //Then the eventInstance 'evt' was where I changed the sound parameters
+
+                        //Seems there are two values to determine for movement speed; moveForward and velocity
+                        //it seems velocity caps how fast the creature can move, whilst forward is perhaps the forward momentum it can generate?
+                        //So it keeps moving forward, up to the velocity limit?
+
+                        //Some example code for how it might work altering a creature based on its modifier
+                        //creature.gameObject.GetComponent<FMOD_CustomEmitter>().evt.
+                        #endregion
                         break;
                     default:
                         break;
@@ -79,9 +94,9 @@ namespace CreatureConfigSize
                 {
                     if (CreatureSizeReference[i][j] == techType)
                     {
-                        //We return i as the size class, as it refers to which of the 3 size arrays we found the TechType match in
+                        //We return i (+1 as None is 0) as the size class, as it refers to which of the 3 size arrays we found the TechType match in
                         //We use the SizeClass array in future references, for legibility
-                        sizeClass = (SizeClass)i;
+                        sizeClass = (SizeClass)(i+1); //This turns the int result into its appropriate enum counterpart; e.g. 1 becomes SizeClass.Small
                         break;
                     }
                 }
@@ -147,7 +162,7 @@ namespace CreatureConfigSize
             //Return an int value, between min and max values, both multiplied by 10
             //We both by 10, so that we can get the numbers unbetween 1 & 2, or 10 and 20 here
             //We'll divide them back down by 10 after we've gotten a random integer
-            var modifierByTen = rand.Next((int)config.LargeCreatureMinSize * 10, (int)config.LargeCreatureMaxSize * 10);
+            var modifierByTen = rand.Next((int)(config.LargeCreatureMinSize * 10), (int)(config.LargeCreatureMaxSize * 10));
 
             //Divide the modifier back down by 10, meaning we have a modifier to 1 decimal place.
             var modifier = (float)modifierByTen / 10;
