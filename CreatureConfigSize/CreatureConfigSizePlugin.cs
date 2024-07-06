@@ -32,24 +32,29 @@ namespace CreatureConfigSize
     [Menu("Creature Config - Size")]
     public class Config : Nautilus.Json.ConfigFile
     {
+        [Toggle("Enable precise size customisation?",
+            Tooltip = "Enable precise changes to size range of each creature, which can be changed in the config file for this mod. If unchecked, will use the size range options below.")]
+        public bool PreciseEnabled = false;
+
         //NOTE!! May use these for the 'simple' option, where the user *doesn't* customise every single creature
-        [Slider("Small Creature Minimum Size", Min = 0.1f, Max = 1f, DefaultValue = 1f, Step = 0.1f, Id = "SmallCreatureMinSize",
-            Tooltip = "Minimum size modifier of small-size creatures. For example, a value of '0.5' would make the minimum size half as small as the base size.")]
+        //TODO!! Make it clear it's a random valueb between the min amd max ranges
+        [Slider("Small Creature Minimum Size", Min = 0.1f, Max = 1f, DefaultValue = 1f, Step = 0.1f, Format = "{0:F1}", Id = "SmallCreatureMinSize",
+            Tooltip = "Minimum size modifier of small creatures. Will be randomly generated between this and the maximum size, then multiplied against the creature's base size.")]
         public float SmallCreatureMinSize = 1f;
         [Slider("Small Creature Maximum Size", Min = 1f, Max = 4f, DefaultValue = 1f, Step = 0.1f, Id = "SmallCreatureMaxSize",
-            Tooltip = "Maximum size modifier of small-size creatures. For example, a value of '2' would make the maximum size twice as big as the base size.")]
+            Tooltip = "Maximum size modifier of small creatures. Will be randomly generated between this and the minimum size, then multiplied against the creature's base size.")]
         public float SmallCreatureMaxSize = 1f;
         [Slider("Medium Creature Minimum Size", Min = 0.1f, Max = 1f, DefaultValue = 1f, Step = 0.1f, Id = "MedCreatureMinSize",
-            Tooltip = "Minimum size modifier of medium-size creatures. For example, a value of '0.5' would make the minimum size half as small as the base size.")]
+            Tooltip = "Minimum size modifier of medium creatures. Will be randomly generated between this and the maximum size, then multiplied against the creature's base size.")]
         public float MedCreatureMinSize = 1f;
         [Slider("Medium Creature Maximum Size", Min = 1f, Max = 4f, DefaultValue = 1f, Step = 0.1f, Id = "MedCreatureMaxSize",
-            Tooltip = "Minimum size modifier of medium-size creatures. For example, a value of '2' would make the maximum size twice as big as the base size.")]
+            Tooltip = "Maximum size modifier of medium creatures. Will be randomly generated between this and the minimum size, then multiplied against the creature's base size.")]
         public float MedCreatureMaxSize = 1f;
         [Slider("Large Creature Minimum Size", Min = 0.1f, Max = 1f, DefaultValue = 1f, Step = 0.1f, Id = "LargeCreatureMinSize",
-            Tooltip = "Minimum size modifier of leviathan-size creatures. For example, a value of '0.5' would make the minimum size half as small as the base size.")]
+            Tooltip = "Minimum size modifier of large creatures. Will be randomly generated between this and the maximum size, then multiplied against the creature's base size.")]
         public float LargeCreatureMinSize = 1f;
         [Slider("Large Creature Maximum Size", Min = 1f, Max = 4f, DefaultValue = 1f, Step = 0.1f, Id = "LargeCreatureMaxSize",
-            Tooltip = "Maximum size modifier of leviathan-size creatures. For example, a value of '2' would make the maximum size twice as big as the base size.")]
+            Tooltip = "Maximum size modifier of large creatures. Will be randomly generated between this and the minimum size, then multiplied against the creature's base size.")]
         public float LargeCreatureMaxSize = 1f;
 
         //NOTE!! May use this for the 'complex' option, where the user *can* customise every single creature
@@ -59,7 +64,6 @@ namespace CreatureConfigSize
         //NOTE!! The default min and max here is 0.9 and 1.1, so that the decimals show up in the text file and the user is aware they can set them to decimals
         public Dictionary<TechType, (float, float)> sizeReference = new Dictionary<TechType, (float, float)>()
         {
-            { TechType.Biter, (0.9f,1.1f) },
             { TechType.Biter, (0.9f,1.1f) },
             { TechType.Bladderfish, (0.9f,1.1f) },
             { TechType.Bleeder, (0.9f,1.1f) },

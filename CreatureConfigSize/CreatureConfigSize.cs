@@ -107,13 +107,13 @@ namespace CreatureConfigSize
                     switch (sizeClass)
                     {
                         case SizeClass.Small:
-                            modifier = GetSmallSizeModifier();
+                            modifier = GetSizeModifier(config.SmallCreatureMinSize, config.SmallCreatureMaxSize);
                             break;
                         case SizeClass.Medium:
-                            modifier = GetMedSizeModifier();
+                            modifier = GetSizeModifier(config.MedCreatureMinSize, config.MedCreatureMaxSize);
                             break;
                         case SizeClass.Large:
-                            modifier = GetLargeSizeModifier();
+                            modifier = GetSizeModifier(config.LargeCreatureMinSize, config.LargeCreatureMaxSize);
                             break;
                     }
                 }
@@ -127,43 +127,15 @@ namespace CreatureConfigSize
             return modifier;
         }
 
-    private static float GetSmallSizeModifier()
+    private static float GetSizeModifier(float minSize, float maxSize)
         {
-            //Return a random size between the min and max set for leviathan-size creatures
+            //Return a random size between the min and max
             System.Random rand = new System.Random();
+
             //Return an int value, between min and max values, both multiplied by 10
-            //We both by 10, so that we can get the numbers unbetween 1 & 2, or 10 and 20 here
+            //NOTE!! We multiply both by 10, so that we can get the numbers unbetween 1 & 2, or 10 and 20 here
             //We'll divide them back down by 10 after we've gotten a random integer
-            var modifierByTen = rand.Next((int)config.SmallCreatureMinSize * 10, (int)config.SmallCreatureMaxSize * 10);
-            //Divide the modifier back down by 10, meaning we have a modifier to 1 decimal place.
-            var modifier = (float)modifierByTen / 10;
-
-            return modifier;
-        }
-
-        private static float GetMedSizeModifier()
-        {
-            //Return a random size between the min and max set for leviathan-size creatures
-            System.Random rand = new System.Random();
-            //Return an int value, between min and max values, both multiplied by 10
-            //We both by 10, so that we can get the numbers unbetween 1 & 2, or 10 and 20 here
-            //We'll divide them back down by 10 after we've gotten a random integer
-            var modifierByTen = rand.Next((int)config.MedCreatureMinSize * 10, (int)config.MedCreatureMaxSize * 10);
-
-            //Divide the modifier back down by 10, meaning we have a modifier to 1 decimal place.
-            var modifier = (float)modifierByTen / 10;
-
-            return modifier;
-        }
-
-        private static float GetLargeSizeModifier()
-        {
-            //Return a random size between the min and max set for leviathan-size creatures
-            System.Random rand = new System.Random();
-            //Return an int value, between min and max values, both multiplied by 10
-            //We both by 10, so that we can get the numbers unbetween 1 & 2, or 10 and 20 here
-            //We'll divide them back down by 10 after we've gotten a random integer
-            var modifierByTen = rand.Next((int)(config.LargeCreatureMinSize * 10), (int)(config.LargeCreatureMaxSize * 10));
+            var modifierByTen = rand.Next((int)(minSize * 10), (int)(maxSize * 10));
 
             //Divide the modifier back down by 10, meaning we have a modifier to 1 decimal place.
             var modifier = (float)modifierByTen / 10;
