@@ -62,6 +62,7 @@ namespace CreatureConfigSize
                         //Some example code for how it might work altering a creature based on its modifier
                         //creature.gameObject.GetComponent<FMOD_CustomEmitter>().evt.
                         #endregion
+                        creature.AddComponent<Pickupable>();
                         break;
                     default:
                         break;
