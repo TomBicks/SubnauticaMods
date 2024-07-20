@@ -37,66 +37,81 @@ namespace CreatureConfigSize
                 float modifier = GetCreatureSizeModifier(techType); ;
 
                 //Once we've retrieved the modifier, apply the change to size, by the modifier
-                ChangeSize(creature, modifier);
-
-                ErrorMessage.AddMessage($"Size of {techType} = {GetSize(creature)}");
-
-                //NOTE!! If i use the reference array above, this switch statement would *only* be for unique changes made!
-                //NOTE!! Can also use this for any changes unique to the creature we need to make, if any; probably jsut for leviathans
-                switch (techType)
+                //NOTE!! I wonder if there's a way to save the new size between loading and saving? It's clear they still randomise when loading it, from Start...unless I'm doing that?
+                //Is there a way to check if I've already randomised this creature's size?
+                //YES!! I AM THE ONE CHANGING IT!! So I'm re-randomising every time, but the size is totally saved. So if I check if it's not size 1.0 local scale, than it'll work!
+                if (GetSize(creature) == 1)
                 {
-                    case TechType.ReaperLeviathan:
-                        #region Notes about creature properties
-                        //NOTE!! If I want to deal with velocity, will have to deal with leash movement of leviathans too
-                        //NOTE!! Perhaps I can increase the speed of the leviathan, whilst inversely decreasing the turning speed of it, as it gets larger?
-                        //Probably no need to increase the turning speed of smaller leviathans; they seem to get buggy when it's put above 3
-                        //If they're faster larger, do I need to increase their leash distance a bit? Is that dangerous?
+                    ChangeSize(creature, modifier);
+                    ErrorMessage.AddMessage("Changing Size");
 
-                        //Regarding pitch, which can be set, 0.8 is the deepest without being ridiculous I think, same for 1.4 or 1.3 for highest
-                        //Volume can be changed too
-                        //Only issue with pitch is the audio is quicker or slower based on it, so it can loop back on itself by the looks
-                        //Under FMOD CustomLoopingEventWithCallback, triggering on the Roar animation
-                        //Then the eventInstance 'evt' was where I changed the sound parameters
+                    ErrorMessage.AddMessage($"Size of {techType} = {GetSize(creature)}");
 
-                        //Seems there are two values to determine for movement speed; moveForward and velocity
-                        //it seems velocity caps how fast the creature can move, whilst forward is perhaps the forward momentum it can generate?
-                        //So it keeps moving forward, up to the velocity limit?
+                    //NOTE!! If i use the reference array above, this switch statement would *only* be for unique changes made!
+                    //NOTE!! Can also use this for any changes unique to the creature we need to make, if any; probably jsut for leviathans
+                    switch (techType)
+                    {
+                        case TechType.ReaperLeviathan:
+                            #region Notes about creature properties
+                            //NOTE!! If I want to deal with velocity, will have to deal with leash movement of leviathans too
+                            //NOTE!! Perhaps I can increase the speed of the leviathan, whilst inversely decreasing the turning speed of it, as it gets larger?
+                            //Probably no need to increase the turning speed of smaller leviathans; they seem to get buggy when it's put above 3
+                            //If they're faster larger, do I need to increase their leash distance a bit? Is that dangerous?
 
-                        //Some example code for how it might work altering a creature based on its modifier
-                        //creature.gameObject.GetComponent<FMOD_CustomEmitter>().evt.setParameterValue("volume", 2.5f);
-                        #endregion
-                        //creature.AddComponent<Pickupable>();
-                        break;
-                    default:
-                        break;
-                }
+                            //Regarding pitch, which can be set, 0.8 is the deepest without being ridiculous I think, same for 1.4 or 1.3 for highest
+                            //Volume can be changed too
+                            //Only issue with pitch is the audio is quicker or slower based on it, so it can loop back on itself by the looks
+                            //Under FMOD CustomLoopingEventWithCallback, triggering on the Roar animation
+                            //Then the eventInstance 'evt' was where I changed the sound parameters
 
-                //If suitable size for alien containment, make pickupable and update WaterParkCreature component
-                if (creature.GetComponent<Pickupable>() == null)
-                {
-                    creature.AddComponent<Pickupable>();
-                }
+                            //Seems there are two values to determine for movement speed; moveForward and velocity
+                            //it seems velocity caps how fast the creature can move, whilst forward is perhaps the forward momentum it can generate?
+                            //So it keeps moving forward, up to the velocity limit?
 
-                //NOTE!! USE REF LIKE YOU DID WITH DAMAGE! IT HELPS FIX THE PRIVACY ISSUE
-                //https://www.geeksforgeeks.org/ref-in-c-sharp/
-                //NOTE!! Creatures in containment will not trigger Creature.Start when loading in; they will only when released from the inventory
-                if (creature.GetComponent<WaterParkCreature>() != null)
-                {
-                    //According to Indigo, I might be able to duplicate the data, change the values, and assign it back to the changed fish; worth a shot
-                    WaterParkCreatureData newData = ScriptableObject.CreateInstance<WaterParkCreatureData>();
-                    //newData = creature.GetComponent<WaterParkCreature>().data;
+                            //Some example code for how it might work altering a creature based on its modifier
+                            //creature.gameObject.GetComponent<FMOD_CustomEmitter>().evt.setParameterValue("volume", 2.5f);
 
-                    SetWaterPark(ref newData, GetSize(creature));
+                            //REGARDING SIZE - 0.1 or 0.2 for a reaper, making them 0.06 or 0.12 in scale in the alien containment, is the max size, anything above that will not fit, and thus cannot be picked up
+                            #endregion
+                            if(modifier <= 0.2)
+                            {
+                                creature.AddComponent<Pickupable>();
+                            }
+                            break;
+                        default:
+                            break;
+                    }
 
-                    //newData.name = creature.GetComponent<WaterParkCreature>().data.name;
-                    //newData.initialSize = GetSize(creature);
-                    //newData.maxSize = GetSize(creature);
+                    //If suitable size for alien containment, make pickupable and update WaterParkCreature component
+                    if (creature.GetComponent<Pickupable>() == null)
+                    {
+                        creature.AddComponent<Pickupable>();
+                    }
 
-                    creature.GetComponent<WaterParkCreature>().data = newData;
-                }
-                else
-                {
-                    //creature.AddComponent<WaterParkCreature>();
+                    //NOTE!! USE REF LIKE YOU DID WITH DAMAGE! IT HELPS FIX THE PRIVACY ISSUE
+                    //https://www.geeksforgeeks.org/ref-in-c-sharp/
+                    //NOTE!! Creatures in containment will not trigger Creature.Start when loading in; they will only when released from the inventory
+                    if (creature.GetComponent<WaterParkCreature>() != null)
+                    {
+                        //According to Indigo, I might be able to duplicate the data, change the values, and assign it back to the changed fish; worth a shot
+                        WaterParkCreatureData newData = ScriptableObject.CreateInstance<WaterParkCreatureData>();
+                        //newData = creature.GetComponent<WaterParkCreature>().data;
+
+                        SetWaterPark(ref newData, GetSize(creature));
+
+                        //newData.name = creature.GetComponent<WaterParkCreature>().data.name;
+                        //newData.initialSize = GetSize(creature);
+                        //newData.maxSize = GetSize(creature);
+
+                        creature.GetComponent<WaterParkCreature>().data = newData;
+                    }
+                    else
+                    {
+                        creature.AddComponent<WaterParkCreature>();
+                        WaterParkCreatureData newData = ScriptableObject.CreateInstance<WaterParkCreatureData>();
+                        SetWaterPark(ref newData, GetSize(creature));
+                        creature.GetComponent<WaterParkCreature>().data = newData;
+                    }
                 }
             }
             else
