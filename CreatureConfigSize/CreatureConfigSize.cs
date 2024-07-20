@@ -1,8 +1,6 @@
 ﻿using HarmonyLib;
 using static CreatureConfigSize.CreatureConfigSizePlugin;
 using UnityEngine;
-using System;
-using static CreatureConfigSize.CreatureConfigSize;
 
 namespace CreatureConfigSize
 {
@@ -13,7 +11,7 @@ namespace CreatureConfigSize
         //NOTE!! However, I won't be using it forever until I'm sure the switch case statement isn't more helpful, for things unique to each creature
         static readonly TechType[][] CreatureSizeReference = {
             new TechType[] {TechType.Biter, TechType.Bladderfish, TechType.Bleeder, TechType.Blighter, TechType.Shuttlebug, TechType.Boomerang, TechType.CaveCrawler, TechType.Crash, 
-                TechType.Eyeye, TechType.Floater, TechType.GarryFish, TechType.HoleFish, TechType.Hoopfish, TechType.Hoverfish, TechType.LavaBoomerang, TechType.LavaLarva, TechType.Mesmer, 
+                TechType.Eyeye, TechType.Floater, TechType.GarryFish, TechType.HoleFish, TechType.Hoopfish, TechType.HoopfishSchool, TechType.Hoverfish, TechType.LavaBoomerang, TechType.LavaLarva, TechType.Mesmer, 
                 TechType.Oculus, TechType.Peeper, TechType.LavaEyeye, TechType.Reginald, TechType.Skyray, TechType.Spadefish, TechType.Spinefish, TechType.Jumper},
             new TechType[] {TechType.Shocker, TechType.BoneShark, TechType.Crabsnake, TechType.CrabSquid, TechType.Cutefish, TechType.GhostRayRed, TechType.Gasopod, TechType.GhostRayBlue, 
                 TechType.Jellyray, TechType.LavaLizard, TechType.RabbitRay, TechType.SpineEel, TechType.Sandshark, TechType.SeaEmperorBaby, TechType.Stalker, TechType.Warper},
@@ -30,13 +28,18 @@ namespace CreatureConfigSize
 
             TechType techType = CraftData.GetTechType(creature);
 
-            if(techType != TechType.None)
+            if (techType != TechType.None)
             {
-                logger.LogDebug($"Setting size of TechType {techType}");
-                ErrorMessage.AddDebug($"Setting size of TechType {techType}");
+                //logger.LogDebug($"Setting size of TechType {techType}");
+                //ErrorMessage.AddDebug($"Setting size of TechType {techType}");
 
                 //Generate a modifier based on the creature's size class, retrieved from the CreatureSizeReference array
                 float modifier = GetCreatureSizeModifier(techType); ;
+
+                //Once we've retrieved the modifier, apply the change to size, by the modifier
+                ChangeSize(creature, modifier);
+
+                ErrorMessage.AddMessage($"Size of {techType} = {GetSize(creature)}");
 
                 //NOTE!! If i use the reference array above, this switch statement would *only* be for unique changes made!
                 //NOTE!! Can also use this for any changes unique to the creature we need to make, if any; probably jsut for leviathans
@@ -60,16 +63,41 @@ namespace CreatureConfigSize
                         //So it keeps moving forward, up to the velocity limit?
 
                         //Some example code for how it might work altering a creature based on its modifier
-                        //creature.gameObject.GetComponent<FMOD_CustomEmitter>().evt.
+                        //creature.gameObject.GetComponent<FMOD_CustomEmitter>().evt.setParameterValue("volume", 2.5f);
                         #endregion
-                        creature.AddComponent<Pickupable>();
+                        //creature.AddComponent<Pickupable>();
                         break;
                     default:
                         break;
                 }
 
-                //Once we've retrieved the modifier, apply the change to size, by the modifier
-                ChangeSize(creature, modifier);
+                //If suitable size for alien containment, make pickupable and update WaterParkCreature component
+                if (creature.GetComponent<Pickupable>() == null)
+                {
+                    creature.AddComponent<Pickupable>();
+                }
+
+                //NOTE!! USE REF LIKE YOU DID WITH DAMAGE! IT HELPS FIX THE PRIVACY ISSUE
+                //https://www.geeksforgeeks.org/ref-in-c-sharp/
+                //NOTE!! Creatures in containment will not trigger Creature.Start when loading in; they will only when released from the inventory
+                if (creature.GetComponent<WaterParkCreature>() != null)
+                {
+                    //According to Indigo, I might be able to duplicate the data, change the values, and assign it back to the changed fish; worth a shot
+                    WaterParkCreatureData newData = ScriptableObject.CreateInstance<WaterParkCreatureData>();
+                    //newData = creature.GetComponent<WaterParkCreature>().data;
+
+                    SetWaterPark(ref newData, GetSize(creature));
+
+                    //newData.name = creature.GetComponent<WaterParkCreature>().data.name;
+                    //newData.initialSize = GetSize(creature);
+                    //newData.maxSize = GetSize(creature);
+
+                    creature.GetComponent<WaterParkCreature>().data = newData;
+                }
+                else
+                {
+                    //creature.AddComponent<WaterParkCreature>();
+                }
             }
             else
             {
@@ -77,57 +105,83 @@ namespace CreatureConfigSize
             }
         }
 
+        public static void SetWaterPark(ref WaterParkCreatureData data, float size)
+        {
+            //ERROR!! Whenever I edit any of these settings for a type of creature, it changes it for all the other instances of this creature!
+            //Do they share the same WaterParkCreatureData?
+            //NOTE!! Each particular creature shares a WaterParkCreatureData (e.g. Hoopfish_WaterParkCreatureData)
+            //This means two things; one, I can't change one SpineFish without changing the other, and two, I need to create one for the creatures that don't usually go in containment, like leviathans
+            data.initialSize = size * 0.1f;
+            data.maxSize = size * 0.6f;
+            data.outsideSize = size;
+        }
+
         //Just an easier way to read the sizeClass of the creatures
         public enum SizeClass { None, Small, Medium, Large }
 
         private static float GetCreatureSizeModifier(TechType techType)
         {
-            //Return 0 if no size class can be found in the reference array
-            var sizeClass = SizeClass.None;
-
             //Return a default modifier of 1 if no size class can be found in the reference array
             var modifier = 1.0f;
 
-            //Try to get the size class of the given TechType
-            for (var i = 0; i < 3; i++)
+            if (!config.ComplexSizeEnabled)
             {
-                for(var j = 0; j < CreatureSizeReference[i].Length; j++)
-                {
-                    if (CreatureSizeReference[i][j] == techType)
-                    {
-                        //We return i (+1 as None is 0) as the size class, as it refers to which of the 3 size arrays we found the TechType match in
-                        //We use the SizeClass array in future references, for legibility
-                        sizeClass = (SizeClass)(i+1); //This turns the int result into its appropriate enum counterpart; e.g. 1 becomes SizeClass.Small
-                        break;
-                    }
-                }
-                //If we found a size class, generate a modifier for it, then break from the loop
-                if (sizeClass != SizeClass.None)
-                {
-                    switch (sizeClass)
-                    {
-                        case SizeClass.Small:
-                            modifier = GetSizeModifier(config.SmallCreatureMinSize, config.SmallCreatureMaxSize);
-                            break;
-                        case SizeClass.Medium:
-                            modifier = GetSizeModifier(config.MedCreatureMinSize, config.MedCreatureMaxSize);
-                            break;
-                        case SizeClass.Large:
-                            modifier = GetSizeModifier(config.LargeCreatureMinSize, config.LargeCreatureMaxSize);
-                            break;
-                    }
-                }
-            }
+                #region Size Class Modifier
+                //Return 0 if no size class can be found in the reference array
+                var sizeClass = SizeClass.None;
 
-            if(sizeClass == SizeClass.None)
+                //Try to get the size class of the given TechType
+                for (var i = 0; i < 3; i++)
+                {
+                    for (var j = 0; j < CreatureSizeReference[i].Length; j++)
+                    {
+                        if (CreatureSizeReference[i][j] == techType)
+                        {
+                            //We return i (+1 as None is 0) as the size class, as it refers to which of the 3 size arrays we found the TechType match in
+                            //We use the SizeClass array in future references, for legibility
+                            sizeClass = (SizeClass)(i + 1); //This turns the int result into its appropriate enum counterpart; e.g. 1 becomes SizeClass.Small
+                            break;
+                        }
+                    }
+                    //If we found a size class, generate a modifier for it, then break from the loop
+                    if (sizeClass != SizeClass.None)
+                    {
+                        switch (sizeClass)
+                        {
+                            case SizeClass.Small:
+                                modifier = GenerateSizeModifier(config.SmallCreatureMinSize, config.SmallCreatureMaxSize);
+                                break;
+                            case SizeClass.Medium:
+                                modifier = GenerateSizeModifier(config.MedCreatureMinSize, config.MedCreatureMaxSize);
+                                break;
+                            case SizeClass.Large:
+                                modifier = GenerateSizeModifier(config.LargeCreatureMinSize, config.LargeCreatureMaxSize);
+                                break;
+                        }
+                    }
+                }
+
+                if (sizeClass == SizeClass.None)
+                {
+                    logger.LogWarning($"Error! Could not retrieve size class for TechType {techType}!");
+                }
+                #endregion
+            }
+            else
             {
-                logger.LogWarning($"Error! Could not retrieve size class for TechType {techType}!");
+                #region Complex Size Modifier
+                //Try to get the size range of the given TechType
+                if (config.sizeReference.ContainsKey(techType))
+                {
+                    //TODO!!
+                }
+                #endregion
             }
 
             return modifier;
         }
 
-    private static float GetSizeModifier(float minSize, float maxSize)
+        private static float GenerateSizeModifier(float minSize, float maxSize)
         {
             //Return a random size between the min and max
             System.Random rand = new System.Random();
@@ -145,7 +199,16 @@ namespace CreatureConfigSize
 
         private static void ChangeSize(GameObject creature, float modifier)
         {
+            //ErrorMessage.AddMessage($"Multiplying {CraftData.GetTechType(creature)} of size {creature.transform.localScale.x} by modifier {modifier} to size {(modifier)}");
             creature.transform.localScale = new Vector3(modifier, modifier, modifier);
+        }
+
+        private static float GetSize(GameObject creature)
+        {
+            //NOTE!! Should I be wary if creatures are in the alien containment when this is used? Could result int false positives or negatives, as the creature is smaller
+            var size = creature.transform.localScale.x;
+
+            return size;
         }
     }
 }

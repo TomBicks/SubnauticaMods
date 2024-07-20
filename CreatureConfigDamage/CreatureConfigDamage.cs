@@ -180,7 +180,7 @@ namespace CreatureConfigDamage
 	        }
         }*/
 
-        [HarmonyPatch(typeof(SpikePlant), nameof(SpikePlant.Start))]
+        /*[HarmonyPatch(typeof(SpikePlant), nameof(SpikePlant.Start))]
         [HarmonyPrefix]
         public static void PrefixTigerPlant(SpikePlant __instance)
         {
@@ -188,7 +188,7 @@ namespace CreatureConfigDamage
             //However, unlike the Drooping Stinger, the Tiger Plant has a component with a damage value we can change relatively easily
             logger.Log(LogLevel.Error, "Tiger Plant Found");
             ChangeUniqueAttack(__instance.gameObject, ref __instance.GetComponent<RangeAttacker>().damage, config.TigerPlantDmg, "TigerPlantDmg");
-        }
+        }*/
 
         public static void ChangeGenericMeleeAttack(GameObject __instance, float __customDmgValue, string __defaultDmgValueKey)
         {

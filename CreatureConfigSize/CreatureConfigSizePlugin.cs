@@ -32,28 +32,28 @@ namespace CreatureConfigSize
     [Menu("Creature Config - Size")]
     public class Config : Nautilus.Json.ConfigFile
     {
-        [Toggle("Enable precise size customisation?",
-            Tooltip = "Enable precise changes to size range of each creature, which can be changed in the config file for this mod. If unchecked, will use the size range options below.")]
-        public bool PreciseEnabled = false;
+        [Toggle("Enable complex size customisation?",
+            Tooltip = "Enable complex changes to size range of each creature, which can be changed in the config file for this mod. If unchecked, will use the size range options below.")]
+        public bool ComplexSizeEnabled = false;
 
         //NOTE!! May use these for the 'simple' option, where the user *doesn't* customise every single creature
         //TODO!! Make it clear it's a random valueb between the min amd max ranges
         [Slider("Small Creature Minimum Size", Min = 0.1f, Max = 1f, DefaultValue = 1f, Step = 0.1f, Format = "{0:F1}", Id = "SmallCreatureMinSize",
             Tooltip = "Minimum size modifier of small creatures. Will be randomly generated between this and the maximum size, then multiplied against the creature's base size.")]
         public float SmallCreatureMinSize = 1f;
-        [Slider("Small Creature Maximum Size", Min = 1f, Max = 4f, DefaultValue = 1f, Step = 0.1f, Id = "SmallCreatureMaxSize",
+        [Slider("Small Creature Maximum Size", Min = 1f, Max = 4f, DefaultValue = 1f, Step = 0.1f, Format = "{0:F1}", Id = "SmallCreatureMaxSize",
             Tooltip = "Maximum size modifier of small creatures. Will be randomly generated between this and the minimum size, then multiplied against the creature's base size.")]
         public float SmallCreatureMaxSize = 1f;
-        [Slider("Medium Creature Minimum Size", Min = 0.1f, Max = 1f, DefaultValue = 1f, Step = 0.1f, Id = "MedCreatureMinSize",
+        [Slider("Medium Creature Minimum Size", Min = 0.1f, Max = 1f, DefaultValue = 1f, Step = 0.1f, Format = "{0:F1}", Id = "MedCreatureMinSize",
             Tooltip = "Minimum size modifier of medium creatures. Will be randomly generated between this and the maximum size, then multiplied against the creature's base size.")]
         public float MedCreatureMinSize = 1f;
-        [Slider("Medium Creature Maximum Size", Min = 1f, Max = 4f, DefaultValue = 1f, Step = 0.1f, Id = "MedCreatureMaxSize",
+        [Slider("Medium Creature Maximum Size", Min = 1f, Max = 4f, DefaultValue = 1f, Step = 0.1f, Format = "{0:F1}", Id = "MedCreatureMaxSize",
             Tooltip = "Maximum size modifier of medium creatures. Will be randomly generated between this and the minimum size, then multiplied against the creature's base size.")]
         public float MedCreatureMaxSize = 1f;
-        [Slider("Large Creature Minimum Size", Min = 0.1f, Max = 1f, DefaultValue = 1f, Step = 0.1f, Id = "LargeCreatureMinSize",
+        [Slider("Large Creature Minimum Size", Min = 0.1f, Max = 1f, DefaultValue = 1f, Step = 0.1f, Format = "{0:F1}", Id = "LargeCreatureMinSize",
             Tooltip = "Minimum size modifier of large creatures. Will be randomly generated between this and the maximum size, then multiplied against the creature's base size.")]
         public float LargeCreatureMinSize = 1f;
-        [Slider("Large Creature Maximum Size", Min = 1f, Max = 4f, DefaultValue = 1f, Step = 0.1f, Id = "LargeCreatureMaxSize",
+        [Slider("Large Creature Maximum Size", Min = 1f, Max = 4f, DefaultValue = 1f, Step = 0.1f, Format = "{0:F1}", Id = "LargeCreatureMaxSize",
             Tooltip = "Maximum size modifier of large creatures. Will be randomly generated between this and the minimum size, then multiplied against the creature's base size.")]
         public float LargeCreatureMaxSize = 1f;
 
