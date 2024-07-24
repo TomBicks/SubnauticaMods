@@ -188,7 +188,9 @@ namespace CreatureConfigSize
                 //Try to get the size range of the given TechType
                 if (config.sizeReference.ContainsKey(techType))
                 {
-                    //TODO!!
+                    //Generate a size modifier based on the min and max values of the dictionary in config (text file able to be manually edited by users)
+                    var (min, max) = config.sizeReference[techType];
+                    modifier = GenerateSizeModifier(min, max);
                 }
                 #endregion
             }
