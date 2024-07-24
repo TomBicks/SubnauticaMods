@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using static CreatureConfigSize.CreatureConfigSizePlugin;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace CreatureConfigSize
 {
@@ -18,6 +19,20 @@ namespace CreatureConfigSize
             new TechType[] {TechType.GhostLeviathan, TechType.GhostLeviathanJuvenile, TechType.ReaperLeviathan, TechType.SeaDragon, TechType.SeaEmperor, TechType.SeaEmperorJuvenile, 
                 TechType.SeaTreader}
         };
+
+        #region Reference Dictionaries (put these in their own class later on, to save on clutter in the main class)
+        //Dictionary used to reference the min and max values a creature can be whilst still able to be picked up by the player
+        private static readonly Dictionary<TechType, (float min, float max)> pickupableReference = new Dictionary<TechType, (float, float)>()
+        {
+            { TechType.ReaperLeviathan, (0.1f,0.2f) } //Made pickupable at near minimum size, just so it's even possible to put it in containment
+        };
+
+        //Dictionary used to reference the min and max values a creature can be whilst still able to placed in an alien containment (big fish tank)
+        private static readonly Dictionary<TechType, (float min, float max)> waterParkReference = new Dictionary<TechType, (float, float)>()
+        {
+            { TechType.ReaperLeviathan, (0.1f,0.2f) } //Reaper won't fit in the containment at anything larger than 20% size
+        };
+        #endregion
 
         [HarmonyPatch(typeof(Creature), nameof(Creature.Start))]
         [HarmonyPostfix] //Postfix means less chance of missing setting any creatures' size
