@@ -97,10 +97,46 @@ namespace CreatureConfigSize
                             break;
                     }
 
-                    //If suitable size for alien containment, make pickupable and update WaterParkCreature component
-                    if (creature.GetComponent<Pickupable>() == null)
+                    //Check via reference whether the creature is eligible to be picked up (and have the Pickupable component)
+                    if(pickupableReference.ContainsKey(techType))
                     {
-                        creature.AddComponent<Pickupable>();
+                        ErrorMessage.AddMessage($"{techType} is using pickupableReference");
+
+                        //Size range within which a creature is made able to be picked up
+                        //Being outside of this range means the creature will have the Pickupable component removed, if it has one
+                        var (min, max) = pickupableReference[techType];
+
+                        //Whether the creature has a Pickupable component already or not
+                        bool componentExists = !(creature.GetComponent<Pickupable>() == null);
+
+                        if (modifier >= min && modifier <= max)
+                        {
+                            //If creature is eligible for the component and doesn't have one, add it
+                            if (!componentExists)
+                            {
+                                creature.AddComponent<Pickupable>();
+                            }
+                        }
+                        else
+                        {
+                            //If creature is ineligable for the component and has one, remove it
+                            if(componentExists)
+                            {
+                                var component = creature.GetComponent<Pickupable>();
+                                Object.Destroy(component);
+                            }
+                        }
+                    }
+                    //DEBUG!! Temporary code until I add in the reference for every creature
+                    else
+                    {
+                        ErrorMessage.AddError($"{techType} is not in the pickupable reference dictionary!");
+
+                        //If suitable size for alien containment, make pickupable and update WaterParkCreature component
+                        if (creature.GetComponent<Pickupable>() == null)
+                        {
+                            creature.AddComponent<Pickupable>();
+                        }
                     }
 
                     //NOTE!! USE REF LIKE YOU DID WITH DAMAGE! IT HELPS FIX THE PRIVACY ISSUE
