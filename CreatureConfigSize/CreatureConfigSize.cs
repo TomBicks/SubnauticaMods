@@ -141,6 +141,7 @@ namespace CreatureConfigSize
                 }
 
                 //Using this to repopulate the missing WaterParkCreatureData on each reload
+                //ERROR!! Creatures in alien containment DO NOT trigger Creature.Start; this WILL NOT work to repopulate the WaterParkCreatureData of creatures already in containment
                 if (creature.GetComponent<WaterParkCreature>() != null)
                 {
                     logger.LogWarning($"{techType} has WaterParkComponent.");
