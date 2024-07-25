@@ -224,6 +224,7 @@ namespace CreatureConfigSize
                                 modifier = GenerateSizeModifier(config.LargeCreatureMinSize, config.LargeCreatureMaxSize);
                                 break;
                         }
+                        break; //No need to keep going through the loop, if we've found our techtype already
                     }
                 }
 
