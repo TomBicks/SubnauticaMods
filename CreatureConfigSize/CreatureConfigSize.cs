@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using static CreatureConfigSize.CreatureConfigSizePlugin;
+using static CreatureConfigSize.References;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -8,32 +9,6 @@ namespace CreatureConfigSize
     [HarmonyPatch]
     internal class CreatureConfigSize
     {
-        //NOTE!! Whilst this won't make it more efficient, requiring more checks, surely making the code cleaner and more legible is better (can't imagine this would even remotely tank performance)
-        //NOTE!! However, I won't be using it forever until I'm sure the switch case statement isn't more helpful, for things unique to each creature
-        static readonly TechType[][] CreatureSizeClassReference = {
-            new TechType[] {TechType.Biter, TechType.Bladderfish, TechType.Bleeder, TechType.Blighter, TechType.Shuttlebug, TechType.Boomerang, TechType.CaveCrawler, TechType.Crash, 
-                TechType.Eyeye, TechType.Floater, TechType.GarryFish, TechType.HoleFish, TechType.Hoopfish, TechType.HoopfishSchool, TechType.Hoverfish, TechType.LavaBoomerang, TechType.LavaLarva, TechType.Mesmer, 
-                TechType.Oculus, TechType.Peeper, TechType.LavaEyeye, TechType.Reginald, TechType.Skyray, TechType.Spadefish, TechType.Spinefish, TechType.Jumper},
-            new TechType[] {TechType.Shocker, TechType.BoneShark, TechType.Crabsnake, TechType.CrabSquid, TechType.Cutefish, TechType.GhostRayRed, TechType.Gasopod, TechType.GhostRayBlue, 
-                TechType.Jellyray, TechType.LavaLizard, TechType.RabbitRay, TechType.SpineEel, TechType.Sandshark, TechType.SeaEmperorBaby, TechType.Stalker, TechType.Warper},
-            new TechType[] {TechType.GhostLeviathan, TechType.GhostLeviathanJuvenile, TechType.ReaperLeviathan, TechType.SeaDragon, TechType.SeaEmperor, TechType.SeaEmperorJuvenile, 
-                TechType.SeaTreader}
-        };
-
-        #region Reference Dictionaries (put these in their own class later on, to save on clutter in the main class)
-        //Dictionary used to reference the min and max values a creature can be whilst still able to be picked up by the player
-        private static readonly Dictionary<TechType, (float min, float max)> PickupableReference = new Dictionary<TechType, (float, float)>()
-        {
-            { TechType.ReaperLeviathan, (0.1f,0.2f) } //Made pickupable at near minimum size, just so it's even possible to put it in containment
-        };
-
-        //Dictionary used to reference the min and max values a creature can be whilst still able to placed in an alien containment (big fish tank)
-        private static readonly Dictionary<TechType, (float min, float max)> WaterParkReference = new Dictionary<TechType, (float, float)>()
-        {
-            { TechType.ReaperLeviathan, (0.1f,0.2f) } //Reaper won't fit in the containment at anything larger than 20% size
-        };
-        #endregion
-
         [HarmonyPatch(typeof(Creature), nameof(Creature.Start))]
         [HarmonyPostfix] //Postfix means less chance of missing setting any creatures' size
         public static void PostCreatureStart(Creature __instance)
@@ -177,6 +152,9 @@ namespace CreatureConfigSize
             //Do they share the same WaterParkCreatureData?
             //NOTE!! Each particular creature shares a WaterParkCreatureData (e.g. Hoopfish_WaterParkCreatureData)
             //This means two things; one, I can't change one SpineFish without changing the other, and two, I need to create one for the creatures that don't usually go in containment, like leviathans
+
+            //2nd ERROR!! When loading into a save, with a creature such as a reaper in containment (a creature I added a waterparkcomponent to), the data is empty and null upon loading the save
+            //Will likely need to look into repopulating the data every time I load in
             data.initialSize = size * 0.1f;
             data.maxSize = size * 0.6f;
             data.outsideSize = size;
