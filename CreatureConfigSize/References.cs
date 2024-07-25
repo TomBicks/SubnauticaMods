@@ -28,6 +28,8 @@ namespace CreatureConfigSize
         };
 
         //Dictionary used to reference the min and max values a creature can be whilst still able to placed in an alien containment (big fish tank)
+        //NOTE!! Likely need to make sure the range includes the regular size of fish that can be hatched via eggs
+        //This does bring up the great question of what occurs with my mod when creatures are hatched from eggs however
         public static readonly Dictionary<TechType, (float min, float max)> WaterParkReference = new Dictionary<TechType, (float, float)>()
         {
             { TechType.ReaperLeviathan, (0.1f,0.2f) } //Reaper won't fit in the containment at anything larger than 20% size
