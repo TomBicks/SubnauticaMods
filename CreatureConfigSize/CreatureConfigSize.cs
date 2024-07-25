@@ -10,7 +10,7 @@ namespace CreatureConfigSize
     {
         //NOTE!! Whilst this won't make it more efficient, requiring more checks, surely making the code cleaner and more legible is better (can't imagine this would even remotely tank performance)
         //NOTE!! However, I won't be using it forever until I'm sure the switch case statement isn't more helpful, for things unique to each creature
-        static readonly TechType[][] CreatureSizeReference = {
+        static readonly TechType[][] CreatureSizeClassReference = {
             new TechType[] {TechType.Biter, TechType.Bladderfish, TechType.Bleeder, TechType.Blighter, TechType.Shuttlebug, TechType.Boomerang, TechType.CaveCrawler, TechType.Crash, 
                 TechType.Eyeye, TechType.Floater, TechType.GarryFish, TechType.HoleFish, TechType.Hoopfish, TechType.HoopfishSchool, TechType.Hoverfish, TechType.LavaBoomerang, TechType.LavaLarva, TechType.Mesmer, 
                 TechType.Oculus, TechType.Peeper, TechType.LavaEyeye, TechType.Reginald, TechType.Skyray, TechType.Spadefish, TechType.Spinefish, TechType.Jumper},
@@ -22,13 +22,13 @@ namespace CreatureConfigSize
 
         #region Reference Dictionaries (put these in their own class later on, to save on clutter in the main class)
         //Dictionary used to reference the min and max values a creature can be whilst still able to be picked up by the player
-        private static readonly Dictionary<TechType, (float min, float max)> pickupableReference = new Dictionary<TechType, (float, float)>()
+        private static readonly Dictionary<TechType, (float min, float max)> PickupableReference = new Dictionary<TechType, (float, float)>()
         {
             { TechType.ReaperLeviathan, (0.1f,0.2f) } //Made pickupable at near minimum size, just so it's even possible to put it in containment
         };
 
         //Dictionary used to reference the min and max values a creature can be whilst still able to placed in an alien containment (big fish tank)
-        private static readonly Dictionary<TechType, (float min, float max)> waterParkReference = new Dictionary<TechType, (float, float)>()
+        private static readonly Dictionary<TechType, (float min, float max)> WaterParkReference = new Dictionary<TechType, (float, float)>()
         {
             { TechType.ReaperLeviathan, (0.1f,0.2f) } //Reaper won't fit in the containment at anything larger than 20% size
         };
@@ -98,13 +98,13 @@ namespace CreatureConfigSize
                     }
 
                     //Check via reference whether the creature is eligible to be picked up (and have the Pickupable component)
-                    if(pickupableReference.ContainsKey(techType))
+                    if(PickupableReference.ContainsKey(techType))
                     {
                         ErrorMessage.AddMessage($"{techType} is using pickupableReference");
 
                         //Size range within which a creature is made able to be picked up
                         //Being outside of this range means the creature will have the Pickupable component removed, if it has one
-                        var (min, max) = pickupableReference[techType];
+                        var (min, max) = PickupableReference[techType];
 
                         //Whether the creature has a Pickupable component already or not
                         bool componentExists = !(creature.GetComponent<Pickupable>() == null);
@@ -199,9 +199,9 @@ namespace CreatureConfigSize
                 //Try to get the size class of the given TechType
                 for (var i = 0; i < 3; i++)
                 {
-                    for (var j = 0; j < CreatureSizeReference[i].Length; j++)
+                    for (var j = 0; j < CreatureSizeClassReference[i].Length; j++)
                     {
-                        if (CreatureSizeReference[i][j] == techType)
+                        if (CreatureSizeClassReference[i][j] == techType)
                         {
                             //We return i (+1 as None is 0) as the size class, as it refers to which of the 3 size arrays we found the TechType match in
                             //We use the SizeClass array in future references, for legibility
@@ -237,10 +237,10 @@ namespace CreatureConfigSize
             {
                 #region Complex Size Modifier
                 //Try to get the size range of the given TechType
-                if (config.sizeReference.ContainsKey(techType))
+                if (config.CreatureSizeRangeReference.ContainsKey(techType))
                 {
                     //Generate a size modifier based on the min and max values of the dictionary in config (text file able to be manually edited by users)
-                    var (min, max) = config.sizeReference[techType];
+                    var (min, max) = config.CreatureSizeRangeReference[techType];
                     modifier = GenerateSizeModifier(min, max);
                 }
                 #endregion

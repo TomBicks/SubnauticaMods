@@ -62,7 +62,7 @@ namespace CreatureConfigSize
         //TODO!! Create a dictionary of min and max values, with assocaited techTypes, so the users can customise each and every value to their whim
         //TODO!! Utilise the dictionary, if the config is set, to bypass the three sizeclass system and directly change the min and max values
         //NOTE!! The default min and max here is 0.9 and 1.1, so that the decimals show up in the text file and the user is aware they can set them to decimals
-        public Dictionary<TechType, (float min, float max)> sizeReference = new Dictionary<TechType, (float, float)>()
+        public Dictionary<TechType, (float min, float max)> CreatureSizeRangeReference = new Dictionary<TechType, (float, float)>()
         {
             { TechType.Biter, (0.9f,1.1f) },
             { TechType.Bladderfish, (0.9f,1.1f) },
