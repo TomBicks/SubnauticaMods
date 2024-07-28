@@ -142,7 +142,7 @@ namespace CreatureConfigSize
 
                 //Using this to repopulate the missing WaterParkCreatureData on each reload
                 //ERROR!! Creatures in alien containment DO NOT trigger Creature.Start; this WILL NOT work to repopulate the WaterParkCreatureData of creatures already in containment
-                if (creature.GetComponent<WaterParkCreature>() != null)
+                /*if (creature.GetComponent<WaterParkCreature>() != null)
                 {
                     logger.LogWarning($"{techType} has WaterParkComponent.");
 
@@ -177,7 +177,7 @@ namespace CreatureConfigSize
                         creature.GetComponent<WaterParkCreature>().data = newData;
                         logger.LogWarning($"New WaterParkCreatureData applied!");
                     }
-                }
+                }*/
             }
             else
             {
@@ -185,6 +185,47 @@ namespace CreatureConfigSize
             }
         }
 
+        [HarmonyPatch(typeof(WaterParkCreature), nameof(WaterParkCreature.Start))]
+        [HarmonyPostfix] //Postfix means less chance of missing setting any creatures' size
+        public static void PostWaterParkStart(WaterParkCreature __instance)
+        {
+            GameObject creature = __instance.gameObject;
+            logger.LogWarning($"(WaterParkCreasture) {__instance.gameObject}");
+            TechType techType = CraftData.GetTechType(creature);
+
+            logger.LogWarning($"(WaterParkCreasture) Size of {techType} = {GetSize(creature)}");
+
+            if (__instance.data == null)
+            {
+                logger.LogWarning($"(WaterParkCreasture) {techType} WaterParkComponent data is null! Repopulating!");
+                logger.LogWarning($"(WaterParkCreasture) Size is {GetSize(creature)}!");
+
+                WaterParkCreatureData newData = ScriptableObject.CreateInstance<WaterParkCreatureData>();
+
+                //If creature is inside the alien containment, then it'll be smaller than its max size, and we need to work backwards
+                //NOTE!! We specify if currentWaterPark isn't null, as if they are in inventory after being picked up from containment, it'll be a false positive
+                if (__instance.isInside && __instance.currentWaterPark != null)
+                {
+                    logger.LogWarning($"(WaterParkCreasture) {techType} is already inside alien containment! Calcuating original size!");
+
+                    //By performing the calculation to get maxSize (x * 0.6), but in reverse (x / 0.6), we get our old size back
+                    var initialSize = GetSize(creature) / 0.6f;
+                    SetWaterParkData(ref newData, initialSize);
+                }
+                else
+                {
+                    logger.LogWarning($"(WaterParkCreasture) {techType} is not inside alien containment! Using current size!");
+
+                    //If the creature isn't in alien containment, this means we can just use its current size, as normal, to set the WaterParkCreatureData
+                    var currentSize = GetSize(creature);
+                    SetWaterParkData(ref newData, currentSize);
+                }
+
+                //Apply the new WaterParkCreatureData
+                __instance.data = newData;
+                logger.LogWarning($"(WaterParkCreasture) New WaterParkCreatureData applied!");
+            }
+        }
         public static void SetWaterParkData(ref WaterParkCreatureData data, float size)
         {
             //ERROR!! Whenever I edit any of these settings for a type of creature, it changes it for all the other instances of this creature!
