@@ -32,8 +32,8 @@ namespace CreatureConfigSize
                 //YES!! I AM THE ONE CHANGING IT!! So I'm re-randomising every time, but the size is totally saved. So if I check if it's not size 1.0 local scale, than it'll work!
                 if (GetSize(creature) == 1)
                 {
-                    ChangeSize(creature, modifier);
                     ErrorMessage.AddMessage("Changing Size");
+                    ChangeSize(creature, modifier);
 
                     ErrorMessage.AddMessage($"Size of {techType} = {GetSize(creature)}");
 
@@ -63,17 +63,13 @@ namespace CreatureConfigSize
 
                             //REGARDING SIZE - 0.1 or 0.2 for a reaper, making them 0.06 or 0.12 in scale in the alien containment, is the max size, anything above that will not fit, and thus cannot be picked up
                             #endregion
-                            if(modifier <= 0.2)
-                            {
-                                creature.AddComponent<Pickupable>();
-                            }
                             break;
                         default:
                             break;
                     }
 
                     //Check via reference whether the creature is eligible to be picked up (and have the Pickupable component)
-                    if(PickupableReference.ContainsKey(techType))
+                    if (PickupableReference.ContainsKey(techType))
                     {
                         ErrorMessage.AddMessage($"{techType} is using pickupableReference");
 
@@ -95,7 +91,7 @@ namespace CreatureConfigSize
                         else
                         {
                             //If creature is ineligable for the component and has one, remove it
-                            if(componentExists)
+                            if (componentExists)
                             {
                                 var component = creature.GetComponent<Pickupable>();
                                 Object.Destroy(component);
@@ -113,71 +109,7 @@ namespace CreatureConfigSize
                             creature.AddComponent<Pickupable>();
                         }
                     }
-
-                    //NOTE!! USE REF LIKE YOU DID WITH DAMAGE! IT HELPS FIX THE PRIVACY ISSUE
-                    //https://www.geeksforgeeks.org/ref-in-c-sharp/
-                    //NOTE!! Creatures in containment will not trigger Creature.Start when loading in; they will only when released from the inventory
-                    /*if (creature.GetComponent<WaterParkCreature>() != null)
-                    {
-                        //According to Indigo, I might be able to duplicate the data, change the values, and assign it back to the changed fish; worth a shot
-                        WaterParkCreatureData newData = ScriptableObject.CreateInstance<WaterParkCreatureData>();
-                        //newData = creature.GetComponent<WaterParkCreature>().data;
-
-                        SetWaterParkData(ref newData, GetSize(creature));
-
-                        //newData.name = creature.GetComponent<WaterParkCreature>().data.name;
-                        //newData.initialSize = GetSize(creature);
-                        //newData.maxSize = GetSize(creature);
-
-                        creature.GetComponent<WaterParkCreature>().data = newData;
-                    }
-                    else
-                    {
-                        creature.AddComponent<WaterParkCreature>();
-                        WaterParkCreatureData newData = ScriptableObject.CreateInstance<WaterParkCreatureData>();
-                        SetWaterParkData(ref newData, GetSize(creature));
-                        creature.GetComponent<WaterParkCreature>().data = newData;
-                    }*/
                 }
-
-                //Using this to repopulate the missing WaterParkCreatureData on each reload
-                //ERROR!! Creatures in alien containment DO NOT trigger Creature.Start; this WILL NOT work to repopulate the WaterParkCreatureData of creatures already in containment
-                /*if (creature.GetComponent<WaterParkCreature>() != null)
-                {
-                    logger.LogWarning($"{techType} has WaterParkComponent.");
-
-                    WaterParkCreature waterParkComponent = creature.GetComponent<WaterParkCreature>();
-
-                    if (waterParkComponent.data == null)
-                    {
-                        logger.LogWarning($"{techType} WaterParkComponent data is null! Repopulating!");
-                        logger.LogWarning($"Size is {GetSize(creature)}!");
-
-                        WaterParkCreatureData newData = ScriptableObject.CreateInstance<WaterParkCreatureData>();
-
-                        //If creature is inside the alien containment, then it'll be smaller than its max size, and we need to work backwards
-                        if (waterParkComponent.isInside)
-                        {
-                            logger.LogWarning($"{techType} is already inside alien containment! Calcuating original size!");
-
-                            //By performing the calculation to get maxSize (x * 0.6), but in reverse (x / 0.6), we get our old size back
-                            var initialSize = GetSize(creature) / 0.6f;
-                            SetWaterParkData(ref newData, initialSize);
-                        }
-                        else
-                        {
-                            logger.LogWarning($"{techType} is not inside alien containment! Using current size!");
-
-                            //If the creature isn't in alien containment, this means we can just use its current size, as normal, to set the WaterParkCreatureData
-                            var currentSize = GetSize(creature);
-                            SetWaterParkData(ref newData, currentSize);
-                        }
-
-                        //Apply the new WaterParkCreatureData
-                        creature.GetComponent<WaterParkCreature>().data = newData;
-                        logger.LogWarning($"New WaterParkCreatureData applied!");
-                    }
-                }*/
             }
             else
             {
@@ -190,45 +122,70 @@ namespace CreatureConfigSize
         //NOTE!! Originally was patching WaterParkCreature.Start, but as Metious let me know, that is triggered *waaay* too late, and we get null reference errors before then
         public static void PostLiveMixin(Creature __instance)
         {
+            //logger.LogWarning($"(LiveMixin) {__instance.gameObject}");
+            TechType techType = CraftData.GetTechType(__instance.gameObject);
+
             //Because many things use LiveMixin, we need to filter; using the WaterParkReference dictionary is perfect here
-            logger.LogWarning($"(WaterParkCreasture) {__instance.gameObject}");
+            if (WaterParkReference.ContainsKey(techType))
+            {
+                //Ensures the component exists; if it doesn't exist, this will create it, meaning no matter what it'll exist from here onwards
+                WaterParkCreature wpc = __instance.gameObject.EnsureComponent<WaterParkCreature>();
+                logger.LogWarning($"(LiveMixin) Size of {techType} = {GetSize(__instance.gameObject)}");
+
+                if (wpc.data == null)
+                {
+                    logger.LogWarning($"(LiveMixin) {techType} WaterParkComponent data is null! Repopulating!");
+                    //ERROR!! So, I'm using LiveMixin, because it means I can assign the data before WaterParkCreature is reference and all the null values start coming in.
+                    //But, the issue then is that I need to know whether 'IsInside' is true or not when assigning the WaterParkCreatureData. But the solution to the previous issue
+                    //Was to access it at a time when that data is not determined (default false); thus, the creature in containment gets smaller and smaller
+
+                    //SO NEXT STEP!! Determine if the creature is parented to an ACU; use the same logic to calculate data to add for both inside and outside
+                    //NOTE!! creatures growing to maturity will potentially pose a big issue; I'll need to test if I can access MaturityTime easily or not
+
+                    //Apply the new placeholder/default WaterParkCreatureData
+                    wpc.data = ScriptableObject.CreateInstance<WaterParkCreatureData>();
+                    logger.LogWarning($"(LiveMixin) Placeholder WaterParkCreatureData applied!");
+                }
+            }
+            else
+            {
+                ErrorMessage.AddError($"{techType} is not in the waterPark reference dictionary!");
+            }
+        }
+
+        [HarmonyPatch(typeof(WaterParkCreature), nameof(WaterParkCreature.Start))]
+        [HarmonyPrefix] //NOTE!! Creatures in containment will not trigger Creature.Start when loading in; they will only when released from the inventory; thus we use WaterParkCreature.Start
+        public static void PreWaterPark(WaterParkCreature __instance)
+        {
+            //Because many things use LiveMixin, we need to filter; using the WaterParkReference dictionary is perfect here
             TechType techType = CraftData.GetTechType(__instance.gameObject);
 
             if (WaterParkReference.ContainsKey(techType))
             {
                 //Ensures the component exists; if it doesn't exist, this will create it, meaning no matter what it'll exist from here onwards
-                WaterParkCreature wpc = __instance.gameObject.EnsureComponent<WaterParkCreature>();
+                WaterParkCreature wpc = __instance;
                 logger.LogWarning($"(WaterParkCreasture) Size of {techType} = {GetSize(__instance.gameObject)}");
 
-                if (wpc.data == null)
+                logger.LogWarning($"(WaterParkCreasture) {wpc.isInside}");
+                logger.LogWarning($"(WaterParkCreasture) Repopulating placeholder WaterParkComponent data of {techType}!");
+
+                //If creature is inside the alien containment, then it'll be smaller than its max size, and we need to work backwards
+                //NOTE!! We specify if currentWaterPark isn't null, as if they are in inventory after being picked up from containment, it'll be a false positive
+                if (wpc.isInside && wpc.currentWaterPark != null)
                 {
-                    logger.LogWarning($"(WaterParkCreasture) {techType} WaterParkComponent data is null! Repopulating!");
-                    logger.LogWarning($"(WaterParkCreasture) Size is {GetSize(__instance.gameObject)}!");
+                    logger.LogWarning($"(WaterParkCreasture) {techType} is already inside alien containment! Calcuating original size!");
 
-                    WaterParkCreatureData newData = ScriptableObject.CreateInstance<WaterParkCreatureData>();
+                    //By performing the calculation to get maxSize (x * 0.6), but in reverse (x / 0.6), we get our old size back
+                    var initialSize = GetSize(__instance.gameObject) / 0.6f;
+                    SetWaterParkData(ref wpc.data, initialSize);
+                }
+                else
+                {
+                    logger.LogWarning($"(WaterParkCreasture) {techType} is not inside alien containment! Using current size!");
 
-                    //If creature is inside the alien containment, then it'll be smaller than its max size, and we need to work backwards
-                    //NOTE!! We specify if currentWaterPark isn't null, as if they are in inventory after being picked up from containment, it'll be a false positive
-                    if (wpc.isInside && wpc.currentWaterPark != null)
-                    {
-                        logger.LogWarning($"(WaterParkCreasture) {techType} is already inside alien containment! Calcuating original size!");
-
-                        //By performing the calculation to get maxSize (x * 0.6), but in reverse (x / 0.6), we get our old size back
-                        var initialSize = GetSize(__instance.gameObject) / 0.6f;
-                        SetWaterParkData(ref newData, initialSize);
-                    }
-                    else
-                    {
-                        logger.LogWarning($"(WaterParkCreasture) {techType} is not inside alien containment! Using current size!");
-
-                        //If the creature isn't in alien containment, this means we can just use its current size, as normal, to set the WaterParkCreatureData
-                        var currentSize = GetSize(__instance.gameObject);
-                        SetWaterParkData(ref newData, currentSize);
-                    }
-
-                    //Apply the new WaterParkCreatureData
-                    wpc.data = newData;
-                    logger.LogWarning($"(WaterParkCreasture) New WaterParkCreatureData applied!");
+                    //If the creature isn't in alien containment, this means we can just use its current size, as normal, to set the WaterParkCreatureData
+                    var currentSize = GetSize(__instance.gameObject);
+                    SetWaterParkData(ref wpc.data, currentSize);
                 }
             }
             else
@@ -238,12 +195,10 @@ namespace CreatureConfigSize
         }
         public static void SetWaterParkData(ref WaterParkCreatureData data, float size)
         {
-            //ERROR!! Whenever I edit any of these settings for a type of creature, it changes it for all the other instances of this creature!
-            //Do they share the same WaterParkCreatureData?
             //NOTE!! Each particular creature shares a WaterParkCreatureData (e.g. Hoopfish_WaterParkCreatureData)
             //This means two things; one, I can't change one SpineFish without changing the other, and two, I need to create one for the creatures that don't usually go in containment, like leviathans
 
-            //2nd ERROR!! When loading into a save, with a creature such as a reaper in containment (a creature I added a waterparkcomponent to), the data is empty and null upon loading the save
+            //2nd NOTE!! When loading into a save, with a creature such as a reaper in containment (a creature I added a waterparkcomponent to), the data is empty and null upon loading the save
             //Will likely need to look into repopulating the data every time I load in
             data.initialSize = size * 0.1f;
             data.maxSize = size * 0.6f;
