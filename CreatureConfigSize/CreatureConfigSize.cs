@@ -9,6 +9,14 @@ namespace CreatureConfigSize
     [HarmonyPatch]
     internal class CreatureConfigSize
     {
+        [HarmonyPatch(typeof(Player), nameof(Player.Start))]
+        [HarmonyPrefix]
+        public static void PrePlayerStart()
+        {
+            //Add inventory size of the Reaper Leviathan when picking it up
+            CraftData.itemSizes.Add(TechType.ReaperLeviathan, new Vector2int(3, 3));
+        }
+
         [HarmonyPatch(typeof(Creature), nameof(Creature.Start))]
         [HarmonyPostfix] //Postfix means less chance of missing setting any creatures' size
         public static void PostCreatureStart(Creature __instance)
