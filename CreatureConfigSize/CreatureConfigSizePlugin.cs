@@ -100,6 +100,8 @@ namespace CreatureConfigSize
             { TechType.Reginald, (0.9f, 1.1f) },
             { TechType.Sandshark, (0.9f,1.1f) },
             { TechType.SeaDragon, (0.9f,1.1f) },
+            { TechType.SeaEmperorBaby, (0.9f, 1.1f) },
+            { TechType.SeaEmperorJuvenile , (0.9f, 1.1f) }, //TechType for the several Sea Emperors found in the world
             { TechType.SeaTreader, (0.9f,1.1f) },
             { TechType.Shocker, (0.9f,1.1f) }, //TechType for Ampeel
             { TechType.Shuttlebug, (0.9f,1.1f) }, //TechType for Blood Crawler

@@ -79,6 +79,8 @@ namespace CreatureConfigSize
                     //Check via reference whether the creature is eligible to be picked up (and have the Pickupable component)
                     if (PickupableReference.ContainsKey(techType))
                     {
+                        //NOTE!! Need to account for creatures inside WaterParks when calculating this, as they need to be able to be picked up still, but not when placed outside
+                        //The way to do this is to make IsPickupableOutside false in the WPC data; thus, might possibly be better to do all the checking there?
                         ErrorMessage.AddMessage($"{techType} is using pickupableReference");
 
                         //Size range within which a creature is made able to be picked up
@@ -125,10 +127,11 @@ namespace CreatureConfigSize
             }
         }
 
+        //Create a placeholder WaterParkCreatureData, before the component accesses it, to ensure no null reference errors
         [HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.Awake))]
         [HarmonyPostfix] //By patching LiveMixin, this ensures we can use this for creatures both in and out of containment
         //NOTE!! Originally was patching WaterParkCreature.Start, but as Metious let me know, that is triggered *waaay* too late, and we get null reference errors before then
-        public static void PostLiveMixin(Creature __instance)
+        public static void CreatePlaceholderWPCData(Creature __instance)
         {
             //logger.LogWarning($"(LiveMixin) {__instance.gameObject}");
             TechType techType = CraftData.GetTechType(__instance.gameObject);
@@ -142,7 +145,7 @@ namespace CreatureConfigSize
 
                 if (wpc.data == null)
                 {
-                    logger.LogWarning($"(LiveMixin) {techType} WaterParkComponent data is null! Repopulating!");
+                    logger.LogWarning($"(LiveMixin) {techType} WaterParkComponent data is null! Creating placeholder!");
                     //ERROR!! So, I'm using LiveMixin, because it means I can assign the data before WaterParkCreature is reference and all the null values start coming in.
                     //But, the issue then is that I need to know whether 'IsInside' is true or not when assigning the WaterParkCreatureData. But the solution to the previous issue
                     //Was to access it at a time when that data is not determined (default false); thus, the creature in containment gets smaller and smaller
@@ -152,7 +155,7 @@ namespace CreatureConfigSize
 
                     //Apply the new placeholder/default WaterParkCreatureData
                     wpc.data = ScriptableObject.CreateInstance<WaterParkCreatureData>();
-                    logger.LogWarning($"(LiveMixin) Placeholder WaterParkCreatureData applied!");
+                    logger.LogWarning($"(LiveMixin) Placeholder WaterParkCreatureData created!");
                 }
             }
             else
@@ -161,9 +164,10 @@ namespace CreatureConfigSize
             }
         }
 
+        //Populate WaterParkCreatureData with actual data, calculated from the size of the creature
         [HarmonyPatch(typeof(WaterParkCreature), nameof(WaterParkCreature.Start))]
         [HarmonyPrefix] //NOTE!! Creatures in containment will not trigger Creature.Start when loading in; they will only when released from the inventory; thus we use WaterParkCreature.Start
-        public static void PreWaterPark(WaterParkCreature __instance)
+        public static void PopulateWPCData(WaterParkCreature __instance)
         {
             //Because many things use LiveMixin, we need to filter; using the WaterParkReference dictionary is perfect here
             TechType techType = CraftData.GetTechType(__instance.gameObject);
@@ -172,16 +176,16 @@ namespace CreatureConfigSize
             {
                 //Ensures the component exists; if it doesn't exist, this will create it, meaning no matter what it'll exist from here onwards
                 WaterParkCreature wpc = __instance;
-                logger.LogWarning($"(WaterParkCreasture) Size of {techType} = {GetSize(__instance.gameObject)}");
+                logger.LogWarning($"(WaterParkCreature) Size of {techType} = {GetSize(__instance.gameObject)}");
 
-                logger.LogWarning($"(WaterParkCreasture) {wpc.isInside}");
-                logger.LogWarning($"(WaterParkCreasture) Repopulating placeholder WaterParkComponent data of {techType}!");
+                logger.LogWarning($"(WaterParkCreature) {wpc.isInside}");
+                logger.LogWarning($"(WaterParkCreature) Replacing placeholder {techType} WaterParkComponent data with real data!");
 
                 //If creature is inside the alien containment, then it'll be smaller than its max size, and we need to work backwards
                 //NOTE!! We specify if currentWaterPark isn't null, as if they are in inventory after being picked up from containment, it'll be a false positive
                 if (wpc.isInside && wpc.currentWaterPark != null)
                 {
-                    logger.LogWarning($"(WaterParkCreasture) {techType} is already inside alien containment! Calcuating original size!");
+                    logger.LogWarning($"(WaterParkCreature) {techType} is already inside alien containment! Calcuating original size!");
 
                     //By performing the calculation to get maxSize (x * 0.6), but in reverse (x / 0.6), we get our old size back
                     var initialSize = GetSize(__instance.gameObject) / 0.6f;
@@ -189,12 +193,13 @@ namespace CreatureConfigSize
                 }
                 else
                 {
-                    logger.LogWarning($"(WaterParkCreasture) {techType} is not inside alien containment! Using current size!");
+                    logger.LogWarning($"(WaterParkCreature) {techType} is not inside alien containment! Using current size!");
 
                     //If the creature isn't in alien containment, this means we can just use its current size, as normal, to set the WaterParkCreatureData
                     var currentSize = GetSize(__instance.gameObject);
                     SetWaterParkData(ref wpc.data, currentSize);
                 }
+                logger.LogWarning($"(WaterParkCreature) Real WaterParkCreatureData created!");
             }
             else
             {
