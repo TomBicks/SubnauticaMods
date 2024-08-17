@@ -41,7 +41,7 @@ namespace CreatureConfigSize
                 if (GetSize(creature) == 1)
                 {
                     ErrorMessage.AddMessage("Changing Size");
-                    ChangeSize(creature, modifier);
+                    SetSize(creature, modifier);
 
                     ErrorMessage.AddMessage($"Size of {techType} = {GetSize(creature)}");
 
@@ -313,7 +313,7 @@ namespace CreatureConfigSize
             return modifier;
         }
 
-        private static void ChangeSize(GameObject creature, float modifier)
+        private static void SetSize(GameObject creature, float modifier)
         {
             //ErrorMessage.AddMessage($"Multiplying {CraftData.GetTechType(creature)} of size {creature.transform.localScale.x} by modifier {modifier} to size {(modifier)}");
             creature.transform.localScale = new Vector3(modifier, modifier, modifier);

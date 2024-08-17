@@ -37,6 +37,7 @@ namespace CreatureConfigSize
         //but can't when you place them outside containment; i.e. IsOutsidePickupable = false in WPC data
         public static readonly Dictionary<TechType, (float min, float max)> WaterParkReference = new Dictionary<TechType, (float, float)>()
         {
+            { TechType.Crash, (0.1f, 3.0f) },
             { TechType.Peeper, (0.1f, 5.0f) },
             { TechType.ReaperLeviathan, (0.1f,0.2f) } //Reaper won't fit in the containment at anything larger than 20% size
         };

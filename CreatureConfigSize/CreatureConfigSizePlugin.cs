@@ -13,7 +13,7 @@ namespace CreatureConfigSize
     {
         private const string myGUID = "com.jukebox.creatureconfigsize";
         private const string pluginName = "Creature Config - Size";
-        private const string versionString = "0.0.1";
+        private const string versionString = "0.5.0";
 
         private static readonly Harmony harmony = new Harmony(myGUID);
 
@@ -26,6 +26,8 @@ namespace CreatureConfigSize
             harmony.PatchAll();
             Logger.LogInfo(pluginName + " " + versionString + " " + "loaded.");
             logger = Logger;
+
+            ConsoleCommandsHandler.RegisterConsoleCommands(typeof(CommandsSize));
         }
     }
 
