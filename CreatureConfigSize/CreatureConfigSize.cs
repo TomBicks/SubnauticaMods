@@ -166,7 +166,7 @@ namespace CreatureConfigSize
 
         //Populate WaterParkCreatureData with actual data, calculated from the size of the creature
         [HarmonyPatch(typeof(WaterParkCreature), nameof(WaterParkCreature.Start))]
-        [HarmonyPrefix] //NOTE!! Creatures in containment will not trigger Creature.Start when loading in; they will only when released from the inventory; thus we use WaterParkCreature.Start
+        [HarmonyPostfix] //NOTE!! Creatures in containment will not trigger Creature.Start when loading in; they will only when released from the inventory; thus we use WaterParkCreature.Start
         public static void PopulateWPCData(WaterParkCreature __instance)
         {
             //Because many things use LiveMixin, we need to filter; using the WaterParkReference dictionary is perfect here
@@ -181,16 +181,27 @@ namespace CreatureConfigSize
                 logger.LogWarning($"(WaterParkCreature) {wpc.isInside}");
                 logger.LogWarning($"(WaterParkCreature) Replacing placeholder {techType} WaterParkComponent data with real data!");
 
-                //If creature is inside the alien containment, then it'll be smaller than its max size, and we need to work backwards
+                //If creature is inside the alien containment, then it'll be smaller than its max size, and we need to work backwards to calculate WPC data
                 //NOTE!! We specify if currentWaterPark isn't null, as if they are in inventory after being picked up from containment, it'll be a false positive
                 if (wpc.isInside && wpc.currentWaterPark != null)
                 {
-                    logger.LogWarning($"(WaterParkCreature) {techType} is already inside alien containment! Calcuating original size!");
+                    //If creature is already mature, that means it's currently at its max size, so we calculate from here as normal
+                    //if(wpc.isMature)
+                    //{
+                        logger.LogWarning($"(WaterParkCreature) {techType} is already inside alien containment! Calcuating original size!");
 
-                    //By performing the calculation to get maxSize (x * 0.6), but in reverse (x / 0.6), we get our old size back
-                    var initialSize = GetSize(__instance.gameObject) / 0.6f;
-                    SetWaterParkData(ref wpc.data, initialSize);
+                        //By performing the calculation to get maxSize (x * 0.6), but in reverse (x / 0.6), we get our old size back
+                        var initialSize = GetSize(__instance.gameObject) / 0.6f;
+                        SetWaterParkData(ref wpc.data, initialSize);
+                    //}
+                    //If creature is not mature, then we need to use
+                    //ERROR!! IsMature is not accessible at Pre or Post Start
+                    //else
+                    //{
+                        logger.LogError($"{wpc.isMature}, {wpc.matureTime}, {wpc.data.outsideSize}, {wpc.data.maxSize}");
+                    //}
                 }
+                //If creature is not in alien containment, then we just use its current size to calculate WPC data
                 else
                 {
                     logger.LogWarning($"(WaterParkCreature) {techType} is not inside alien containment! Using current size!");
