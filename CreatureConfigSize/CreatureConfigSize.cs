@@ -245,15 +245,16 @@ namespace CreatureConfigSize
 
         public static bool GetInsideWaterPark(GameObject creature)
         {
-            logger.LogInfo($"WaterPark = {creature.GetComponentInParent<WaterPark>()}");
+            //DEBUG!!
+            TechType techType = CraftData.GetTechType(creature);
 
             if(creature.GetComponentInParent<WaterPark>() != null)
             {
-                logger.LogInfo("Creature is in a WaterPark");
+                logger.LogInfo($"{techType} is in a WaterPark");
                 return true;
             }
 
-            logger.LogInfo("Creature is not in a WaterPark");
+            logger.LogInfo($"{techType} is not in a WaterPark");
             return false;
         }
 
