@@ -112,12 +112,9 @@ namespace CreatureConfigSize
                     else
                     {
                         ErrorMessage.AddError($"{techType} is not in the pickupable reference dictionary!");
-
-                        //If suitable size for alien containment, make pickupable and update WaterParkCreature component
-                        if (creature.GetComponent<Pickupable>() == null)
-                        {
-                            creature.AddComponent<Pickupable>();
-                        }
+                        //DEBUG!!
+                        ErrorMessage.AddError($"Giving {techType} Pickupable anyway!");
+                        creature.AddComponent<Pickupable>();
                     }
                 }
             }
@@ -137,8 +134,8 @@ namespace CreatureConfigSize
             TechType techType = CraftData.GetTechType(__instance.gameObject);
 
             //Because many things use LiveMixin, we need to filter; using the WaterParkReference dictionary is perfect here
-            if (WaterParkReference.ContainsKey(techType))
-            {
+            //if (WaterParkReference.ContainsKey(techType))
+            //{
                 //Ensures the component exists; if it doesn't exist, this will create it, meaning no matter what it'll exist from here onwards
                 WaterParkCreature wpc = __instance.gameObject.EnsureComponent<WaterParkCreature>();
                 logger.LogWarning($"(LiveMixin) Size of {techType} = {GetSize(__instance.gameObject)}");
@@ -157,11 +154,11 @@ namespace CreatureConfigSize
                     wpc.data = ScriptableObject.CreateInstance<WaterParkCreatureData>();
                     logger.LogWarning($"(LiveMixin) Placeholder WaterParkCreatureData created!");
                 }
-            }
-            else
-            {
-                ErrorMessage.AddError($"{techType} is not in the waterPark reference dictionary!");
-            }
+            //}
+            //else
+            //{
+                //ErrorMessage.AddError($"{techType} is not in the waterPark reference dictionary!");
+            //}
         }
 
         //Populate WaterParkCreatureData with actual data, calculated from the size of the creature
