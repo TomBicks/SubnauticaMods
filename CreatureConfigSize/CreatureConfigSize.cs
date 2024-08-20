@@ -77,45 +77,7 @@ namespace CreatureConfigSize
                     }
 
                     //Check via reference whether the creature is eligible to be picked up (and have the Pickupable component)
-                    if (PickupableReference.ContainsKey(techType))
-                    {
-                        //NOTE!! Need to account for creatures inside WaterParks when calculating this, as they need to be able to be picked up still, but not when placed outside
-                        //The way to do this is to make IsPickupableOutside false in the WPC data; thus, might possibly be better to do all the checking there?
-                        ErrorMessage.AddMessage($"{techType} is using pickupableReference");
-
-                        //Size range within which a creature is made able to be picked up
-                        //Being outside of this range means the creature will have the Pickupable component removed, if it has one
-                        var (min, max) = PickupableReference[techType];
-
-                        //Whether the creature has a Pickupable component already or not
-                        bool componentExists = !(creature.GetComponent<Pickupable>() == null);
-
-                        if (modifier >= min && modifier <= max)
-                        {
-                            //If creature is eligible for the component and doesn't have one, add it
-                            if (!componentExists)
-                            {
-                                creature.AddComponent<Pickupable>();
-                            }
-                        }
-                        else
-                        {
-                            //If creature is ineligable for the component and has one, remove it
-                            if (componentExists)
-                            {
-                                var component = creature.GetComponent<Pickupable>();
-                                Object.Destroy(component);
-                            }
-                        }
-                    }
-                    //DEBUG!! Temporary code until I add in the reference for every creature
-                    else
-                    {
-                        ErrorMessage.AddError($"{techType} is not in the pickupable reference dictionary!");
-                        //DEBUG!!
-                        ErrorMessage.AddError($"Giving {techType} Pickupable anyway!");
-                        creature.AddComponent<Pickupable>();
-                    }
+                    CheckPickupableComponent(creature, modifier);
                 }
             }
             else
@@ -171,7 +133,6 @@ namespace CreatureConfigSize
 
             if (WaterParkReference.ContainsKey(techType))
             {
-                //Ensures the component exists; if it doesn't exist, this will create it, meaning no matter what it'll exist from here onwards
                 WaterParkCreature wpc = __instance;
                 logger.LogWarning($"(WaterParkCreature) Size of {techType} = {GetSize(__instance.gameObject)}");
 
@@ -214,6 +175,58 @@ namespace CreatureConfigSize
                 ErrorMessage.AddError($"{techType} is not in the waterPark reference dictionary!");
             }
         }
+
+        public static bool CheckPickupableComponent(GameObject creature, float modifier)
+        {
+            //Generate techtype to check the dictionary for creature's entry
+            TechType techType = CraftData.GetTechType(creature);
+
+            if(PickupableReference.ContainsKey(techType))
+            {
+                //NOTE!! Need to account for creatures inside WaterParks when calculating this, as they need to be able to be picked up still, but not when placed outside
+                //The way to do this is to make IsPickupableOutside false in the WPC data; thus, might possibly be better to do all the checking there?
+
+                //The size range within which a creature is made able to be picked up
+                //Being outside of this range means the creature will have the Pickupable component removed, if it has one
+                var (min, max) = PickupableReference[techType];
+
+                //Whether the creature has a Pickupable component already or not
+                bool componentExists = !(creature.GetComponent<Pickupable>() == null);
+
+                if (modifier >= min && modifier <= max)
+                {
+                    //If creature is eligible for the component and doesn't have one, add it and return true
+                    if (!componentExists)
+                    {
+                        creature.AddComponent<Pickupable>();
+                        return true;
+                    }
+                }
+                else
+                {
+                    //If creature is ineligable for the component and has one, remove it (and will return false by default)
+                    if (componentExists)
+                    {
+                        var component = creature.GetComponent<Pickupable>();
+                        Object.Destroy(component);
+                    }
+                }
+            }
+            //DEBUG!! Temporary code until I add in the reference for every creature
+            else
+            {
+                ErrorMessage.AddError($"{techType} is not in the pickupable reference dictionary!");
+                //DEBUG!!
+                ErrorMessage.AddError($"Giving {techType} Pickupable anyway!");
+                creature.AddComponent<Pickupable>();
+                //DEBUG!!
+                return true;
+            }
+
+            //Return false if any of the if statements are false
+            return false;
+        }
+
         public static void SetWaterParkData(ref WaterParkCreatureData data, float size)
         {
             //NOTE!! Each particular creature shares a WaterParkCreatureData (e.g. Hoopfish_WaterParkCreatureData)
@@ -312,13 +325,12 @@ namespace CreatureConfigSize
 
         private static void SetSize(GameObject creature, float modifier)
         {
-            //ErrorMessage.AddMessage($"Multiplying {CraftData.GetTechType(creature)} of size {creature.transform.localScale.x} by modifier {modifier} to size {(modifier)}");
             creature.transform.localScale = new Vector3(modifier, modifier, modifier);
         }
 
         private static float GetSize(GameObject creature)
         {
-            //NOTE!! Should I be wary if creatures are in the alien containment when this is used? Could result int false positives or negatives, as the creature is smaller
+            //NOTE!! Be wary this won't differentiate if a creature is in containment or not, as it will be smaller there than out in the ocean
             var size = creature.transform.localScale.x;
 
             return size;
