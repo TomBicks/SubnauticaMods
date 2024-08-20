@@ -3,6 +3,7 @@ using static CreatureConfigSize.CreatureConfigSizePlugin;
 using static CreatureConfigSize.References;
 using UnityEngine;
 using System.Collections.Generic;
+using static VFXParticlesPool;
 
 namespace CreatureConfigSize
 {
@@ -21,6 +22,7 @@ namespace CreatureConfigSize
         [HarmonyPostfix] //Postfix means less chance of missing setting any creatures' size
         public static void PostCreatureStart(Creature __instance)
         {
+            logger.LogInfo($"(PostCreatureStart){CraftData.GetTechType(__instance.gameObject)}");
             //Reference the gameObject Class directly, as none of the functionality uses the Creature class specifically
             GameObject creature = __instance.gameObject;
 
@@ -28,22 +30,17 @@ namespace CreatureConfigSize
 
             if (techType != TechType.None)
             {
-                //logger.LogDebug($"Setting size of TechType {techType}");
-                //ErrorMessage.AddDebug($"Setting size of TechType {techType}");
-
                 //Generate a modifier based on the creature's size class, retrieved from the CreatureSizeReference array
                 float modifier = GetCreatureSizeModifier(techType); ;
 
                 //Once we've retrieved the modifier, apply the change to size, by the modifier
-                //NOTE!! I wonder if there's a way to save the new size between loading and saving? It's clear they still randomise when loading it, from Start...unless I'm doing that?
-                //Is there a way to check if I've already randomised this creature's size?
-                //YES!! I AM THE ONE CHANGING IT!! So I'm re-randomising every time, but the size is totally saved. So if I check if it's not size 1.0 local scale, than it'll work!
+                //NOTE!! We apply them if their size is 1, as this is hopefully the baseline for many creatures
+                //NOTE 2!! Unfortunately, not all creatures start at size 1; notably small fish and Sea Treaders
                 if (GetSize(creature) == 1)
                 {
-                    ErrorMessage.AddMessage("Changing Size");
                     SetSize(creature, modifier);
 
-                    ErrorMessage.AddMessage($"Size of {techType} = {GetSize(creature)}");
+                    ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
 
                     //NOTE!! If i use the reference array above, this switch statement would *only* be for unique changes made!
                     //NOTE!! Can also use this for any changes unique to the creature we need to make, if any; probably jsut for leviathans
@@ -75,10 +72,10 @@ namespace CreatureConfigSize
                         default:
                             break;
                     }
-
-                    //Check via reference whether the creature is eligible to be picked up (and have the Pickupable component)
-                    CheckPickupableComponent(creature, modifier);
                 }
+
+                //Check whether the creature is eligible to be picked up (and have the Pickupable component) or not
+                CheckPickupableComponent(creature, GetSize(creature));
             }
             else
             {
@@ -86,98 +83,18 @@ namespace CreatureConfigSize
             }
         }
 
-        //Create a placeholder WaterParkCreatureData, before the component accesses it, to ensure no null reference errors
         [HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.Awake))]
-        [HarmonyPostfix] //By patching LiveMixin, this ensures we can use this for creatures both in and out of containment
-        //NOTE!! Originally was patching WaterParkCreature.Start, but as Metious let me know, that is triggered *waaay* too late, and we get null reference errors before then
-        public static void CreatePlaceholderWPCData(Creature __instance)
+        [HarmonyPostfix] //Using LiveMixin because creatures in containment don't trigger Creature.Start, and this occurs *after* Creature.Start anyway
+        public static void PostLiveMixin(Creature __instance)
         {
-            //logger.LogWarning($"(LiveMixin) {__instance.gameObject}");
-            TechType techType = CraftData.GetTechType(__instance.gameObject);
-
-            GetInsideWaterPark(__instance.gameObject);
-
-            //Because many things use LiveMixin, we need to filter; using the WaterParkReference dictionary is perfect here
-            //if (WaterParkReference.ContainsKey(techType))
-            //{
-            //Ensures the component exists; if it doesn't exist, this will create it, meaning no matter what it'll exist from here onwards
-            WaterParkCreature wpc = __instance.gameObject.EnsureComponent<WaterParkCreature>();
-                logger.LogWarning($"(LiveMixin) Size of {techType} = {GetSize(__instance.gameObject)}");
-
-                if (wpc.data == null)
-                {
-                    logger.LogWarning($"(LiveMixin) {techType} WaterParkComponent data is null! Creating placeholder!");
-                    //ERROR!! So, I'm using LiveMixin, because it means I can assign the data before WaterParkCreature is reference and all the null values start coming in.
-                    //But, the issue then is that I need to know whether 'IsInside' is true or not when assigning the WaterParkCreatureData. But the solution to the previous issue
-                    //Was to access it at a time when that data is not determined (default false); thus, the creature in containment gets smaller and smaller
-
-                    //SO NEXT STEP!! Determine if the creature is parented to an ACU; use the same logic to calculate data to add for both inside and outside
-                    //NOTE!! creatures growing to maturity will potentially pose a big issue; I'll need to test if I can access MaturityTime easily or not
-
-                    //Apply the new placeholder/default WaterParkCreatureData
-                    wpc.data = ScriptableObject.CreateInstance<WaterParkCreatureData>();
-                    logger.LogWarning($"(LiveMixin) Placeholder WaterParkCreatureData created!");
-                }
-            //}
-            //else
-            //{
-                //ErrorMessage.AddError($"{techType} is not in the waterPark reference dictionary!");
-            //}
-        }
-
-        //Populate WaterParkCreatureData with actual data, calculated from the size of the creature
-        [HarmonyPatch(typeof(WaterParkCreature), nameof(WaterParkCreature.Start))]
-        [HarmonyPostfix] //NOTE!! Creatures in containment will not trigger Creature.Start when loading in; they will only when released from the inventory; thus we use WaterParkCreature.Start
-        public static void PopulateWPCData(WaterParkCreature __instance)
-        {
-            //Because many things use LiveMixin, we need to filter; using the WaterParkReference dictionary is perfect here
-            TechType techType = CraftData.GetTechType(__instance.gameObject);
-
-            if (WaterParkReference.ContainsKey(techType))
+            if(__instance.gameObject.GetComponent<Creature>() != null)
             {
-                WaterParkCreature wpc = __instance;
-                logger.LogWarning($"(WaterParkCreature) Size of {techType} = {GetSize(__instance.gameObject)}");
-
-                logger.LogWarning($"(WaterParkCreature) {wpc.isInside}");
-                logger.LogWarning($"(WaterParkCreature) Replacing placeholder {techType} WaterParkComponent data with real data!");
-
-                //If creature is inside the alien containment, then it'll be smaller than its max size, and we need to work backwards to calculate WPC data
-                //NOTE!! We specify if currentWaterPark isn't null, as if they are in inventory after being picked up from containment, it'll be a false positive
-                if (wpc.isInside && wpc.currentWaterPark != null)
-                {
-                    //If creature is already mature, that means it's currently at its max size, so we calculate from here as normal
-                    //if(wpc.isMature)
-                    //{
-                        logger.LogWarning($"(WaterParkCreature) {techType} is already inside alien containment! Calcuating original size!");
-
-                        //By performing the calculation to get maxSize (x * 0.6), but in reverse (x / 0.6), we get our old size back
-                        var initialSize = GetSize(__instance.gameObject) / 0.6f;
-                        SetWaterParkData(ref wpc.data, initialSize);
-                    //}
-                    //If creature is not mature, then we need to use
-                    //ERROR!! IsMature is not accessible at Pre or Post Start
-                    //else
-                    //{
-                        logger.LogError($"{wpc.isMature}, {wpc.matureTime}, {wpc.data.outsideSize}, {wpc.data.maxSize}");
-                    //}
-                }
-                //If creature is not in alien containment, then we just use its current size to calculate WPC data
-                else
-                {
-                    logger.LogWarning($"(WaterParkCreature) {techType} is not inside alien containment! Using current size!");
-
-                    //If the creature isn't in alien containment, this means we can just use its current size, as normal, to set the WaterParkCreatureData
-                    var currentSize = GetSize(__instance.gameObject);
-                    SetWaterParkData(ref wpc.data, currentSize);
-                }
-                logger.LogWarning($"(WaterParkCreature) Real WaterParkCreatureData created!");
-            }
-            else
-            {
-                ErrorMessage.AddError($"{techType} is not in the waterPark reference dictionary!");
+                logger.LogInfo($"(PostLiveMixin){CraftData.GetTechType(__instance.gameObject)}");
+                CheckWaterParkCreatureComponent(__instance.gameObject, GetSize(__instance.gameObject));
             }
         }
 
+        //Check whether the creature's size makes it eligible or not for the Pickupable component, and to add it or remove it
         public static bool CheckPickupableComponent(GameObject creature, float modifier)
         {
             //Generate techtype to check the dictionary for creature's entry
@@ -188,8 +105,7 @@ namespace CreatureConfigSize
                 //NOTE!! Need to account for creatures inside WaterParks when calculating this, as they need to be able to be picked up still, but not when placed outside
                 //The way to do this is to make IsPickupableOutside false in the WPC data; thus, might possibly be better to do all the checking there?
 
-                //The size range within which a creature is made able to be picked up
-                //Being outside of this range means the creature will have the Pickupable component removed, if it has one
+                //The size range within which a creature is made able to be picked up; component removed if outside of this range
                 var (min, max) = PickupableReference[techType];
 
                 //Whether the creature has a Pickupable component already or not
@@ -224,6 +140,61 @@ namespace CreatureConfigSize
                 ErrorMessage.AddError($"Giving {techType} Pickupable anyway!");
                 creature.AddComponent<Pickupable>();
                 //DEBUG!!
+                return true;
+            }
+
+            //Return false if any of the if statements are false
+            return false;
+        }
+
+        //Check whether the creature's size makes it eligible or not for the WaterParkCreature component, and to add it or remove it
+        public static bool CheckWaterParkCreatureComponent(GameObject creature, float modifier)
+        {
+            //Generate techtype to check the dictionary for creature's entry
+            TechType techType = CraftData.GetTechType(creature);
+
+            if(WaterParkReference.ContainsKey(techType))
+            {
+                var (min, max) = WaterParkReference[techType];
+
+                //Ensure the creature has the WaterParkCreature component
+                WaterParkCreature wpc = creature.EnsureComponent<WaterParkCreature>();
+
+                //Create an empty WaterParkCreatureData for us to populate, if it's empty
+                if(wpc.data == null)
+                {
+                    logger.LogWarning($"WaterParkCreatureData of {techType} is null! Creating placeholder!");
+                    wpc.data = ScriptableObject.CreateInstance<WaterParkCreatureData>(); 
+                }
+
+                if (GetInsideWaterPark(creature))
+                {
+                    //If creature is already mature, that means it's currently at its max size, so we calculate from here as normal
+                    //if(wpc.isMature)
+                    //{
+                    logger.LogWarning($"(WaterParkCreature) {techType} is already inside alien containment! Calcuating original size!");
+
+                    //By performing the calculation to get maxSize (x * 0.6), but in reverse (x / 0.6), we get our old size back
+                    var initialSize = GetSize(creature) / 0.6f;
+                    SetWaterParkData(ref wpc.data, initialSize);
+                    //}
+                    //If creature is not mature, then we need to use
+                    //ERROR!! IsMature is not accessible at Pre or Post Start
+                    //else
+                    //{
+                    logger.LogError($"{wpc.isMature}, {wpc.matureTime}, {wpc.data.outsideSize}, {wpc.data.maxSize}");
+                    //}
+                }
+                //If creature is not in alien containment, then we just use its current size to calculate WPC data
+                else
+                {
+                    logger.LogWarning($"(WaterParkCreature) {techType} is not inside alien containment! Using current size!");
+
+                    //If the creature isn't in alien containment, this means we can just use its current size, as normal, to set the WaterParkCreatureData
+                    var currentSize = GetSize(creature);
+                    SetWaterParkData(ref wpc.data, currentSize);
+                }
+
                 return true;
             }
 
