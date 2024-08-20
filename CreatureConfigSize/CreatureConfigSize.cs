@@ -18,79 +18,46 @@ namespace CreatureConfigSize
             CraftData.itemSizes.Add(TechType.ReaperLeviathan, new Vector2int(3, 3));
         }
 
-        [HarmonyPatch(typeof(Creature), nameof(Creature.Start))]
-        [HarmonyPostfix] //Postfix means less chance of missing setting any creatures' size
-        public static void PostCreatureStart(Creature __instance)
-        {
-            logger.LogInfo($"(PostCreatureStart){CraftData.GetTechType(__instance.gameObject)}");
-            //Reference the gameObject Class directly, as none of the functionality uses the Creature class specifically
-            GameObject creature = __instance.gameObject;
-
-            TechType techType = CraftData.GetTechType(creature);
-
-            if (techType != TechType.None)
-            {
-                //Generate a modifier based on the creature's size class, retrieved from the CreatureSizeReference array
-                float modifier = GetCreatureSizeModifier(techType); ;
-
-                //Once we've retrieved the modifier, apply the change to size, by the modifier
-                //NOTE!! We apply them if their size is 1, as this is hopefully the baseline for many creatures
-                //NOTE 2!! Unfortunately, not all creatures start at size 1; notably small fish and Sea Treaders
-                if (GetSize(creature) == 1)
-                {
-                    SetSize(creature, modifier);
-
-                    ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
-
-                    //NOTE!! If i use the reference array above, this switch statement would *only* be for unique changes made!
-                    //NOTE!! Can also use this for any changes unique to the creature we need to make, if any; probably jsut for leviathans
-                    switch (techType)
-                    {
-                        case TechType.ReaperLeviathan:
-                            #region Notes about creature properties
-                            //NOTE!! If I want to deal with velocity, will have to deal with leash movement of leviathans too
-                            //NOTE!! Perhaps I can increase the speed of the leviathan, whilst inversely decreasing the turning speed of it, as it gets larger?
-                            //Probably no need to increase the turning speed of smaller leviathans; they seem to get buggy when it's put above 3
-                            //If they're faster larger, do I need to increase their leash distance a bit? Is that dangerous?
-
-                            //Regarding pitch, which can be set, 0.8 is the deepest without being ridiculous I think, same for 1.4 or 1.3 for highest
-                            //Volume can be changed too
-                            //Only issue with pitch is the audio is quicker or slower based on it, so it can loop back on itself by the looks
-                            //Under FMOD CustomLoopingEventWithCallback, triggering on the Roar animation
-                            //Then the eventInstance 'evt' was where I changed the sound parameters
-
-                            //Seems there are two values to determine for movement speed; moveForward and velocity
-                            //it seems velocity caps how fast the creature can move, whilst forward is perhaps the forward momentum it can generate?
-                            //So it keeps moving forward, up to the velocity limit?
-
-                            //Some example code for how it might work altering a creature based on its modifier
-                            //creature.gameObject.GetComponent<FMOD_CustomEmitter>().evt.setParameterValue("volume", 2.5f);
-
-                            //REGARDING SIZE - 0.1 or 0.2 for a reaper, making them 0.06 or 0.12 in scale in the alien containment, is the max size, anything above that will not fit, and thus cannot be picked up
-                            #endregion
-                            break;
-                        default:
-                            break;
-                    }
-                }
-
-                //Check whether the creature is eligible to be picked up (and have the Pickupable component) or not
-                CheckPickupableComponent(creature, GetSize(creature));
-            }
-            else
-            {
-                logger.LogWarning($"Error! Creature {__instance.name} has no TechType!");
-            }
-        }
-
         [HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.Awake))]
         [HarmonyPostfix] //Using LiveMixin because creatures in containment don't trigger Creature.Start, and this occurs *after* Creature.Start anyway
         public static void PostLiveMixin(Creature __instance)
         {
             if(__instance.gameObject.GetComponent<Creature>() != null)
             {
+                //Reference the gameObject Class directly, as none of the functionality uses the Creature class specifically
+                GameObject creature = __instance.gameObject;
+
+                TechType techType = CraftData.GetTechType(creature);
+
+                if (techType != TechType.None)
+                {
+                    //Generate a modifier based on the creature's size class, retrieved from the CreatureSizeReference array
+                    float modifier = GetCreatureSizeModifier(techType); ;
+
+                    //Once we've retrieved the modifier, apply the change to size, by the modifier
+                    //NOTE!! We apply them if their size is 1, as this is hopefully the baseline for many creatures
+                    //NOTE 2!! Unfortunately, not all creatures start at size 1; notably small fish and Sea Treaders
+                    if (GetSize(creature) == 1)
+                    {
+                        SetSize(creature, modifier);
+
+                        ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
+                    }
+
+                    var sizeAfterChange = GetSize(creature);
+
+                    //Check whether the creature is eligible to be picked up (and have the Pickupable component) or not
+                    CheckPickupableComponent(creature, sizeAfterChange);
+
+                    //Check whether the creature is eligible to be placed in alien containment up (and have the WPC component) or not
+                    CheckWaterParkCreatureComponent(__instance.gameObject, sizeAfterChange);
+                }
+                else
+                {
+                    logger.LogWarning($"Error! Creature {__instance.name} has no TechType!");
+                }
+
                 logger.LogInfo($"(PostLiveMixin){CraftData.GetTechType(__instance.gameObject)}");
-                CheckWaterParkCreatureComponent(__instance.gameObject, GetSize(__instance.gameObject));
             }
         }
 
