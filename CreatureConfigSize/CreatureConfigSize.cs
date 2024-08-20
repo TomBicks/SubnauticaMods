@@ -95,11 +95,13 @@ namespace CreatureConfigSize
             //logger.LogWarning($"(LiveMixin) {__instance.gameObject}");
             TechType techType = CraftData.GetTechType(__instance.gameObject);
 
+            GetInsideWaterPark(__instance.gameObject);
+
             //Because many things use LiveMixin, we need to filter; using the WaterParkReference dictionary is perfect here
             //if (WaterParkReference.ContainsKey(techType))
             //{
-                //Ensures the component exists; if it doesn't exist, this will create it, meaning no matter what it'll exist from here onwards
-                WaterParkCreature wpc = __instance.gameObject.EnsureComponent<WaterParkCreature>();
+            //Ensures the component exists; if it doesn't exist, this will create it, meaning no matter what it'll exist from here onwards
+            WaterParkCreature wpc = __instance.gameObject.EnsureComponent<WaterParkCreature>();
                 logger.LogWarning($"(LiveMixin) Size of {techType} = {GetSize(__instance.gameObject)}");
 
                 if (wpc.data == null)
@@ -193,6 +195,8 @@ namespace CreatureConfigSize
                 //Whether the creature has a Pickupable component already or not
                 bool componentExists = !(creature.GetComponent<Pickupable>() == null);
 
+                GetInsideWaterPark(creature);
+
                 if (modifier >= min && modifier <= max)
                 {
                     //If creature is eligible for the component and doesn't have one, add it and return true
@@ -237,6 +241,20 @@ namespace CreatureConfigSize
             data.initialSize = size * 0.1f;
             data.maxSize = size * 0.6f;
             data.outsideSize = size;
+        }
+
+        public static bool GetInsideWaterPark(GameObject creature)
+        {
+            logger.LogInfo($"WaterPark = {creature.GetComponentInParent<WaterPark>()}");
+
+            if(creature.GetComponentInParent<WaterPark>() != null)
+            {
+                logger.LogInfo("Creature is in a WaterPark");
+                return true;
+            }
+
+            logger.LogInfo("Creature is not in a WaterPark");
+            return false;
         }
 
         //Just an easier way to read the sizeClass of the creatures

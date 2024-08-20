@@ -1,4 +1,5 @@
 ﻿using static CreatureConfigSize.CreatureConfigSizePlugin;
+using static CreatureConfigSize.CreatureConfigSize;
 using Nautilus.Commands;
 using UnityEngine;
 
@@ -36,6 +37,8 @@ namespace CreatureConfigSize
                 //We want to update whether it should have pickupable and WPC components after the change, to keep it in line with everything
                 //Should also take into account whether it's already in containment, as then its initialSize should be taken into account
                 //Also, it should *always* be pickupable if in containment; need a wat to remove it, right?
+
+                CheckPickupableComponent(target, modifier);
             }
             else
             {

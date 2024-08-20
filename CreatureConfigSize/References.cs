@@ -33,7 +33,7 @@ namespace CreatureConfigSize
 
             //Leviathans
             { TechType.GhostLeviathan, (0.1f,0.1f) }, ////Made pickupable at minimum size, just so it's even possible to put it in containment
-            //NOTE!! Is Juvenile different to adult in terms of default size? Different TechTypes either way means I have to check for both likely
+            //{ TechType.GhostLeviathanJuvenile, (0.1f,0.1f) }, //NOTE!! Is Juvenile different to adult in terms of default size? Different TechTypes either way means I have to check for both likely
             { TechType.ReaperLeviathan, (0.1f,0.2f) },
             //{ TechType.SeaDragon, (0.1f,0.1f) }, //UNTESTED!! But likely this is max size, like the sea emperor
             { TechType.SeaEmperorJuvenile, (0.1f,0.1f) }, //The grown up sea emperors; made pickupable at minimum size, just so it's even possible to put it in containment
@@ -60,10 +60,11 @@ namespace CreatureConfigSize
 
             //Leviathans
             { TechType.GhostLeviathan, (0.1f,0.1f) }, //6% size is honestly the largest it fits without clipping; so only minimum size ghost will fit
-            //NOTE!! Is Juvenile different to adult in terms of default size? Different TechTypes either way means I have to check for both likely
+            //{ TechType.GhostLeviathanJuvenile, (0.1f,0.1f) }, //NOTE!! Is Juvenile different to adult in terms of default size? Different TechTypes either way means I have to check for both likely
             { TechType.ReaperLeviathan, (0.1f,0.2f) }, //Reaper won't fit in the containment at anything larger than 12% size
             //{ TechType.SeaDragon, (0.1f,0.1f) }, //UNTESTED!! But likely this is max size, like the sea emperor
-            { TechType.SeaEmperorJuvenile, (0.1f,0.1f) } //The grown up sea emperors; 6% size is honestly the largest it fits without clipping; so only minimum size sea emperor will fit
+            { TechType.SeaEmperorJuvenile, (0.1f,0.1f) }, //The grown up sea emperors; 6% size is honestly the largest it fits without clipping; so only minimum size sea emperor will fit
+            //{ TechType.SeaTreader, (0.1f,0.1f) } //ERROR!! Sea Treader has no locomotion component, instead having a unique component to move on the ground, and thus breaks in containment
         };
         #endregion
     }
