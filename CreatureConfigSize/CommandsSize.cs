@@ -39,6 +39,8 @@ namespace CreatureConfigSize
                 //Also, it should *always* be pickupable if in containment; need a wat to remove it, right?
 
                 CheckPickupableComponent(target, modifier);
+
+                CheckWaterParkCreatureComponent(target, modifier);
             }
             else
             {

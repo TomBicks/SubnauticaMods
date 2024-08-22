@@ -143,7 +143,7 @@ namespace CreatureConfigSize
 
                     //By performing the calculation to get maxSize (x * 0.6), but in reverse (x / 0.6), we get our old size back
                     var initialSize = GetSize(creature) / 0.6f;
-                    SetWaterParkData(ref wpc.data, initialSize);
+                    SetWaterParkData(ref wpc.data, initialSize, techType);
                     //}
                     //If creature is not mature, then we need to use
                     //ERROR!! IsMature is not accessible at Pre or Post Start
@@ -159,7 +159,7 @@ namespace CreatureConfigSize
 
                     //If the creature isn't in alien containment, this means we can just use its current size, as normal, to set the WaterParkCreatureData
                     var currentSize = GetSize(creature);
-                    SetWaterParkData(ref wpc.data, currentSize);
+                    SetWaterParkData(ref wpc.data, currentSize, techType);
                 }
 
                 return true;
@@ -169,7 +169,7 @@ namespace CreatureConfigSize
             return false;
         }
 
-        public static void SetWaterParkData(ref WaterParkCreatureData data, float size)
+        public static void SetWaterParkData(ref WaterParkCreatureData data, float size, TechType techType)
         {
             //NOTE!! Each particular creature shares a WaterParkCreatureData (e.g. Hoopfish_WaterParkCreatureData)
             //This means two things; one, I can't change one SpineFish without changing the other, and two, I need to create one for the creatures that don't usually go in containment, like leviathans
@@ -179,6 +179,18 @@ namespace CreatureConfigSize
             data.initialSize = size * 0.1f;
             data.maxSize = size * 0.6f;
             data.outsideSize = size;
+
+            //Check whether the creature should be pickupable outside containment or not (default value is true, if not in dictionary)
+            if(PickupableReference.ContainsKey(techType))
+            {
+                //Calculate a bool that is equal to whether or not the creature's size is within the set range
+                var (min, max) = PickupableReference[techType];
+                bool withinRange = (size >= min && size <= max);
+                data.isPickupableOutside = withinRange;
+            }
+
+            data.canBreed = true;
+            if(GetCreatureSizeModifier(techType) == SizeClass.Large) { data.canBreed = false; }
         }
 
         public static bool GetInsideWaterPark(GameObject creature)
