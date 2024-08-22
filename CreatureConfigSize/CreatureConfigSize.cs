@@ -32,14 +32,14 @@ namespace CreatureConfigSize
 
                 if (techType != TechType.None)
                 {
-                    //Generate a modifier based on the creature's size class, retrieved from the CreatureSizeReference array
-                    float modifier = GetCreatureSizeModifier(techType); ;
-
-                    //Once we've retrieved the modifier, apply the change to size, by the modifier
                     //NOTE!! We apply them if their size is 1, as this is hopefully the baseline for many creatures
                     //NOTE 2!! Unfortunately, not all creatures start at size 1; notably small fish and Sea Treaders
                     if (GetSize(creature) == 1)
                     {
+                        //Generate a modifier based on the creature's size class, retrieved from the CreatureSizeReference array
+                        float modifier = GetCreatureSizeModifier(techType); ;
+
+                        //Once we've retrieved the modifier, apply the change to size, by the modifier
                         SetSize(creature, modifier);
 
                         ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
@@ -137,21 +137,12 @@ namespace CreatureConfigSize
 
                 if (GetInsideWaterPark(creature))
                 {
-                    //If creature is already mature, that means it's currently at its max size, so we calculate from here as normal
-                    //if(wpc.isMature)
-                    //{
                     logger.LogWarning($"(WaterParkCreature) {techType} is already inside alien containment! Calcuating original size!");
 
                     //By performing the calculation to get maxSize (x * 0.6), but in reverse (x / 0.6), we get our old size back
-                    var initialSize = GetSize(creature) / 0.6f;
+                    var initialSize = modifier / 0.6f;
                     SetWaterParkData(ref wpc.data, initialSize, techType);
-                    //}
-                    //If creature is not mature, then we need to use
-                    //ERROR!! IsMature is not accessible at Pre or Post Start
-                    //else
-                    //{
                     logger.LogError($"{wpc.isMature}, {wpc.matureTime}, {wpc.data.outsideSize}, {wpc.data.maxSize}");
-                    //}
                 }
                 //If creature is not in alien containment, then we just use its current size to calculate WPC data
                 else
@@ -159,7 +150,7 @@ namespace CreatureConfigSize
                     logger.LogWarning($"(WaterParkCreature) {techType} is not inside alien containment! Using current size!");
 
                     //If the creature isn't in alien containment, this means we can just use its current size, as normal, to set the WaterParkCreatureData
-                    var currentSize = GetSize(creature);
+                    var currentSize = modifier;
                     SetWaterParkData(ref wpc.data, currentSize, techType);
                 }
 
@@ -190,10 +181,8 @@ namespace CreatureConfigSize
                 data.isPickupableOutside = withinRange;
             }
 
-            //If creature is large, it cannot breed
+            //If creature is large, it cannot breed in containment
             data.canBreed = GetSizeClass(techType) == SizeClass.Large ? false : true;
-            //data.canBreed = true;
-            //if(GetSizeClass(techType) == SizeClass.Large) { data.canBreed = false; }
         }
 
         public static bool GetInsideWaterPark(GameObject creature)
