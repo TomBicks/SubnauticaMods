@@ -4,6 +4,7 @@ using static CreatureConfigSize.References;
 using UnityEngine;
 using System.Collections.Generic;
 using static VFXParticlesPool;
+using static CreatureConfigSize.CreatureConfigSize;
 
 namespace CreatureConfigSize
 {
@@ -189,8 +190,10 @@ namespace CreatureConfigSize
                 data.isPickupableOutside = withinRange;
             }
 
-            data.canBreed = true;
-            if(GetCreatureSizeModifier(techType) == SizeClass.Large) { data.canBreed = false; }
+            //If creature is large, it cannot breed
+            data.canBreed = GetSizeClass(techType) == SizeClass.Large ? false : true;
+            //data.canBreed = true;
+            //if(GetSizeClass(techType) == SizeClass.Large) { data.canBreed = false; }
         }
 
         public static bool GetInsideWaterPark(GameObject creature)
@@ -211,6 +214,28 @@ namespace CreatureConfigSize
         //Just an easier way to read the sizeClass of the creatures
         public enum SizeClass { None, Small, Medium, Large }
 
+        private static SizeClass GetSizeClass(TechType techType)
+        {
+            SizeClass sizeClass = SizeClass.None;
+
+            for (var i = 0; i < 3; i++)
+            {
+                for (var j = 0; j < CreatureSizeClassReference[i].Length; j++)
+                {
+                    if (CreatureSizeClassReference[i][j] == techType)
+                    {
+                        //We return i (+1 as None is 0) as the size class, as it refers to which of the 3 size arrays we found the TechType match in
+                        //We use the SizeClass array in future references, for legibility
+                        sizeClass = (SizeClass)(i + 1); //This turns the int result into its appropriate enum counterpart; e.g. 1 becomes SizeClass.Small
+                        break; //No need to keep going through the loop, if we've found our techtype already
+                    }
+                }
+            }
+
+            //If no matches, size class equals none
+            return sizeClass;
+        }
+
         private static float GetCreatureSizeModifier(TechType techType)
         {
             //Return a default modifier of 1 if no size class can be found in the reference array
@@ -219,42 +244,26 @@ namespace CreatureConfigSize
             if (!config.ComplexSizeEnabled)
             {
                 #region Size Class Modifier
-                //Return 0 if no size class can be found in the reference array
-                var sizeClass = SizeClass.None;
-
                 //Try to get the size class of the given TechType
-                for (var i = 0; i < 3; i++)
+                SizeClass sizeClass = GetSizeClass(techType);
+
+                //If we found a size class, generate a modifier for it, then break from the loop
+                if (sizeClass != SizeClass.None)
                 {
-                    for (var j = 0; j < CreatureSizeClassReference[i].Length; j++)
+                    switch (sizeClass)
                     {
-                        if (CreatureSizeClassReference[i][j] == techType)
-                        {
-                            //We return i (+1 as None is 0) as the size class, as it refers to which of the 3 size arrays we found the TechType match in
-                            //We use the SizeClass array in future references, for legibility
-                            sizeClass = (SizeClass)(i + 1); //This turns the int result into its appropriate enum counterpart; e.g. 1 becomes SizeClass.Small
+                        case SizeClass.Small:
+                            modifier = GenerateSizeModifier(config.SmallCreatureMinSize, config.SmallCreatureMaxSize);
                             break;
-                        }
-                    }
-                    //If we found a size class, generate a modifier for it, then break from the loop
-                    if (sizeClass != SizeClass.None)
-                    {
-                        switch (sizeClass)
-                        {
-                            case SizeClass.Small:
-                                modifier = GenerateSizeModifier(config.SmallCreatureMinSize, config.SmallCreatureMaxSize);
-                                break;
-                            case SizeClass.Medium:
-                                modifier = GenerateSizeModifier(config.MedCreatureMinSize, config.MedCreatureMaxSize);
-                                break;
-                            case SizeClass.Large:
-                                modifier = GenerateSizeModifier(config.LargeCreatureMinSize, config.LargeCreatureMaxSize);
-                                break;
-                        }
-                        break; //No need to keep going through the loop, if we've found our techtype already
+                        case SizeClass.Medium:
+                            modifier = GenerateSizeModifier(config.MedCreatureMinSize, config.MedCreatureMaxSize);
+                            break;
+                        case SizeClass.Large:
+                            modifier = GenerateSizeModifier(config.LargeCreatureMinSize, config.LargeCreatureMaxSize);
+                            break;
                     }
                 }
-
-                if (sizeClass == SizeClass.None)
+                else
                 {
                     logger.LogWarning($"Error! Could not retrieve size class for TechType {techType}!");
                 }
