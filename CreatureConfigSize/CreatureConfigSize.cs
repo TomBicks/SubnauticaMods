@@ -2,6 +2,7 @@
 using static CreatureConfigSize.CreatureConfigSizePlugin;
 using static CreatureConfigSize.References;
 using UnityEngine;
+using static HandReticle;
 
 namespace CreatureConfigSize
 {
@@ -17,8 +18,36 @@ namespace CreatureConfigSize
         }
 
         [HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.Awake))]
-        [HarmonyPostfix] //Using LiveMixin because creatures in containment don't trigger Creature.Start, and this occurs *after* Creature.Start anyway
-        public static void PostLiveMixin(Creature __instance)
+        [HarmonyPostfix] //Using LiveMixin because creatures in containment don't trigger Creature events (because their creature component is disabled)
+        //Using .Awake to set up the placeholder WPC data, as by .Start it's pulling null references and breaking
+        public static void PostLiveMixinAwake(Creature __instance)
+        {
+            GameObject creature = __instance.gameObject;
+            TechType techType = CraftData.GetTechType(creature);
+
+            //DEBUG!! Commenting these until I;m ready to actually sort out creatures by size
+            //If the creature can be in a WaterPark but isn't normally, we need to create a new blank placeholder WPC data at start
+            //Otherwise it breaks, because they're null otherwise, on account of not normally having WPC component
+            //if (WaterParkReference.ContainsKey(techType))
+            //{
+                //var (min, max) = WaterParkReference[techType];
+
+                //Ensure the creature has the WaterParkCreature component
+                WaterParkCreature wpc = creature.EnsureComponent<WaterParkCreature>();
+
+                //Create an empty WaterParkCreatureData for us to populate, if it's empty
+                if (wpc.data == null)
+                {
+                    logger.LogInfo($"WaterParkCreatureData of {techType} is null! Creating placeholder!");
+                    wpc.data = ScriptableObject.CreateInstance<WaterParkCreatureData>();
+                }
+            //}
+        }
+
+        [HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.Start))]
+        [HarmonyPostfix] //Using LiveMixin because creatures in containment don't trigger Creature events (because their creature component is disabled)
+        //Using .Start for everything else because size changes don't take effect if done in .Awake
+        public static void PostLiveMixinStart(Creature __instance)
         {
             if(__instance.gameObject.GetComponent<Creature>() != null)
             {
@@ -32,7 +61,7 @@ namespace CreatureConfigSize
                 }
 
                 ErrorMessage.AddMessage($"Creature {techType} found");
-                logger.LogMessage($"Creature {techType} found");
+                logger.LogInfo($"Creature {techType} found");
 
                 if (techType != TechType.None)
                 {
@@ -142,8 +171,10 @@ namespace CreatureConfigSize
                 //Create an empty WaterParkCreatureData for us to populate, if it's empty
                 if(wpc.data == null)
                 {
-                    logger.LogWarning($"WaterParkCreatureData of {techType} is null! Creating placeholder!");
-                    wpc.data = ScriptableObject.CreateInstance<WaterParkCreatureData>(); 
+                //logger.LogWarning($"WaterParkCreatureData of {techType} is null! Creating placeholder!");
+                //wpc.data = ScriptableObject.CreateInstance<WaterParkCreatureData>(); 
+                //Because I'm setting this in LiveMixin.Awake, this SHOULD NOT trigger
+                logger.LogError($"Error! WaterParkCreature component data for {techType} is null!");
                 }
 
                 if (GetInsideWaterPark(creature))
