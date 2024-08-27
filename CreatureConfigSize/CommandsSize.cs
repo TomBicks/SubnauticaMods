@@ -47,7 +47,7 @@ namespace CreatureConfigSize
                 if(target!=null)
                 {
                     TechType techType = CraftData.GetTechType(target);
-                    ErrorMessage.AddWarning($"{target} is not a creature!");
+                    ErrorMessage.AddWarning($"{techType} is not a creature!");
                 }
                 else
                 {

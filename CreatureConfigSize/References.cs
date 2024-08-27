@@ -32,10 +32,10 @@ namespace CreatureConfigSize
             { TechType.SeaEmperorBaby, (0.1f, 0.5f) }, //The baby sea emperor newly hatched; feels cruel to grab them, but they cute
 
             //Leviathans
-            { TechType.GhostLeviathan, (0.1f,0.1f) }, ////Made pickupable at minimum size, just so it's even possible to put it in containment
+            { TechType.GhostLeviathan, (0.1f,0.1f) }, //Made pickupable at minimum size, just so it's even possible to put it in containment
             //{ TechType.GhostLeviathanJuvenile, (0.1f,0.1f) }, //NOTE!! Is Juvenile different to adult in terms of default size? Different TechTypes either way means I have to check for both likely
             { TechType.ReaperLeviathan, (0.1f,0.2f) },
-            //{ TechType.SeaDragon, (0.1f,0.1f) }, //UNTESTED!! But likely this is max size, like the sea emperor
+            { TechType.SeaDragon, (0.1f,0.1f) }, //Made pickupable at minimum size, just so it's even possible to put it in containment
             { TechType.SeaEmperorJuvenile, (0.1f,0.1f) }, //The grown up sea emperors; made pickupable at minimum size, just so it's even possible to put it in containment
             { TechType.SeaTreader, (0.1f,0.1f) }
         };
@@ -62,7 +62,8 @@ namespace CreatureConfigSize
             { TechType.GhostLeviathan, (0.1f,0.1f) }, //6% size is honestly the largest it fits without clipping; so only minimum size ghost will fit
             //{ TechType.GhostLeviathanJuvenile, (0.1f,0.1f) }, //NOTE!! Is Juvenile different to adult in terms of default size? Different TechTypes either way means I have to check for both likely
             { TechType.ReaperLeviathan, (0.1f,0.2f) }, //Reaper won't fit in the containment at anything larger than 12% size
-            //{ TechType.SeaDragon, (0.1f,0.1f) }, //UNTESTED!! But likely this is max size, like the sea emperor
+            { TechType.Reefback, (0.1f,0.2f) }, //Reefback and ReefbackBaby both share the same techtype of Reefback, despite being different models, different base sizes, and despite ReefbackBaby techtype existing
+            { TechType.SeaDragon, (0.1f,0.1f) }, //ERROR!! Sea Dragon does not appear to swim around in the tank without Sea Dragon component being enabled
             { TechType.SeaEmperorJuvenile, (0.1f,0.1f) }, //The grown up sea emperors; 6% size is honestly the largest it fits without clipping; so only minimum size sea emperor will fit
             //{ TechType.SeaTreader, (0.1f,0.1f) } //ERROR!! Sea Treader has no locomotion component, instead having a unique component to move on the ground, and thus breaks in containment
         };

@@ -2,9 +2,6 @@
 using static CreatureConfigSize.CreatureConfigSizePlugin;
 using static CreatureConfigSize.References;
 using UnityEngine;
-using System.Collections.Generic;
-using static VFXParticlesPool;
-using static CreatureConfigSize.CreatureConfigSize;
 
 namespace CreatureConfigSize
 {
@@ -29,15 +26,28 @@ namespace CreatureConfigSize
                 GameObject creature = __instance.gameObject;
 
                 TechType techType = CraftData.GetTechType(creature);
+                if(techType == TechType.Reefback) 
+                {
+                    logger.LogInfo($"{creature.name}");
+                }
+
+                ErrorMessage.AddMessage($"Creature {techType} found");
+                logger.LogMessage($"Creature {techType} found");
 
                 if (techType != TechType.None)
                 {
                     //NOTE!! We apply them if their size is 1, as this is hopefully the baseline for many creatures
                     //NOTE 2!! Unfortunately, not all creatures start at size 1; notably small fish and Sea Treaders
+                    //ERROR!! I'm not sure if it's because I'm calling it from LiveMixin, and thus too early, but size randomising isn't working anymore!!!
+                    //ERROR!! Set Size still works, so I'm assuming maybe because this occurs before Creature.Start, whatever I do is being reset by the start event?
+
+                    //Maybe I create a component in code, to hold onto the value and then apply it after its loaded?
+                    logger.LogInfo($"Creature Size = {GetSize(creature)}");
                     if (GetSize(creature) == 1)
                     {
                         //Generate a modifier based on the creature's size class, retrieved from the CreatureSizeReference array
-                        float modifier = GetCreatureSizeModifier(techType); ;
+                        float modifier = GetCreatureSizeModifier(techType);
+                        logger.LogInfo($"Creature Modifier = {modifier}");
 
                         //Once we've retrieved the modifier, apply the change to size, by the modifier
                         SetSize(creature, modifier);
@@ -46,6 +56,7 @@ namespace CreatureConfigSize
                     }
 
                     var sizeAfterChange = GetSize(creature);
+                    logger.LogInfo($"Creature Size After = {sizeAfterChange}");
 
                     //Check whether the creature is eligible to be picked up (and have the Pickupable component) or not
                     CheckPickupableComponent(creature, sizeAfterChange);
@@ -121,9 +132,9 @@ namespace CreatureConfigSize
             //Generate techtype to check the dictionary for creature's entry
             TechType techType = CraftData.GetTechType(creature);
 
-            if(WaterParkReference.ContainsKey(techType))
-            {
-                var (min, max) = WaterParkReference[techType];
+            //if(WaterParkReference.ContainsKey(techType))
+            //{
+                //var (min, max) = WaterParkReference[techType];
 
                 //Ensure the creature has the WaterParkCreature component
                 WaterParkCreature wpc = creature.EnsureComponent<WaterParkCreature>();
@@ -155,7 +166,7 @@ namespace CreatureConfigSize
                 }
 
                 return true;
-            }
+            //}
 
             //Return false if any of the if statements are false
             return false;
@@ -182,7 +193,7 @@ namespace CreatureConfigSize
             }
 
             //If creature is large, it cannot breed in containment
-            data.canBreed = GetSizeClass(techType) == SizeClass.Large ? false : true;
+            data.canBreed = GetSizeClass(techType) != SizeClass.Large;
         }
 
         public static bool GetInsideWaterPark(GameObject creature)
