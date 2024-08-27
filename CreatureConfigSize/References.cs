@@ -11,12 +11,15 @@ namespace CreatureConfigSize
         //NOTE!! Whilst this won't make it more efficient, requiring more checks, surely making the code cleaner and more legible is better (can't imagine this would even remotely tank performance)
         //NOTE!! However, I won't be using it forever until I'm sure the switch case statement isn't more helpful, for things unique to each creature
         public static readonly TechType[][] CreatureSizeClassReference = {
+            //Size Class - Small
             new TechType[] {TechType.Biter, TechType.Bladderfish, TechType.Bleeder, TechType.Blighter, TechType.Shuttlebug, TechType.Boomerang, TechType.CaveCrawler, TechType.Crash,
                 TechType.Eyeye, TechType.Floater, TechType.GarryFish, TechType.HoleFish, TechType.Hoopfish, TechType.HoopfishSchool, TechType.Hoverfish, TechType.LavaBoomerang, TechType.LavaLarva, TechType.Mesmer,
                 TechType.Oculus, TechType.Peeper, TechType.LavaEyeye, TechType.Reginald, TechType.Skyray, TechType.Spadefish, TechType.Spinefish, TechType.Jumper},
+            //Size Class - Medium
             new TechType[] {TechType.Shocker, TechType.BoneShark, TechType.Crabsnake, TechType.CrabSquid, TechType.Cutefish, TechType.GhostRayRed, TechType.Gasopod, TechType.GhostRayBlue,
                 TechType.Jellyray, TechType.LavaLizard, TechType.RabbitRay, TechType.SpineEel, TechType.Sandshark, TechType.SeaEmperorBaby, TechType.Stalker, TechType.Warper},
-            new TechType[] {TechType.GhostLeviathan, TechType.GhostLeviathanJuvenile, TechType.ReaperLeviathan, TechType.SeaDragon, TechType.SeaEmperorBaby, TechType.SeaEmperorJuvenile,
+            //Size Class - Large (Leviathan)
+            new TechType[] {TechType.GhostLeviathan, TechType.GhostLeviathanJuvenile, TechType.ReaperLeviathan, TechType.Reefback, TechType.SeaDragon, TechType.SeaEmperorJuvenile,
                 TechType.SeaTreader}
         };
 
@@ -25,7 +28,32 @@ namespace CreatureConfigSize
         public static readonly Dictionary<TechType, (float min, float max)> PickupableReference = new Dictionary<TechType, (float, float)>()
         {
             //Small Fish
-            { TechType.Peeper, (0.1f, 2.0f) },
+            { TechType.Biter, (0.1f, 2.0f) }, //Done
+            { TechType.Bladderfish, (0.1f, 2.0f) }, //Done
+            { TechType.Bleeder, (0.1f, 2.5f) }, //Done
+            { TechType.Blighter, (0.1f, 2.0f) }, //Done
+            { TechType.Shuttlebug, (0.1f, 0.6f) }, //Blood Crawler TechType, Done (though please check max size again)
+            { TechType.Boomerang, (0.1f, 2.0f) }, //Done
+            { TechType.CaveCrawler, (0.1f, 1.4f) }, //Done
+            { TechType.Crash,(0.1f, 1.3f) }, //Done
+            { TechType.Eyeye, (0.1f, 2.0f) }, //Done
+            { TechType.Floater, (0.1f, 2.0f) }, //Done
+            { TechType.GarryFish, (0.1f, 2.0f) }, //Done
+            { TechType.HoleFish, (0.1f, 2.0f) }, //Done
+            { TechType.Hoopfish, (0.1f, 2.0f) }, //Done
+            { TechType.HoopfishSchool, (1.0f, 1.0f) },
+            { TechType.Hoverfish, (1.0f, 1.0f) },
+            { TechType.LavaBoomerang, (0.1f, 2.0f) }, //Done
+            { TechType.LavaLarva, (1.0f, 1.0f) },
+            { TechType.Mesmer,(1.0f, 1.0f) },
+            { TechType.Oculus, (0.1f, 2.0f) }, //Done
+            { TechType.Peeper, (0.1f, 2.0f) }, //Done
+            { TechType.LavaEyeye, (1.0f, 1.0f) },
+            { TechType.Reginald, (0.1f, 2.0f) }, //Done
+            { TechType.Skyray, (1.0f, 1.0f) },
+            { TechType.Spadefish, (0.1f, 1.5f) }, //Done
+            { TechType.Spinefish, (0.1f, 2.0f) }, //Done
+            { TechType.Jumper, (0.1f, 1.5f) }, //Shuttlebug TechType, Done
 
             //Medium Fish
             { TechType.CrabSquid, (0.1f, 0.2f) },

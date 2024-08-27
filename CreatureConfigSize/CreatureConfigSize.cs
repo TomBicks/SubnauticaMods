@@ -2,7 +2,6 @@
 using static CreatureConfigSize.CreatureConfigSizePlugin;
 using static CreatureConfigSize.References;
 using UnityEngine;
-using static HandReticle;
 
 namespace CreatureConfigSize
 {
@@ -14,7 +13,7 @@ namespace CreatureConfigSize
         public static void PrePlayerStart()
         {
             //Add inventory size of the Reaper Leviathan when picking it up
-            CraftData.itemSizes.Add(TechType.ReaperLeviathan, new Vector2int(3, 3));
+            //CraftData.itemSizes.Add(TechType.ReaperLeviathan, new Vector2int(3, 3));
         }
 
         [HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.Awake))]
@@ -146,7 +145,7 @@ namespace CreatureConfigSize
                 ErrorMessage.AddError($"{techType} is not in the pickupable reference dictionary!");
                 //DEBUG!!
                 ErrorMessage.AddError($"Giving {techType} Pickupable anyway!");
-                creature.AddComponent<Pickupable>();
+                creature.EnsureComponent<Pickupable>();
                 //DEBUG!!
                 return true;
             }
@@ -171,8 +170,6 @@ namespace CreatureConfigSize
                 //Create an empty WaterParkCreatureData for us to populate, if it's empty
                 if(wpc.data == null)
                 {
-                //logger.LogWarning($"WaterParkCreatureData of {techType} is null! Creating placeholder!");
-                //wpc.data = ScriptableObject.CreateInstance<WaterParkCreatureData>(); 
                 //Because I'm setting this in LiveMixin.Awake, this SHOULD NOT trigger
                 logger.LogError($"Error! WaterParkCreature component data for {techType} is null!");
                 }
