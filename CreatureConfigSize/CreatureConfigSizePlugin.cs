@@ -34,6 +34,12 @@ namespace CreatureConfigSize
     [Menu("Creature Config - Size")]
     public class Config : Nautilus.Json.ConfigFile
     {
+        [Toggle("Allow all creatures to be picked up?",
+            Tooltip = "Allow any fish, regardless of size, to be picked up. Without this enabled, only fish small enough can be picked up.")]
+        public bool AllPickupable = false;
+        [Toggle("Allow all creatures to be placed into alien containment?",
+            Tooltip = "Allow any fish, regardless of size, to be placed into alien containment. Be default, only fish that can physically fit in containment are allowed, so take care when enabling this.")]
+        public bool AllWaterPark = false;
         [Toggle("Enable complex size customisation?",
             Tooltip = "Enable complex changes to size range of each creature, which can be changed in the config file for this mod. If unchecked, will use the size range options below.")]
         public bool ComplexSizeEnabled = false;
