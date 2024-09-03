@@ -87,14 +87,14 @@ namespace CreatureConfigSize
                         ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
                     }
 
-                    var sizeAfterChange = GetSize(creature);
-                    logger.LogInfo($"Creature Size After = {sizeAfterChange}");
+                    var size = GetSize(creature);
+                    logger.LogInfo($"Creature Size After = {size}");
 
                     //Check whether the creature is eligible to be picked up (and have the Pickupable component) or not
-                    CheckPickupableComponent(creature, sizeAfterChange);
+                    CheckPickupableComponent(creature, size);
 
                     //Check whether the creature is eligible to be placed in alien containment up (and have the WPC component) or not
-                    CheckWaterParkCreatureComponent(__instance.gameObject, sizeAfterChange);
+                    CheckWaterParkCreatureComponent(__instance.gameObject, size);
                 }
                 else
                 {
@@ -104,44 +104,45 @@ namespace CreatureConfigSize
         }
 
         //Check whether the creature's size makes it eligible or not for the Pickupable component, and to add it or remove it
-        public static bool CheckPickupableComponent(GameObject creature, float modifier)
+        public static bool CheckPickupableComponent(GameObject creature, float size)
         {
             //Generate techtype to check the dictionary for creature's entry
             TechType techType = CraftData.GetTechType(creature);
 
             if(PickupableReference.ContainsKey(techType))
             {
-                //NOTE!! Need to account for creatures inside WaterParks when calculating this, as they need to be able to be picked up still, but not when placed outside
-                //The way to do this is to make IsPickupableOutside false in the WPC data; thus, might possibly be better to do all the checking there?
-
                 //The size range within which a creature is made able to be picked up; component removed if outside of this range
                 var (min, max) = PickupableReference[techType];
 
                 //Whether the creature has a Pickupable component already or not
                 bool componentExists = !(creature.GetComponent<Pickupable>() == null);
 
-                //Calculate whether to use current size or a larger size if the creature is in containment and has been shrunk to 60%
-                float size;
+                //Whether the creature is in alien containment or not
+                bool insideWaterPark = GetInsideWaterPark(creature);
 
-                if (GetInsideWaterPark(creature))
+
+                //Calculate the creature's original size modifier whether its current size or a larger size if the creature is in containment and has been shrunk to 60%
+                float modifier;
+
+                if (insideWaterPark)
                 {
-                    logger.LogWarning($"(Pickupable) {techType} is already inside alien containment! Calcuating original size!");
+                    logger.LogWarning($"(Pickupable) {techType} is already inside alien containment! Calcuating original modifier!");
 
-                    //By performing the calculation to get maxSize (x * 0.6), but in reverse (x / 0.6), we get our old size back
-                    size = modifier / 0.6f;
+                    //By performing the calculation to get maxSize for WPC data (x * 0.6), but in reverse (x / 0.6), we get our old size back and original size modifier
+                    modifier = size / 0.6f;
 
                 }
-                //If creature is not in alien containment, then we just use its current size to calculate WPC data
                 else
                 {
-                    logger.LogWarning($"(Pickupable) {techType} is not inside alien containment! Using current size!");
+                    logger.LogWarning($"(Pickupable) {techType} is not inside alien containment! Using current modifier!");
 
-                    //If the creature isn't in alien containment, this means we can just use its current size, as normal, to set the WaterParkCreatureData
-                    size = modifier;
+                    //If the creature isn't in alien containment, this means its current size is equal to its size modifier
+                    modifier = size;
                 }
 
-                //Use appropriate size to determine if eligible for pickupable component
-                if ((size >= min && size <= max) || config.AllowAllPickupable)
+
+                //Use original size modifier to determine if eligible for pickupable component
+                if ((modifier >= min && modifier <= max) || config.AllowAllPickupable)
                 {
                     //If creature is eligible for the component and doesn't have one, add it and return true
                     if(!componentExists)
@@ -153,14 +154,14 @@ namespace CreatureConfigSize
                 else
                 {
                     //If creature is ineligable for the component and has one, remove it (and will return false by default)
-                    if(componentExists)
+                    //NOTE!! If creature is in alien containment, we DO NOT remove this component; IsPickupableOutside is used instead to remove the component when the creature is placed outside
+                    if(componentExists || insideWaterPark)
                     {
                         var component = creature.GetComponent<Pickupable>();
                         Object.Destroy(component);
                     }
                 }
             }
-            //DEBUG!! Temporary code until I add in the reference for every creature
             else
             {
                 ErrorMessage.AddError($"{techType} is not in the pickupable reference dictionary!");
@@ -171,7 +172,7 @@ namespace CreatureConfigSize
         }
 
         //Check whether the creature's size makes it eligible or not for the WaterParkCreature component, and to add it or remove it
-        public static bool CheckWaterParkCreatureComponent(GameObject creature, float modifier)
+        public static bool CheckWaterParkCreatureComponent(GameObject creature, float size)
         {
             //Generate techtype to check the dictionary for creature's entry
             TechType techType = CraftData.GetTechType(creature);
@@ -179,6 +180,27 @@ namespace CreatureConfigSize
             if(WaterParkReference.ContainsKey(techType))
             {
                 var (min, max) = WaterParkReference[techType];
+
+
+                //Calculate the creature's original size modifier whether its current size or a larger size if the creature is in containment and has been shrunk to 60%
+                float modifier;
+
+                if (GetInsideWaterPark(creature))
+                {
+                    logger.LogWarning($"(WaterParkCreature) {techType} is already inside alien containment! Calcuating original size!");
+
+                    //By performing the calculation to get maxSize for WPC data (x * 0.6), but in reverse (x / 0.6), we get our old size back and original size modifier
+                    modifier = size / 0.6f;
+
+                }
+                else
+                {
+                    logger.LogWarning($"(WaterParkCreature) {techType} is not inside alien containment! Using current size!");
+
+                    //If the creature isn't in alien containment, this means its current size is equal to its size modifier
+                    modifier = size;
+                }
+
 
                 if ((modifier >= min && modifier <= max) || config.AllowAllWaterPark)
                 {
@@ -195,54 +217,38 @@ namespace CreatureConfigSize
                         logger.LogError($"Error! WaterParkCreature component data for {techType} is null!");
                     }
 
-                    //Calculate whether to use current size or a larger size if the creature is in containment and has been shrunk to 60%
-                    float size;
-
-                    if (GetInsideWaterPark(creature))
-                    {
-                        logger.LogWarning($"(WaterParkCreature) {techType} is already inside alien containment! Calcuating original size!");
-
-                        //By performing the calculation to get maxSize (x * 0.6), but in reverse (x / 0.6), we get our old size back
-                        size = modifier / 0.6f;
-                        
-                    }
-                    //If creature is not in alien containment, then we just use its current size to calculate WPC data
-                    else
-                    {
-                        logger.LogWarning($"(WaterParkCreature) {techType} is not inside alien containment! Using current size!");
-
-                        //If the creature isn't in alien containment, this means we can just use its current size, as normal, to set the WaterParkCreatureData
-                        size = modifier;
-                    }
-
                     //Use appropriate size to calculate WPC data
                     SetWaterParkData(ref wpc.data, size, techType);
 
                     return true;
                 }
             }
+            else
+            {
+                ErrorMessage.AddError($"{techType} is not in the waterpark reference dictionary!");
+            }
 
             //Return false if any of the if statements are false
             return false;
         }
 
-        public static void SetWaterParkData(ref WaterParkCreatureData data, float size, TechType techType)
+        public static void SetWaterParkData(ref WaterParkCreatureData data, float modifier, TechType techType)
         {
             //NOTE!! Each particular creature shares a WaterParkCreatureData (e.g. Hoopfish_WaterParkCreatureData)
             //This means two things; one, I can't change one SpineFish without changing the other, and two, I need to create one for the creatures that don't usually go in containment, like leviathans
 
             //2nd NOTE!! When loading into a save, with a creature such as a reaper in containment (a creature I added a waterparkcomponent to), the data is empty and null upon loading the save
             //Will likely need to look into repopulating the data every time I load in
-            data.initialSize = size * 0.1f;
-            data.maxSize = size * 0.6f;
-            data.outsideSize = size;
+            data.initialSize = modifier * 0.1f;
+            data.maxSize = modifier * 0.6f;
+            data.outsideSize = modifier;
 
             //Check whether the creature should be pickupable outside containment or not (default value is true, if not in dictionary)
             if(PickupableReference.ContainsKey(techType))
             {
                 //Whether the creature can be picked up is equal to whether or not the creature's size is within the set range
                 var (min, max) = PickupableReference[techType];
-                bool withinRange = (size >= min && size <= max);
+                bool withinRange = (modifier >= min && modifier <= max);
                 data.isPickupableOutside = withinRange;
             }
 
@@ -257,11 +263,11 @@ namespace CreatureConfigSize
 
             if(creature.GetComponentInParent<WaterPark>() != null)
             {
-                logger.LogInfo($"{techType} is in a WaterPark");
+                //logger.LogInfo($"{techType} is in a WaterPark");
                 return true;
             }
 
-            logger.LogInfo($"{techType} is not in a WaterPark");
+            //logger.LogInfo($"{techType} is not in a WaterPark");
             return false;
         }
 
