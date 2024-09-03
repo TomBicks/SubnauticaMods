@@ -26,34 +26,36 @@ namespace CreatureConfigSize
         [ConsoleCommand("setsize")]
         public static void SetSizeCommand(float modifier)
         {
-            if (GetTarget(out GameObject target) && target.GetComponent<Creature>())
+            //NOTE!! Needed to refer to parent objects with Creature component, as some creatures have child objects that interfere with the raycast
+            //ERROR!! As a result of my fix however, when there is no target, an error occurs; not sure what
+            if (GetTarget(out GameObject target))
             {
-                TechType techType = CraftData.GetTechType(target);
-                ErrorMessage.AddMessage($"Setting size of {techType} to {modifier}");
-                logger.LogMessage($"Setting size of {techType} to {modifier}");
-                target.transform.localScale = new Vector3(modifier, modifier, modifier);
+                GameObject parent = target.GetComponentInParent<Creature>().gameObject;
+                TechType techType = CraftData.GetTechType(parent);
 
-                //TODO!! Break down the pickupable and waterparkcreature checks into functions, then add them in here
-                //We want to update whether it should have pickupable and WPC components after the change, to keep it in line with everything
-                //Should also take into account whether it's already in containment, as then its initialSize should be taken into account
-                //Also, it should *always* be pickupable if in containment; need a wat to remove it, right?
+                ErrorMessage.AddWarning($"{target}, {parent}, {target.GetComponent<Creature>()}, {target.GetComponentInParent<Creature>()}");
 
-                CheckPickupableComponent(target, modifier);
-
-                CheckWaterParkCreatureComponent(target, modifier);
-            }
-            else
-            {
-                if(target!=null)
+                if (parent != null) 
                 {
-                    TechType techType = CraftData.GetTechType(target);
-                    ErrorMessage.AddWarning($"{techType} is not a creature!");
+                    ErrorMessage.AddMessage($"Setting size of {techType} to {modifier}");
+                    logger.LogMessage($"Setting size of {techType} to {modifier}");
+                    parent.transform.localScale = new Vector3(modifier, modifier, modifier);
+
+                    CheckPickupableComponent(parent, modifier);
+
+                    CheckWaterParkCreatureComponent(parent, modifier);
                 }
                 else
                 {
-                    ErrorMessage.AddWarning("No Target!");
+                    ErrorMessage.AddWarning($"{techType} is not a creature!");
                 }
             }
+            else
+            {
+                ErrorMessage.AddWarning("No Target!");
+            }
+
+            ErrorMessage.AddWarning($"{target}, {target.GetComponent<Creature>()}");
         }
     }
 }

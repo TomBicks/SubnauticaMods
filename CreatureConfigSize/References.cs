@@ -42,7 +42,7 @@ namespace CreatureConfigSize
             { TechType.HoleFish, (0.1f, 2.0f) }, //Done
             { TechType.Hoopfish, (0.1f, 2.0f) }, //Done
             { TechType.HoopfishSchool, (1.0f, 1.0f) },
-            { TechType.Hoverfish, (1.0f, 1.0f) },
+            { TechType.Hoverfish, (0.1f, 2.0f) },
             { TechType.LavaBoomerang, (0.1f, 2.0f) }, //Done
             { TechType.LavaLarva, (1.0f, 1.0f) },
             { TechType.Mesmer,(1.0f, 1.0f) },
