@@ -14,6 +14,10 @@ namespace CreatureConfigSize
         {
             //Add inventory size of the Reaper Leviathan when picking it up
             //CraftData.itemSizes.Add(TechType.ReaperLeviathan, new Vector2int(3, 3));
+
+            //DEBUG!! Showcase what options are on or off
+            logger.LogInfo($"All Pickupable = {config.AllowAllPickupable}");
+            logger.LogInfo($"All WaterPark = {config.AllowAllWaterPark}");
         }
 
         [HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.Awake))]
@@ -23,24 +27,23 @@ namespace CreatureConfigSize
         {
             GameObject creature = __instance.gameObject;
             TechType techType = CraftData.GetTechType(creature);
+            logger.LogInfo($"(PostLiveMixinAwake) entity is {techType}");
 
-            //DEBUG!! Commenting these until I;m ready to actually sort out creatures by size
             //If the creature can be in a WaterPark but isn't normally, we need to create a new blank placeholder WPC data at start
             //Otherwise it breaks, because they're null otherwise, on account of not normally having WPC component
-            //if (WaterParkReference.ContainsKey(techType))
-            //{
-                //var (min, max) = WaterParkReference[techType];
-
+            //NOTE!! Only limiting which creatures gets a placeholder WPC component by techType, not by size, because size is not calculated this early on; easier this way
+            if (WaterParkReference.ContainsKey(techType))
+            {
                 //Ensure the creature has the WaterParkCreature component
                 WaterParkCreature wpc = creature.EnsureComponent<WaterParkCreature>();
 
                 //Create an empty WaterParkCreatureData for us to populate, if it's empty
                 if (wpc.data == null)
                 {
-                    logger.LogInfo($"WaterParkCreatureData of {techType} is null! Creating placeholder!");
+                    logger.LogInfo($"(PostLiveMixinAwake) WaterParkCreatureData of {techType} is null! Creating placeholder!");
                     wpc.data = ScriptableObject.CreateInstance<WaterParkCreatureData>();
                 }
-            //}
+            }
         }
 
         [HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.Start))]
@@ -48,6 +51,7 @@ namespace CreatureConfigSize
         //Using .Start for everything else because size changes don't take effect if done in .Awake
         public static void PostLiveMixinStart(Creature __instance)
         {
+            //NOTE!! This might exclude creatures we've seen not work with the command, like Blood Crawlers
             if(__instance.gameObject.GetComponent<Creature>() != null)
             {
                 //Reference the gameObject Class directly, as none of the functionality uses the Creature class specifically
@@ -96,8 +100,6 @@ namespace CreatureConfigSize
                 {
                     logger.LogWarning($"Error! Creature {__instance.name} has no TechType!");
                 }
-
-                logger.LogInfo($"(PostLiveMixin){CraftData.GetTechType(__instance.gameObject)}");
             }
         }
 
@@ -118,12 +120,31 @@ namespace CreatureConfigSize
                 //Whether the creature has a Pickupable component already or not
                 bool componentExists = !(creature.GetComponent<Pickupable>() == null);
 
-                GetInsideWaterPark(creature);
+                //Calculate whether to use current size or a larger size if the creature is in containment and has been shrunk to 60%
+                float size;
 
-                if (modifier >= min && modifier <= max)
+                if (GetInsideWaterPark(creature))
+                {
+                    logger.LogWarning($"(Pickupable) {techType} is already inside alien containment! Calcuating original size!");
+
+                    //By performing the calculation to get maxSize (x * 0.6), but in reverse (x / 0.6), we get our old size back
+                    size = modifier / 0.6f;
+
+                }
+                //If creature is not in alien containment, then we just use its current size to calculate WPC data
+                else
+                {
+                    logger.LogWarning($"(Pickupable) {techType} is not inside alien containment! Using current size!");
+
+                    //If the creature isn't in alien containment, this means we can just use its current size, as normal, to set the WaterParkCreatureData
+                    size = modifier;
+                }
+
+                //Use appropriate size to determine if eligible for pickupable component
+                if ((size >= min && size <= max) || config.AllowAllPickupable)
                 {
                     //If creature is eligible for the component and doesn't have one, add it and return true
-                    if (!componentExists)
+                    if(!componentExists)
                     {
                         creature.AddComponent<Pickupable>();
                         return true;
@@ -132,7 +153,7 @@ namespace CreatureConfigSize
                 else
                 {
                     //If creature is ineligable for the component and has one, remove it (and will return false by default)
-                    if (componentExists)
+                    if(componentExists)
                     {
                         var component = creature.GetComponent<Pickupable>();
                         Object.Destroy(component);
@@ -143,11 +164,6 @@ namespace CreatureConfigSize
             else
             {
                 ErrorMessage.AddError($"{techType} is not in the pickupable reference dictionary!");
-                //DEBUG!!
-                ErrorMessage.AddError($"Giving {techType} Pickupable anyway!");
-                creature.EnsureComponent<Pickupable>();
-                //DEBUG!!
-                return true;
             }
 
             //Return false if any of the if statements are false
@@ -160,41 +176,51 @@ namespace CreatureConfigSize
             //Generate techtype to check the dictionary for creature's entry
             TechType techType = CraftData.GetTechType(creature);
 
-            //if(WaterParkReference.ContainsKey(techType))
-            //{
-                //var (min, max) = WaterParkReference[techType];
+            if(WaterParkReference.ContainsKey(techType))
+            {
+                var (min, max) = WaterParkReference[techType];
 
-                //Ensure the creature has the WaterParkCreature component
-                WaterParkCreature wpc = creature.EnsureComponent<WaterParkCreature>();
-
-                //Create an empty WaterParkCreatureData for us to populate, if it's empty
-                if(wpc.data == null)
+                if ((modifier >= min && modifier <= max) || config.AllowAllWaterPark)
                 {
-                //Because I'm setting this in LiveMixin.Awake, this SHOULD NOT trigger
-                logger.LogError($"Error! WaterParkCreature component data for {techType} is null!");
+                    //NOTE!! NEED TO MAKE SURE THIS IS RUNNING WELL
+                    //THIS MIGHT USELESS CODE!!
+
+                    //Ensure the creature has the WaterParkCreature component
+                    WaterParkCreature wpc = creature.EnsureComponent<WaterParkCreature>();
+
+                    //Create an empty WaterParkCreatureData for us to populate, if it's empty
+                    if (wpc.data == null)
+                    {
+                        //Because I'm setting this in LiveMixin.Awake, this SHOULD NOT trigger
+                        logger.LogError($"Error! WaterParkCreature component data for {techType} is null!");
+                    }
+
+                    //Calculate whether to use current size or a larger size if the creature is in containment and has been shrunk to 60%
+                    float size;
+
+                    if (GetInsideWaterPark(creature))
+                    {
+                        logger.LogWarning($"(WaterParkCreature) {techType} is already inside alien containment! Calcuating original size!");
+
+                        //By performing the calculation to get maxSize (x * 0.6), but in reverse (x / 0.6), we get our old size back
+                        size = modifier / 0.6f;
+                        
+                    }
+                    //If creature is not in alien containment, then we just use its current size to calculate WPC data
+                    else
+                    {
+                        logger.LogWarning($"(WaterParkCreature) {techType} is not inside alien containment! Using current size!");
+
+                        //If the creature isn't in alien containment, this means we can just use its current size, as normal, to set the WaterParkCreatureData
+                        size = modifier;
+                    }
+
+                    //Use appropriate size to calculate WPC data
+                    SetWaterParkData(ref wpc.data, size, techType);
+
+                    return true;
                 }
-
-                if (GetInsideWaterPark(creature))
-                {
-                    logger.LogWarning($"(WaterParkCreature) {techType} is already inside alien containment! Calcuating original size!");
-
-                    //By performing the calculation to get maxSize (x * 0.6), but in reverse (x / 0.6), we get our old size back
-                    var initialSize = modifier / 0.6f;
-                    SetWaterParkData(ref wpc.data, initialSize, techType);
-                    logger.LogError($"{wpc.isMature}, {wpc.matureTime}, {wpc.data.outsideSize}, {wpc.data.maxSize}");
-                }
-                //If creature is not in alien containment, then we just use its current size to calculate WPC data
-                else
-                {
-                    logger.LogWarning($"(WaterParkCreature) {techType} is not inside alien containment! Using current size!");
-
-                    //If the creature isn't in alien containment, this means we can just use its current size, as normal, to set the WaterParkCreatureData
-                    var currentSize = modifier;
-                    SetWaterParkData(ref wpc.data, currentSize, techType);
-                }
-
-                return true;
-            //}
+            }
 
             //Return false if any of the if statements are false
             return false;
@@ -214,7 +240,7 @@ namespace CreatureConfigSize
             //Check whether the creature should be pickupable outside containment or not (default value is true, if not in dictionary)
             if(PickupableReference.ContainsKey(techType))
             {
-                //Calculate a bool that is equal to whether or not the creature's size is within the set range
+                //Whether the creature can be picked up is equal to whether or not the creature's size is within the set range
                 var (min, max) = PickupableReference[techType];
                 bool withinRange = (size >= min && size <= max);
                 data.isPickupableOutside = withinRange;
@@ -244,8 +270,6 @@ namespace CreatureConfigSize
 
         private static SizeClass GetSizeClass(TechType techType)
         {
-            SizeClass sizeClass = SizeClass.None;
-
             for (var i = 0; i < 3; i++)
             {
                 for (var j = 0; j < CreatureSizeClassReference[i].Length; j++)
@@ -254,14 +278,14 @@ namespace CreatureConfigSize
                     {
                         //We return i (+1 as None is 0) as the size class, as it refers to which of the 3 size arrays we found the TechType match in
                         //We use the SizeClass array in future references, for legibility
-                        sizeClass = (SizeClass)(i + 1); //This turns the int result into its appropriate enum counterpart; e.g. 1 becomes SizeClass.Small
-                        break; //No need to keep going through the loop, if we've found our techtype already
+                        SizeClass sizeClass = (SizeClass)(i + 1); //This turns the int result into its appropriate enum counterpart; e.g. 1 becomes SizeClass.Small
+                        return sizeClass; //No need to keep going through the loop, if we've found our techtype already
                     }
                 }
             }
 
             //If no matches, size class equals none
-            return sizeClass;
+            return SizeClass.None;
         }
 
         private static float GetCreatureSizeModifier(TechType techType)
