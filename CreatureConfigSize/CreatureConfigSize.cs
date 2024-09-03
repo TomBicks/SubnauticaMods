@@ -126,7 +126,7 @@ namespace CreatureConfigSize
 
                 if (insideWaterPark)
                 {
-                    logger.LogWarning($"(Pickupable) {techType} is already inside alien containment! Calcuating original modifier!");
+                    logger.LogWarning($"(Pickupable) {techType} is already inside alien containment! Calcuating original size modifier from current size!");
 
                     //By performing the calculation to get maxSize for WPC data (x * 0.6), but in reverse (x / 0.6), we get our old size back and original size modifier
                     modifier = size / 0.6f;
@@ -134,7 +134,7 @@ namespace CreatureConfigSize
                 }
                 else
                 {
-                    logger.LogWarning($"(Pickupable) {techType} is not inside alien containment! Using current modifier!");
+                    logger.LogWarning($"(Pickupable) {techType} is not inside alien containment! Using current size for size modifier!");
 
                     //If the creature isn't in alien containment, this means its current size is equal to its size modifier
                     modifier = size;
@@ -187,7 +187,7 @@ namespace CreatureConfigSize
 
                 if (GetInsideWaterPark(creature))
                 {
-                    logger.LogWarning($"(WaterParkCreature) {techType} is already inside alien containment! Calcuating original size!");
+                    logger.LogWarning($"(WaterParkCreature) {techType} is already inside alien containment! Calcuating original size modifier from current size!");
 
                     //By performing the calculation to get maxSize for WPC data (x * 0.6), but in reverse (x / 0.6), we get our old size back and original size modifier
                     modifier = size / 0.6f;
@@ -195,8 +195,8 @@ namespace CreatureConfigSize
                 }
                 else
                 {
-                    logger.LogWarning($"(WaterParkCreature) {techType} is not inside alien containment! Using current size!");
-
+                    logger.LogWarning($"(WaterParkCreature) {techType} is not inside alien containment! Using current size for size modifier!");
+                    
                     //If the creature isn't in alien containment, this means its current size is equal to its size modifier
                     modifier = size;
                 }
