@@ -33,17 +33,17 @@ namespace CreatureConfigSize
             { TechType.Bleeder, (0.1f, 2.5f) }, //Done
             { TechType.Blighter, (0.1f, 2.0f) }, //Done
             { TechType.Shuttlebug, (0.1f, 0.7f) }, //Blood Crawler TechType, Done
-            { TechType.Boomerang, (0.1f, 2.0f) }, //Done
+            { TechType.Boomerang, (0.1f, 1.6f) }, //Done
             { TechType.CaveCrawler, (0.1f, 1.4f) }, //Done
-            { TechType.Crash,(0.1f, 1.3f) }, //Done
+            { TechType.Crash,(0.1f, 1.3f) }, //Crashfish TechType, Done
             { TechType.Eyeye, (0.1f, 2.0f) }, //Done
             { TechType.Floater, (0.1f, 2.0f) }, //Done
             { TechType.GarryFish, (0.1f, 2.0f) }, //Done
             { TechType.HoleFish, (0.1f, 2.0f) }, //Done
             { TechType.Hoopfish, (0.1f, 2.0f) }, //Done
-            { TechType.HoopfishSchool, (1.0f, 1.0f) },
+            { TechType.HoopfishSchool, (1.0f, 1.0f) }, //TODO!!! CHECK WHAT THIS ENTITY IS COMPARED TO REGULAR HOOPFISH
             { TechType.Hoverfish, (0.1f, 2.0f) }, //Done
-            { TechType.LavaBoomerang, (0.1f, 2.0f) }, //Magma Boomerang, Done
+            { TechType.LavaBoomerang, (0.1f, 1.6f) }, //Magmarang TechType, Done
             { TechType.LavaLarva, (0.1f, 1.0f) }, //Done
             { TechType.Mesmer,(0.1f, 1.5f) }, //Done
             { TechType.Oculus, (0.1f, 2.0f) }, //Done
@@ -79,9 +79,36 @@ namespace CreatureConfigSize
         {
             //NOTE!! The creature is 60% of its initial size in containment; these ranges are for their initial size! E.g. a 4x Ampeel is 2.4x in containment (the max size I'm okay with)
             //NOTE!! Ampeels and Crabsquids hatched from eggs have a different maxSize (0.12 and 0.1 respectively, as opposed to the 0.6 of most small fish); should I worry?
+
             //Small Fish
-            { TechType.Crash, (0.1f, 4.0f) },
-            { TechType.Peeper, (0.1f, 5.0f) },
+            { TechType.Biter, (0.1f, 5.0f) }, //Done
+            { TechType.Bladderfish, (0.1f, 5.0f) }, //Done
+            { TechType.Bleeder, (0.1f, 7.0f) }, //Done
+            { TechType.Blighter, (0.1f, 5.0f) }, //Done
+            { TechType.Shuttlebug, (0.1f, 1.0f) }, //Blood Crawler TechType, Done
+            { TechType.Boomerang, (0.1f, 4.0f) }, //Done
+            { TechType.CaveCrawler, (0.1f, 2.0f) }, //Done
+            { TechType.Crash, (0.1f, 4.0f) }, //Crashfish TechType, Done
+            { TechType.Eyeye, (0.1f, 5.0f) }, //Done
+            { TechType.Floater, (0.1f, 1.0f) }, //Done
+            { TechType.GarryFish, (0.1f, 5.0f) }, //Done
+            { TechType.HoleFish, (0.1f, 5.0f) }, //Done
+            { TechType.Hoopfish, (0.1f, 5.0f) }, //Done
+            { TechType.HoopfishSchool, (1.0f, 1.0f) }, //TODO!!! CHECK WHAT THIS ENTITY IS COMPARED TO REGULAR HOOPFISH
+            { TechType.Hoverfish, (0.1f, 4.0f) }, //Done
+            { TechType.LavaBoomerang, (0.1f, 4.0f) }, //Magmarang TechType, Done
+            { TechType.LavaLarva, (0.1f, 1.5f) }, //Done
+            { TechType.Mesmer, (0.1f, 2.0f) }, //Done
+            { TechType.Oculus, (0.1f, 5.0f) }, //Done
+            { TechType.Peeper, (0.1f, 5.0f) }, //Done
+            { TechType.LavaEyeye, (0.1f, 5.0f) }, //Done
+            { TechType.Reginald, (0.1f, 5.0f) }, //Done
+            { TechType.Skyray, (0.1f, 1.7f) }, //Done, TODO!! Figure out how to have it start drowning if placed in Alien Containment
+            //For reference, how it works is that the drowning component makes the BirdSml animated play the drowning animation; trouble is, it's part of the SkyRay component, which is disabled...
+            //...when placed in Alien Containment; maybe just make it that if SkyRay is placed in there, just don't disable it's component, because it's not like it will be in there long
+            { TechType.Spadefish, (0.1f, 2.5f) }, //Done
+            { TechType.Spinefish, (0.1f, 5.0f) }, //Done
+            { TechType.Jumper, (0.1f, 3.5f) }, //Shuttlebug TechType, Done
 
             //Medium Fish
             { TechType.Shocker, (0.1f, 4.0f) },
