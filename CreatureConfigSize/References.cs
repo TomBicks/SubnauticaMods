@@ -13,8 +13,8 @@ namespace CreatureConfigSize
         public static readonly TechType[][] CreatureSizeClassReference = {
             //Size Class - Small
             new TechType[] {TechType.Biter, TechType.Bladderfish, TechType.Bleeder, TechType.Blighter, TechType.Shuttlebug, TechType.Boomerang, TechType.CaveCrawler, TechType.Crash,
-                TechType.Eyeye, TechType.Floater, TechType.GarryFish, TechType.HoleFish, TechType.Hoopfish, TechType.HoopfishSchool, TechType.Hoverfish, TechType.LavaBoomerang, TechType.LavaLarva, TechType.Mesmer,
-                TechType.Oculus, TechType.Peeper, TechType.LavaEyeye, TechType.Reginald, TechType.Skyray, TechType.Spadefish, TechType.Spinefish, TechType.Jumper},
+                TechType.Eyeye, TechType.Floater, TechType.GarryFish, TechType.HoleFish, TechType.Hoopfish, TechType.HoopfishSchool, TechType.Hoverfish, TechType.LavaLarva, TechType.LavaBoomerang,
+                TechType.LavaEyeye, TechType.Mesmer, TechType.Oculus, TechType.Peeper, TechType.Reginald, TechType.Jumper, TechType.Skyray, TechType.Spadefish, TechType.Spinefish},
             //Size Class - Medium
             new TechType[] {TechType.Shocker, TechType.BoneShark, TechType.Crabsnake, TechType.CrabSquid, TechType.Cutefish, TechType.GhostRayRed, TechType.Gasopod, TechType.GhostRayBlue,
                 TechType.Jellyray, TechType.LavaLizard, TechType.RabbitRay, TechType.SpineEel, TechType.Sandshark, TechType.SeaEmperorBaby, TechType.Stalker, TechType.Warper},
@@ -56,8 +56,22 @@ namespace CreatureConfigSize
             { TechType.Jumper, (0.1f, 1.5f) }, //Shuttlebug TechType, Done
 
             //Medium Fish
-            { TechType.CrabSquid, (0.1f, 0.2f) },
-            { TechType.SeaEmperorBaby, (0.1f, 0.5f) }, //The baby sea emperor newly hatched; feels cruel to grab them, but they cute
+            { TechType.Shocker, (1.0f, 1.0f) },
+            { TechType.BoneShark, (1.0f, 1.0f) },
+            { TechType.Crabsnake, (1.0f, 1.0f) },
+            { TechType.CrabSquid, (0.1f, 0.2f) }, //Done
+            { TechType.Cutefish, (1.0f, 1.0f) },
+            { TechType.GhostRayRed, (1.0f, 1.0f) },
+            { TechType.Gasopod, (1.0f, 1.0f) },
+            { TechType.GhostRayBlue, (1.0f, 1.0f) },
+            { TechType.Jellyray, (1.0f, 1.0f) },
+            { TechType.LavaLizard, (1.0f, 1.0f) },
+            { TechType.RabbitRay, (1.0f, 1.0f) },
+            { TechType.SpineEel, (1.0f, 1.0f) },
+            { TechType.Sandshark, (1.0f, 1.0f) },
+            { TechType.SeaEmperorBaby, (0.1f, 0.5f) }, //Done - feels cruel to grab them, but they *are* cute
+            { TechType.Stalker, (1.0f, 1.0f) },
+            { TechType.Warper, (1.0f, 1.0f) },
 
             //Leviathans
             { TechType.GhostLeviathan, (0.1f,0.1f) }, //Made pickupable at minimum size, just so it's even possible to put it in containment
@@ -111,7 +125,22 @@ namespace CreatureConfigSize
             { TechType.Jumper, (0.1f, 3.5f) }, //Shuttlebug TechType, Done
 
             //Medium Fish
-            { TechType.Shocker, (0.1f, 4.0f) },
+            { TechType.Shocker, (0.1f, 4.0f) }, //Done
+            { TechType.BoneShark, (1.0f, 1.0f) },
+            { TechType.Crabsnake, (1.0f, 1.0f) },
+            { TechType.CrabSquid, (1.0f, 1.0f) },
+            { TechType.Cutefish, (1.0f, 1.0f) },
+            { TechType.GhostRayRed, (1.0f, 1.0f) },
+            { TechType.Gasopod, (1.0f, 1.0f) },
+            { TechType.GhostRayBlue, (1.0f, 1.0f) },
+            { TechType.Jellyray, (1.0f, 1.0f) },
+            { TechType.LavaLizard, (1.0f, 1.0f) },
+            { TechType.RabbitRay, (1.0f, 1.0f) },
+            { TechType.SpineEel, (1.0f, 1.0f) },
+            { TechType.Sandshark, (1.0f, 1.0f) },
+            { TechType.SeaEmperorBaby, (1.0f, 1.0f) },
+            { TechType.Stalker, (1.0f, 1.0f) },
+            { TechType.Warper, (1.0f, 1.0f) },
 
             //Leviathans
             { TechType.GhostLeviathan, (0.1f,0.1f) }, //6% size is honestly the largest it fits without clipping; so only minimum size ghost will fit
