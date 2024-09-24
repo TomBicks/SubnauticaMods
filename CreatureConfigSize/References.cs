@@ -32,7 +32,7 @@ namespace CreatureConfigSize
             { TechType.Bladderfish, (0.1f, 2.0f) }, //Done
             { TechType.Bleeder, (0.1f, 2.5f) }, //Done
             { TechType.Blighter, (0.1f, 2.0f) }, //Done
-            { TechType.Shuttlebug, (0.1f, 0.6f) }, //Blood Crawler TechType, Done (though please check max size again)
+            { TechType.Shuttlebug, (0.1f, 0.7f) }, //Blood Crawler TechType, Done
             { TechType.Boomerang, (0.1f, 2.0f) }, //Done
             { TechType.CaveCrawler, (0.1f, 1.4f) }, //Done
             { TechType.Crash,(0.1f, 1.3f) }, //Done
@@ -43,14 +43,14 @@ namespace CreatureConfigSize
             { TechType.Hoopfish, (0.1f, 2.0f) }, //Done
             { TechType.HoopfishSchool, (1.0f, 1.0f) },
             { TechType.Hoverfish, (0.1f, 2.0f) }, //Done
-            { TechType.LavaBoomerang, (0.1f, 2.0f) }, //Done
-            { TechType.LavaLarva, (1.0f, 1.0f) },
+            { TechType.LavaBoomerang, (0.1f, 2.0f) }, //Magma Boomerang, Done
+            { TechType.LavaLarva, (0.1f, 1.0f) }, //Done
             { TechType.Mesmer,(0.1f, 1.5f) }, //Done
             { TechType.Oculus, (0.1f, 2.0f) }, //Done
             { TechType.Peeper, (0.1f, 2.0f) }, //Done
-            { TechType.LavaEyeye, (1.0f, 1.0f) },
+            { TechType.LavaEyeye, (0.1f, 2.0f) }, //Done
             { TechType.Reginald, (0.1f, 2.0f) }, //Done
-            { TechType.Skyray, (1.0f, 1.0f) },
+            { TechType.Skyray, (0.1f, 1.7f) }, //Done
             { TechType.Spadefish, (0.1f, 1.5f) }, //Done
             { TechType.Spinefish, (0.1f, 2.0f) }, //Done
             { TechType.Jumper, (0.1f, 1.5f) }, //Shuttlebug TechType, Done
