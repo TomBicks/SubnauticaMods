@@ -68,7 +68,7 @@ namespace CreatureConfigSize
                 }
 
                 //Schools of fish go ballistic if we scale them up, so we're ignoring them
-                if (techType != TechType.None || techType != TechType.HoopfishSchool)
+                if (techType != TechType.None && techType != TechType.HoopfishSchool)
                 {
                     //NOTE!! We apply them if their size is 1, as this is hopefully the baseline for many creatures
                     //NOTE 2!! Unfortunately, not all creatures start at size 1; notably small fish and Sea Treaders
