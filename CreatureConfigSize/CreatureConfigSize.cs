@@ -58,15 +58,17 @@ namespace CreatureConfigSize
                 GameObject creature = __instance.gameObject;
 
                 TechType techType = CraftData.GetTechType(creature);
-                if(techType == TechType.Reefback) 
+                ErrorMessage.AddMessage($"Creature {techType} found");
+                logger.LogInfo($"Creature {techType} found");
+
+                //TODO!! Check for whether it's a baby or not and assign it the unused TechType, for my own sanity making checks in future
+                if (techType == TechType.Reefback)
                 {
                     logger.LogInfo($"{creature.name}");
                 }
 
-                ErrorMessage.AddMessage($"Creature {techType} found");
-                logger.LogInfo($"Creature {techType} found");
-
-                if (techType != TechType.None)
+                //Schools of fish go ballistic if we scale them up, so we're ignoring them
+                if (techType != TechType.None || techType != TechType.HoopfishSchool)
                 {
                     //NOTE!! We apply them if their size is 1, as this is hopefully the baseline for many creatures
                     //NOTE 2!! Unfortunately, not all creatures start at size 1; notably small fish and Sea Treaders

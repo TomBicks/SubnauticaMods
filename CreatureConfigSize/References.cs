@@ -41,7 +41,6 @@ namespace CreatureConfigSize
             { TechType.GarryFish, (0.1f, 2.0f) }, //Done
             { TechType.HoleFish, (0.1f, 2.0f) }, //Done
             { TechType.Hoopfish, (0.1f, 2.0f) }, //Done
-            { TechType.HoopfishSchool, (1.0f, 1.0f) }, //TODO!!! CHECK WHAT THIS ENTITY IS COMPARED TO REGULAR HOOPFISH
             { TechType.Hoverfish, (0.1f, 2.0f) }, //Done
             { TechType.LavaBoomerang, (0.1f, 1.6f) }, //Magmarang TechType, Done
             { TechType.LavaLarva, (0.1f, 1.0f) }, //Done
@@ -74,12 +73,14 @@ namespace CreatureConfigSize
             { TechType.Warper, (1.0f, 1.0f) },
 
             //Leviathans
-            { TechType.GhostLeviathan, (0.1f,0.1f) }, //Made pickupable at minimum size, just so it's even possible to put it in containment
-            //{ TechType.GhostLeviathanJuvenile, (0.1f,0.1f) }, //NOTE!! Is Juvenile different to adult in terms of default size? Different TechTypes either way means I have to check for both likely
-            { TechType.ReaperLeviathan, (0.1f,0.2f) },
-            { TechType.SeaDragon, (0.1f,0.1f) }, //Made pickupable at minimum size, just so it's even possible to put it in containment
-            { TechType.SeaEmperorJuvenile, (0.1f,0.1f) }, //The grown up sea emperors; made pickupable at minimum size, just so it's even possible to put it in containment
-            { TechType.SeaTreader, (0.1f,0.1f) }
+            { TechType.GhostLeviathan, (0.1f, 0.1f) }, //Done - Made pickupable at minimum size, just so it's even possible to put it in containment
+            { TechType.GhostLeviathanJuvenile, (0.1f, 0.2f) }, //Done - NOTE!! Ghost Juveniles are approximately 63% the size of adults; making pickup up to 0.2 just because (easier on player to obtain)
+            { TechType.ReaperLeviathan, (0.1f, 0.2f) }, //Done
+            { TechType.Reefback, (0.1f, 0.1f) }, //Done - TODO!! Flora on back acts weirdly when scaled down, and they still produce large bubbles and tiger plants; want to disable them
+            { TechType.ReefbackBaby, (0.1f, 0.2f) }, //Done - Baby seems to be about 25% the size of the adult; TODO!! Reefback and ReefbackBaby both share the same techtype of Reefback, despite being different models, different base sizes, and despite ReefbackBaby techtype existing
+            { TechType.SeaDragon, (0.1f, 0.1f) }, //Done, Made pickupable at minimum size, just so it's even possible to put it in containment
+            { TechType.SeaEmperorJuvenile, (0.1f, 0.1f) }, //Done - Made pickupable at minimum size, just so it's even possible to put it in containment
+            { TechType.SeaTreader, (0.1f, 0.1f) } //Done
         };
 
         //Dictionary used to reference the min and max values a creature can be whilst still able to placed in an alien containment (big fish tank)
@@ -108,7 +109,6 @@ namespace CreatureConfigSize
             { TechType.GarryFish, (0.1f, 5.0f) }, //Done
             { TechType.HoleFish, (0.1f, 5.0f) }, //Done
             { TechType.Hoopfish, (0.1f, 5.0f) }, //Done
-            { TechType.HoopfishSchool, (1.0f, 1.0f) }, //TODO!!! CHECK WHAT THIS ENTITY IS COMPARED TO REGULAR HOOPFISH
             { TechType.Hoverfish, (0.1f, 4.0f) }, //Done
             { TechType.LavaBoomerang, (0.1f, 4.0f) }, //Magmarang TechType, Done
             { TechType.LavaLarva, (0.1f, 1.5f) }, //Done
@@ -143,13 +143,14 @@ namespace CreatureConfigSize
             { TechType.Warper, (1.0f, 1.0f) },
 
             //Leviathans
-            { TechType.GhostLeviathan, (0.1f,0.1f) }, //6% size is honestly the largest it fits without clipping; so only minimum size ghost will fit
-            //{ TechType.GhostLeviathanJuvenile, (0.1f,0.1f) }, //NOTE!! Is Juvenile different to adult in terms of default size? Different TechTypes either way means I have to check for both likely
-            { TechType.ReaperLeviathan, (0.1f,0.2f) }, //Reaper won't fit in the containment at anything larger than 12% size
-            { TechType.Reefback, (0.1f,0.2f) }, //Reefback and ReefbackBaby both share the same techtype of Reefback, despite being different models, different base sizes, and despite ReefbackBaby techtype existing
-            { TechType.SeaDragon, (0.1f,0.1f) }, //ERROR!! Sea Dragon does not appear to swim around in the tank without Sea Dragon component being enabled
-            { TechType.SeaEmperorJuvenile, (0.1f,0.1f) }, //The grown up sea emperors; 6% size is honestly the largest it fits without clipping; so only minimum size sea emperor will fit
-            //{ TechType.SeaTreader, (0.1f,0.1f) } //ERROR!! Sea Treader has no locomotion component, instead having a unique component to move on the ground, and thus breaks in containment
+            { TechType.GhostLeviathan, (0.1f, 0.1f) }, //Done - 6% size is honestly the largest it fits without clipping; so only minimum size ghost will fit
+            { TechType.GhostLeviathanJuvenile, (0.1f, 0.2f) }, //Done - NOTE!! Ghost Juveniles are approximately 63% the size of adults; 0.2 works good enough in small containment
+            { TechType.ReaperLeviathan, (0.1f, 0.2f) }, //Done - Reaper won't fit in the containment at anything larger than 12% size
+            { TechType.Reefback, (0.1f, 0.1f) }, //Done - ERROR!! Scaling down the Reefback doesn't scale down the flora on its back, causing graphical issues
+            { TechType.ReefbackBaby, (0.1f, 0.4f) }, //Done - NOTE!! Reefback and ReefbackBaby both share the same techtype of Reefback, despite being different models, different base sizes, and despite ReefbackBaby techtype existing
+            { TechType.SeaDragon, (0.1f, 0.1f) }, //Done - ERROR!! Sea Dragon does not appear to swim around in the tank without Sea Dragon component being enabled
+            { TechType.SeaEmperorJuvenile, (0.1f, 0.1f) }, //Done - The grown up sea emperors; 6% size is honestly the largest it fits without clipping; so only minimum size sea emperor will fit
+            //{ TechType.SeaTreader, (0.1f, 0.1f) } //ERROR!! Sea Treader has no locomotion component, instead having a unique component to move on the ground, and thus breaks in containment
         };
         #endregion
     }
