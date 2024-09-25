@@ -67,36 +67,38 @@ namespace CreatureConfigSize
                     logger.LogInfo($"{creature.name}");
                 }
 
-                //Schools of fish go ballistic if we scale them up, so we're ignoring them
-                if (techType != TechType.None && techType != TechType.HoopfishSchool)
+                
+                if (techType != TechType.None)
                 {
-                    //NOTE!! We apply them if their size is 1, as this is hopefully the baseline for many creatures
-                    //NOTE 2!! Unfortunately, not all creatures start at size 1; notably small fish and Sea Treaders
-                    //ERROR!! I'm not sure if it's because I'm calling it from LiveMixin, and thus too early, but size randomising isn't working anymore!!!
-                    //ERROR!! Set Size still works, so I'm assuming maybe because this occurs before Creature.Start, whatever I do is being reset by the start event?
-
-                    //Maybe I create a component in code, to hold onto the value and then apply it after its loaded?
-                    logger.LogInfo($"Creature Size = {GetSize(creature)}");
-                    if (GetSize(creature) == 1)
+                    //Further check to make sure creature isn't a school of fish; they don't like being scaled up, though have the creature component
+                    if (techType != TechType.HoopfishSchool)
                     {
-                        //Generate a modifier based on the creature's size class, retrieved from the CreatureSizeReference array
-                        float modifier = GetCreatureSizeModifier(techType);
-                        logger.LogInfo($"Creature Modifier = {modifier}");
+                        //NOTE!! We apply them if their size is 1, as this is hopefully the baseline for many creatures
+                        //NOTE 2!! Unfortunately, not all creatures start at size 1; notably small fish and Sea Treaders
 
-                        //Once we've retrieved the modifier, apply the change to size, by the modifier
-                        SetSize(creature, modifier);
+                        //Maybe I create a component in code, to hold onto the value and then apply it after its loaded?
+                        logger.LogInfo($"Creature Size = {GetSize(creature)}");
+                        if (GetSize(creature) == 1)
+                        {
+                            //Generate a modifier based on the creature's size class, retrieved from the CreatureSizeReference array
+                            float modifier = GetCreatureSizeModifier(techType);
+                            logger.LogInfo($"Creature Modifier = {modifier}");
 
-                        ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
+                            //Once we've retrieved the modifier, apply the change to size, by the modifier
+                            SetSize(creature, modifier);
+
+                            ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
+                        }
+
+                        var size = GetSize(creature);
+                        logger.LogInfo($"Creature Size After = {size}");
+
+                        //Check whether the creature is eligible to be picked up (and have the Pickupable component) or not
+                        CheckPickupableComponent(creature, size);
+
+                        //Check whether the creature is eligible to be placed in alien containment up (and have the WPC component) or not
+                        CheckWaterParkCreatureComponent(__instance.gameObject, size);
                     }
-
-                    var size = GetSize(creature);
-                    logger.LogInfo($"Creature Size After = {size}");
-
-                    //Check whether the creature is eligible to be picked up (and have the Pickupable component) or not
-                    CheckPickupableComponent(creature, size);
-
-                    //Check whether the creature is eligible to be placed in alien containment up (and have the WPC component) or not
-                    CheckWaterParkCreatureComponent(__instance.gameObject, size);
                 }
                 else
                 {
