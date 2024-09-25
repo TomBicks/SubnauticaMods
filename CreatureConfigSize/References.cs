@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CreatureConfigSize
 {
@@ -55,22 +52,22 @@ namespace CreatureConfigSize
             { TechType.Jumper, (0.1f, 1.5f) }, //Shuttlebug TechType, Done
 
             //Medium Fish
-            { TechType.Shocker, (1.0f, 1.0f) },
-            { TechType.BoneShark, (1.0f, 1.0f) },
-            { TechType.Crabsnake, (1.0f, 1.0f) },
+            { TechType.Shocker, (0.1f, 0.1f) }, //Done
+            { TechType.BoneShark, (0.1f, 0.3f) }, //Done
+            { TechType.Crabsnake, (0.1f, 0.1f) }, //Done
             { TechType.CrabSquid, (0.1f, 0.2f) }, //Done
-            { TechType.Cutefish, (1.0f, 1.0f) },
-            { TechType.GhostRayRed, (1.0f, 1.0f) },
-            { TechType.Gasopod, (1.0f, 1.0f) },
-            { TechType.GhostRayBlue, (1.0f, 1.0f) },
-            { TechType.Jellyray, (1.0f, 1.0f) },
-            { TechType.LavaLizard, (1.0f, 1.0f) },
-            { TechType.RabbitRay, (1.0f, 1.0f) },
-            { TechType.SpineEel, (1.0f, 1.0f) },
-            { TechType.Sandshark, (1.0f, 1.0f) },
+            { TechType.Cutefish, (0.1f, 1.7f) }, //Done
+            { TechType.GhostRayRed, (0.1f, 0.1f) }, //Done
+            { TechType.Gasopod, (0.1f, 0.2f) }, //Done
+            { TechType.GhostRayBlue, (0.1f, 0.1f) }, //Done
+            { TechType.Jellyray, (0.1f, 0.3f) }, //Done
+            { TechType.LavaLizard, (0.1f, 0.3f) }, //Done
+            { TechType.RabbitRay, (0.1f, 0.7f) }, //Done
+            { TechType.SpineEel, (0.1f, 0.2f) }, //River Prowler TechType, Done
+            { TechType.Sandshark, (0.1f, 0.2f) }, //Done
             { TechType.SeaEmperorBaby, (0.1f, 0.5f) }, //Done - feels cruel to grab them, but they *are* cute
-            { TechType.Stalker, (1.0f, 1.0f) },
-            { TechType.Warper, (1.0f, 1.0f) },
+            { TechType.Stalker, (0.1f, 0.3f) }, //Done
+            { TechType.Warper, (0.1f, 0.3f) }, //Done
 
             //Leviathans
             { TechType.GhostLeviathan, (0.1f, 0.1f) }, //Done - Made pickupable at minimum size, just so it's even possible to put it in containment
@@ -136,11 +133,11 @@ namespace CreatureConfigSize
             { TechType.Jellyray, (1.0f, 1.0f) },
             { TechType.LavaLizard, (1.0f, 1.0f) },
             { TechType.RabbitRay, (1.0f, 1.0f) },
-            { TechType.SpineEel, (1.0f, 1.0f) },
+            { TechType.SpineEel, (1.0f, 1.0f) }, //River Prowler TechType
             { TechType.Sandshark, (1.0f, 1.0f) },
             { TechType.SeaEmperorBaby, (1.0f, 1.0f) },
             { TechType.Stalker, (1.0f, 1.0f) },
-            { TechType.Warper, (1.0f, 1.0f) },
+            { TechType.Warper, (1.0f, 1.0f) }, //TODO Make the Warper eventually leave the tank, as well as maybe kill any infected fish? Or is this just mean?
 
             //Leviathans
             { TechType.GhostLeviathan, (0.1f, 0.1f) }, //Done - 6% size is honestly the largest it fits without clipping; so only minimum size ghost will fit
