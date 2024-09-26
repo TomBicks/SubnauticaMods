@@ -175,6 +175,10 @@ namespace CreatureConfigSize
             return false;
         }
 
+        //TODO!! Look into hooking into when a creatures hatches from an egg, and set its size there randomly (can be outside the range of pickupable, but within the range of what will fit
+        //in alien containment; this is how you can get bigger sizes in there, if you can't pick them up); they'll still be about 33% of their size in the tank though, so they grow as
+        //newly hatched fish do
+
         //Check whether the creature's size makes it eligible or not for the WaterParkCreature component, and to add it or remove it
         public static bool CheckWaterParkCreatureComponent(GameObject creature, float size)
         {

@@ -90,16 +90,17 @@ namespace CreatureConfigSize
         public static readonly Dictionary<TechType, (float min, float max)> WaterParkReference = new Dictionary<TechType, (float, float)>()
         {
             //NOTE!! The creature is 60% of its initial size in containment; these ranges are for their initial size! E.g. a 4x Ampeel is 2.4x in containment (the max size I'm okay with)
-            //NOTE!! Ampeels and Crabsquids hatched from eggs have a different maxSize (0.12 and 0.1 respectively, as opposed to the 0.6 of most small fish); should I worry?
+            //NOTE!! Ampeels and Crabsquids hatched from eggs have a different maxSize (0.12 and 0.1 respectively, as opposed to the 0.6 of most small fish); should I worry? No;...
+            //...it just means creatures hatched from eggs might be smaller on average grown up, or larger on average when first hatched
 
             //Small Fish
             { TechType.Biter, (0.1f, 5.0f) }, //Done
             { TechType.Bladderfish, (0.1f, 5.0f) }, //Done
             { TechType.Bleeder, (0.1f, 7.0f) }, //Done
             { TechType.Blighter, (0.1f, 5.0f) }, //Done
-            { TechType.Shuttlebug, (0.1f, 1.0f) }, //Blood Crawler TechType, Done
+            { TechType.Shuttlebug, (0.1f, 1.0f) }, //Blood Crawler TechType, Done - TODO!! They don't animate in the tank, and largely don't move all that much; they look awful  xD
             { TechType.Boomerang, (0.1f, 4.0f) }, //Done
-            { TechType.CaveCrawler, (0.1f, 2.0f) }, //Done
+            { TechType.CaveCrawler, (0.1f, 2.0f) }, //Done - TODO!! Cave Crawlers mostly work in containment, but just spam their walking animation, even when still
             { TechType.Crash, (0.1f, 4.0f) }, //Crashfish TechType, Done
             { TechType.Eyeye, (0.1f, 5.0f) }, //Done
             { TechType.Floater, (0.1f, 1.0f) }, //Done
@@ -133,9 +134,9 @@ namespace CreatureConfigSize
             { TechType.Jellyray, (1.0f, 1.0f) },
             { TechType.LavaLizard, (1.0f, 1.0f) },
             { TechType.RabbitRay, (1.0f, 1.0f) },
-            { TechType.SpineEel, (1.0f, 1.0f) }, //River Prowler TechType
-            { TechType.Sandshark, (1.0f, 1.0f) },
-            { TechType.SeaEmperorBaby, (1.0f, 1.0f) },
+            { TechType.SpineEel, (0.1f, 0.5f) }, //River Prowler TechType, Done
+            { TechType.Sandshark, (0.1f, 0.6f) }, //Done - NOTE!! Sandshark seems to rapidly shrink and expand when up against the walls of containment...just, what?
+            { TechType.SeaEmperorBaby, (0.1f, 1.0f) }, //Done
             { TechType.Stalker, (1.0f, 1.0f) },
             { TechType.Warper, (1.0f, 1.0f) }, //TODO Make the Warper eventually leave the tank, as well as maybe kill any infected fish? Or is this just mean?
 
