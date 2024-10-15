@@ -93,12 +93,16 @@ namespace CreatureConfigSize
             //NOTE!! Ampeels and Crabsquids hatched from eggs have a different maxSize (0.12 and 0.1 respectively, as opposed to the 0.6 of most small fish); should I worry? No;...
             //...it just means creatures hatched from eggs might be smaller on average grown up, or larger on average when first hatched
 
+            //TODO!! If I don't disable the behaviour of shuttlebugs and cave crawlers, they actually looks really cool in containment!
+            //Also seems to be okay for the sea dragon
+            //Also, this is likely the solution I want for the skyray too, to trigger the drowning animation
+
             //Small Fish
             { TechType.Biter, (0.1f, 5.0f) }, //Done
             { TechType.Bladderfish, (0.1f, 5.0f) }, //Done
             { TechType.Bleeder, (0.1f, 7.0f) }, //Done
             { TechType.Blighter, (0.1f, 5.0f) }, //Done
-            { TechType.Shuttlebug, (0.1f, 1.0f) }, //Blood Crawler TechType, Done - TODO!! Same as Sea Dragon; They don't animate in the tank, unless their creature component is reactivated
+            { TechType.Shuttlebug, (0.1f, 0.7f) }, //Blood Crawler TechType, Done - TODO!! Same as Sea Dragon; They don't animate in the tank, unless their creature component is reactivated
             { TechType.Boomerang, (0.1f, 4.0f) }, //Done
             { TechType.CaveCrawler, (0.1f, 2.0f) }, //Done - TODO!! Cave Crawlers mostly work in containment, but just spam their walking animation, even when still
             { TechType.Crash, (0.1f, 4.0f) }, //Crashfish TechType, Done
