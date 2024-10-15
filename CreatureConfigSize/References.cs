@@ -98,7 +98,7 @@ namespace CreatureConfigSize
             { TechType.Bladderfish, (0.1f, 5.0f) }, //Done
             { TechType.Bleeder, (0.1f, 7.0f) }, //Done
             { TechType.Blighter, (0.1f, 5.0f) }, //Done
-            { TechType.Shuttlebug, (0.1f, 1.0f) }, //Blood Crawler TechType, Done - TODO!! They don't animate in the tank, and largely don't move all that much; they look awful  xD
+            { TechType.Shuttlebug, (0.1f, 1.0f) }, //Blood Crawler TechType, Done - TODO!! Same as Sea Dragon; They don't animate in the tank, unless their creature component is reactivated
             { TechType.Boomerang, (0.1f, 4.0f) }, //Done
             { TechType.CaveCrawler, (0.1f, 2.0f) }, //Done - TODO!! Cave Crawlers mostly work in containment, but just spam their walking animation, even when still
             { TechType.Crash, (0.1f, 4.0f) }, //Crashfish TechType, Done
@@ -123,28 +123,28 @@ namespace CreatureConfigSize
             { TechType.Jumper, (0.1f, 3.5f) }, //Shuttlebug TechType, Done
 
             //Medium Fish
-            { TechType.Shocker, (0.1f, 4.0f) }, //Done
-            { TechType.BoneShark, (1.0f, 1.0f) },
-            { TechType.Crabsnake, (1.0f, 1.0f) },
-            { TechType.CrabSquid, (1.0f, 1.0f) },
-            { TechType.Cutefish, (1.0f, 1.0f) },
-            { TechType.GhostRayRed, (1.0f, 1.0f) },
-            { TechType.Gasopod, (1.0f, 1.0f) },
-            { TechType.GhostRayBlue, (1.0f, 1.0f) },
-            { TechType.Jellyray, (1.0f, 1.0f) },
-            { TechType.LavaLizard, (1.0f, 1.0f) },
-            { TechType.RabbitRay, (1.0f, 1.0f) },
+            { TechType.Shocker, (0.1f, 0.4f) }, //Done
+            { TechType.BoneShark, (0.1f, 0.5f) }, //Done
+            { TechType.Crabsnake, (0.1f, 0.3f) }, //Done
+            { TechType.CrabSquid, (0.1f, 0.2f) }, //Done
+            { TechType.Cutefish, (0.1f, 2.5f) }, //Done
+            { TechType.GhostRayRed, (0.1f, 0.5f) }, //Done
+            { TechType.Gasopod, (0.1f, 0.7f) }, //Done
+            { TechType.GhostRayBlue, (0.1f, 0.5f) }, //Done
+            { TechType.Jellyray, (0.1f, 0.9f) }, //Done
+            { TechType.LavaLizard, (0.1f, 1.0f) }, //Done
+            { TechType.RabbitRay, (0.1f, 1.5f) }, //Done
             { TechType.SpineEel, (0.1f, 0.5f) }, //River Prowler TechType, Done
             { TechType.Sandshark, (0.1f, 0.6f) }, //Done - NOTE!! Sandshark seems to rapidly shrink and expand when up against the walls of containment...just, what?
             { TechType.SeaEmperorBaby, (0.1f, 1.0f) }, //Done
-            { TechType.Stalker, (1.0f, 1.0f) },
+            { TechType.Stalker, (0.1f, 0.7f) }, //Done
             { TechType.Warper, (1.0f, 1.0f) }, //TODO Make the Warper eventually leave the tank, as well as maybe kill any infected fish? Or is this just mean?
 
             //Leviathans
             { TechType.GhostLeviathan, (0.1f, 0.1f) }, //Done - 6% size is honestly the largest it fits without clipping; so only minimum size ghost will fit
             { TechType.GhostLeviathanJuvenile, (0.1f, 0.2f) }, //Done - NOTE!! Ghost Juveniles are approximately 63% the size of adults; 0.2 works good enough in small containment
             { TechType.ReaperLeviathan, (0.1f, 0.2f) }, //Done - Reaper won't fit in the containment at anything larger than 12% size
-            { TechType.Reefback, (0.1f, 0.1f) }, //Done - ERROR!! Scaling down the Reefback doesn't scale down the flora on its back, causing graphical issues
+            { TechType.Reefback, (0.1f, 0.1f) }, //Done - ERROR!! Scaling down the Reefback doesn't scale down the physics of the flora on its back, causing graphical issues
             { TechType.ReefbackBaby, (0.1f, 0.4f) }, //Done - NOTE!! Reefback and ReefbackBaby both share the same techtype of Reefback, despite being different models, different base sizes, and despite ReefbackBaby techtype existing
             { TechType.SeaDragon, (0.1f, 0.1f) }, //Done - ERROR!! Sea Dragon does not appear to swim around in the tank without Sea Dragon component being enabled
             { TechType.SeaEmperorJuvenile, (0.1f, 0.1f) }, //Done - The grown up sea emperors; 6% size is honestly the largest it fits without clipping; so only minimum size sea emperor will fit
