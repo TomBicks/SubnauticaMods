@@ -36,7 +36,6 @@ namespace CreatureConfigSize
                 {
                     logger.LogError($"{target}");
                     GameObject parent = target.GetComponentInParent<Creature>().gameObject;
-                    //TechType techType = CraftData.GetTechType(target);
 
                     logger.LogError($"{target}, {parent}, {target.GetComponent<Creature>()}, {target.GetComponentInParent<Creature>()}");
 
@@ -55,7 +54,7 @@ namespace CreatureConfigSize
                 else
                 {
                     //If we target something like the ground, it'll still return something, but have TechType.None, so this is effectively "no target"
-                    if(techType == TechType.None)
+                    if (techType == TechType.None)
                     {
                         ErrorMessage.AddWarning("No Target!");
                         logger.LogError("No Target!");
@@ -64,6 +63,58 @@ namespace CreatureConfigSize
                     {
                         ErrorMessage.AddWarning($"{techType} is not a creature!");
                         logger.LogError($"{techType} is not a creature!");
+                    }
+                }
+            }
+            else
+            {
+                //2nd "no target" if the user manages to look at absolutely nothing, like the sky
+                ErrorMessage.AddWarning("No Target!");
+                logger.LogError("No Target!");
+            }
+        }
+
+        //DEBUG!!
+        [ConsoleCommand("fixcreature")]
+        public static void FixBadCreature()
+        {
+            //Debug command used to reanable the creature component of a creature in a waterpark, so they animate better, but still keep them friendly
+            //NOTE!! Need to first confirm if target is null or not before referring to it elsewhere; thus, whole thing has to be incapsulated in that if statement
+            if (GetTarget(out GameObject target))
+            {
+                TechType techType = CraftData.GetTechType(target);
+
+                //NOTE!! Needed to refer to parent objects with Creature component, as some creatures have child objects that interfere with the raycast
+                if (target.GetComponentInParent<Creature>() is CaveCrawler)
+                {
+                    logger.LogError($"{target}");
+                    GameObject parent = target.GetComponentInParent<Creature>().gameObject;
+                    logger.LogError($"{target.GetComponentInParent<Creature>()}");
+
+                    logger.LogError($"{target}, {parent}, {target.GetComponent<Creature>()}, {target.GetComponentInParent<Creature>()}");
+
+                    if (parent != null)
+                    {
+                        //Fix the creature!
+                        //Renable the creature component, as for these creatures much of the animation is contained there
+                        //Then, MAYBE!!, as a precaution, turn on friendly, so they don't try to attack the player when they're 'fixed'
+                        ErrorMessage.AddMessage($"Fixing {techType}");
+                        parent.GetComponent<CaveCrawler>().enabled = true;
+                        parent.GetComponent<CaveCrawler>().friendlyToPlayer = true;
+                    }
+                }
+                else
+                {
+                    //If we target something like the ground, it'll still return something, but have TechType.None, so this is effectively "no target"
+                    if (techType == TechType.None)
+                    {
+                        ErrorMessage.AddWarning("No Target!");
+                        logger.LogError("No Target!");
+                    }
+                    else
+                    {
+                        ErrorMessage.AddWarning($"{techType} is not a Cave Crawler!");
+                        logger.LogError($"{techType} is not a Cave Crawler!");
                     }
                 }
             }

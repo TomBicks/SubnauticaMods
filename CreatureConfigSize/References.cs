@@ -142,7 +142,7 @@ namespace CreatureConfigSize
             { TechType.Sandshark, (0.1f, 0.6f) }, //Done - NOTE!! Sandshark seems to rapidly shrink and expand when up against the walls of containment...just, what?
             { TechType.SeaEmperorBaby, (0.1f, 1.0f) }, //Done
             { TechType.Stalker, (0.1f, 0.7f) }, //Done
-            { TechType.Warper, (1.0f, 1.0f) }, //TODO Make the Warper eventually leave the tank, as well as maybe kill any infected fish? Or is this just mean?
+            { TechType.Warper, (1.0f, 1.0f) }, //NOT DONE YET!! TODO Make the Warper eventually leave the tank, as well as maybe kill any infected fish? Or is this just mean?
 
             //Leviathans
             { TechType.GhostLeviathan, (0.1f, 0.1f) }, //Done - 6% size is honestly the largest it fits without clipping; so only minimum size ghost will fit
