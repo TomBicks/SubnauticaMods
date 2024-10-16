@@ -2,6 +2,7 @@
 using static CreatureConfigSize.CreatureConfigSizePlugin;
 using static CreatureConfigSize.References;
 using UnityEngine;
+using System;
 
 namespace CreatureConfigSize
 {
@@ -90,6 +91,24 @@ namespace CreatureConfigSize
                             ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
                         }
 
+                        #region DEBUG!! Test for checking for creatures who's size isn't 1 set by the game
+                        //If the creature value rounded has more than 1 decimal place, then it's not one set by me and needs changing
+                        //ERROR!! This will not work longterm, because fauna growing up in the tank will falsely trigger this
+                        decimal creatureSize = (decimal)GetSize(creature);
+                        if ((Decimal.Round(creatureSize, 1) != creatureSize))
+                        {
+                            logger.LogInfo($"Size of {techType} was set by game; resizing.");
+                            //Generate a modifier based on the creature's size class, retrieved from the CreatureSizeReference array
+                            float modifier = GetCreatureSizeModifier(techType);
+                            logger.LogInfo($"Creature Modifier = {modifier}");
+
+                            //Once we've retrieved the modifier, apply the change to size, by the modifier
+                            SetSize(creature, modifier);
+
+                            ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
+                        }
+                        #endregion
+
                         var size = GetSize(creature);
                         logger.LogInfo($"Creature Size After = {size}");
 
@@ -162,7 +181,7 @@ namespace CreatureConfigSize
                     if(componentExists || insideWaterPark)
                     {
                         var component = creature.GetComponent<Pickupable>();
-                        Object.Destroy(component);
+                        UnityEngine.Object.Destroy(component);
                     }
                 }
             }

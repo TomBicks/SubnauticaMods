@@ -37,6 +37,7 @@
     <Compile Include="CreatureConfigSize.cs" />
     <Compile Include="CreatureConfigSizePlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SizeChecker.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony">

@@ -125,5 +125,49 @@ namespace CreatureConfigSize
                 logger.LogError("No Target!");
             }
         }
+
+        [ConsoleCommand("addtest")]
+        public static void AddTestComponent()
+        {
+            //NOTE!! Need to first confirm if target is null or not before referring to it elsewhere; thus, whole thing has to be incapsulated in that if statement
+            if (GetTarget(out GameObject target))
+            {
+                TechType techType = CraftData.GetTechType(target);
+
+                //NOTE!! Needed to refer to parent objects with Creature component, as some creatures have child objects that interfere with the raycast
+                if (target.GetComponentInParent<Creature>())
+                {
+                    logger.LogError($"{target}");
+                    GameObject parent = target.GetComponentInParent<Creature>().gameObject;
+
+                    logger.LogError($"{target}, {parent}, {target.GetComponent<Creature>()}, {target.GetComponentInParent<Creature>()}");
+
+                    if (parent != null)
+                    {
+                        parent.AddComponent<SizeChecker>();
+                    }
+                }
+                else
+                {
+                    //If we target something like the ground, it'll still return something, but have TechType.None, so this is effectively "no target"
+                    if (techType == TechType.None)
+                    {
+                        ErrorMessage.AddWarning("No Target!");
+                        logger.LogError("No Target!");
+                    }
+                    else
+                    {
+                        ErrorMessage.AddWarning($"{techType} is not a creature!");
+                        logger.LogError($"{techType} is not a creature!");
+                    }
+                }
+            }
+            else
+            {
+                //2nd "no target" if the user manages to look at absolutely nothing, like the sky
+                ErrorMessage.AddWarning("No Target!");
+                logger.LogError("No Target!");
+            }
+        }
     }
 }
