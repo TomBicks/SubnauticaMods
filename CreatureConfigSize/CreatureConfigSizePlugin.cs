@@ -2,6 +2,8 @@
 using BepInEx.Logging;
 using HarmonyLib;
 using Nautilus.Handlers;
+using Nautilus.Json.Attributes;
+using Nautilus.Json;
 using Nautilus.Options.Attributes;
 using System.Collections.Generic;
 
@@ -13,13 +15,28 @@ namespace CreatureConfigSize
     {
         private const string myGUID = "com.jukebox.creatureconfigsize";
         private const string pluginName = "Creature Config - Size";
-        private const string versionString = "0.5.0";
+        private const string versionString = "0.8.0";
 
         private static readonly Harmony harmony = new Harmony(myGUID);
 
         internal static ManualLogSource logger { get; private set; }
 
         internal static Config config { get; } = OptionsPanelHandler.RegisterModOptions<Config>();
+
+        //TODO!! Maybe think of a better, more fitting name?
+        internal static CreatureSizeInfo creatureSizeInfo { get; } = SaveDataHandler.RegisterSaveDataCache<CreatureSizeInfo>();
+
+        [FileName("creature_size_info")]
+        internal class CreatureSizeInfo : SaveDataCache
+        {
+            public bool SizeRandomised { get; set; }
+            //A list (with its own class, like I did with MoreLeviathanSpawns), that maybe lists size modifier, default size?
+            //TODO!! Check QCreatureConfig for some inspiration for what might be useful to include
+            //SizeChanged - Bool value as to whether this creature has had its size changed or not (no shouldn't need it; if it's in the list, its size has been changed!!)
+            //TechType - Only set it once (or close as possible) and pull from the list whenever needing to refer to the creature and size
+            //Size Modifier - Will be the size modifier set based on the techtype; won't need to rerandomise again, so this won't change and can be static?
+            public List<float> CreatureInfo { get; set; }
+        }
 
         private void Awake()
         {
