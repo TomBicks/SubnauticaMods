@@ -24,18 +24,19 @@ namespace CreatureConfigSize
         internal static Config config { get; } = OptionsPanelHandler.RegisterModOptions<Config>();
 
         //TODO!! Maybe think of a better, more fitting name?
-        internal static CreatureSizeInfo creatureSizeInfo { get; } = SaveDataHandler.RegisterSaveDataCache<CreatureSizeInfo>();
+        internal static CreatureSizeInfoList creatureSizeInfoList { get; } = SaveDataHandler.RegisterSaveDataCache<CreatureSizeInfoList>();
 
-        [FileName("creature_size_info")]
-        internal class CreatureSizeInfo : SaveDataCache
+        [FileName("creature_size_info_list")]
+        internal class CreatureSizeInfoList : SaveDataCache
         {
-            public bool SizeRandomised { get; set; }
+            //NOTE!! Should this be a dictionary instead, with the prefabId being the key, holding a class with all the relevant info as the value?
+
             //A list (with its own class, like I did with MoreLeviathanSpawns), that maybe lists size modifier, default size?
             //TODO!! Check QCreatureConfig for some inspiration for what might be useful to include
             //SizeChanged - Bool value as to whether this creature has had its size changed or not (no shouldn't need it; if it's in the list, its size has been changed!!)
             //TechType - Only set it once (or close as possible) and pull from the list whenever needing to refer to the creature and size
             //Size Modifier - Will be the size modifier set based on the techtype; won't need to rerandomise again, so this won't change and can be static?
-            public List<float> CreatureInfo { get; set; }
+            public List<string> CreatureSizeInfo { get; set; } = new List<string>();
         }
 
         private void Awake()

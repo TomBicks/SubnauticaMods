@@ -77,6 +77,9 @@ namespace CreatureConfigSize
                         //NOTE!! We apply them if their size is 1, as this is hopefully the baseline for many creatures
                         //NOTE 2!! Unfortunately, not all creatures start at size 1; notably small fish and Sea Treaders
 
+                        //DEBUG!! Add creature to the json list, to test whether it works
+                        creatureSizeInfoList.CreatureSizeInfo.Add(creature.GetComponent<PrefabIdentifier>().id);
+
                         //Maybe I create a component in code, to hold onto the value and then apply it after its loaded?
                         logger.LogInfo($"Creature Size = {GetSize(creature)}");
                         if (GetSize(creature) == 1)
