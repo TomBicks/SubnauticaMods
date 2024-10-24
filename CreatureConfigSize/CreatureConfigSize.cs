@@ -28,7 +28,7 @@ namespace CreatureConfigSize
         {
             GameObject creature = __instance.gameObject;
             TechType techType = CraftData.GetTechType(creature);
-            logger.LogInfo($"(PostLiveMixinAwake) entity is {techType}");
+            //logger.LogInfo($"(PostLiveMixinAwake) entity is {techType}");
 
             //If the creature can be in a WaterPark but isn't normally, we need to create a new blank placeholder WPC data at start
             //Otherwise it breaks, because they're null otherwise, on account of not normally having WPC component
@@ -77,8 +77,25 @@ namespace CreatureConfigSize
                         //NOTE!! We apply them if their size is 1, as this is hopefully the baseline for many creatures
                         //NOTE 2!! Unfortunately, not all creatures start at size 1; notably small fish and Sea Treaders
 
+                        #region Unique ID test
                         //DEBUG!! Add creature to the json list, to test whether it works
-                        creatureSizeInfoList.CreatureSizeInfo.Add(creature.GetComponent<PrefabIdentifier>().id);
+                        //NOTE!! Remember, "id" is the private value of UniqueIdentifier, "Id" is the exposed, public accessor
+                        string creatureId = creature.GetComponent<PrefabIdentifier>().Id;
+                        logger.LogInfo($"ID of {techType} = {creatureId}");
+
+                        if(!creatureSizeInfoList.creatureSizeInfo.Contains(creatureId))
+                        {
+                            logger.LogInfo($"Size not randomised/ID not logged.");
+                            creatureSizeInfoList.creatureSizeInfo.Add(creature.GetComponent<PrefabIdentifier>().Id);
+                            //creatureSizeInfoList.creatureDictionary.Add(creature.GetComponent<PrefabIdentifier>().Id, creature.transform.localScale.x);
+                        }
+                        else
+                        {
+                            logger.LogInfo($"Size already randomised/ID already logged.");
+                        }
+
+                        logger.LogInfo($"Length of ID List = {creatureSizeInfoList.creatureSizeInfo.Count}");
+                        #endregion
 
                         //Maybe I create a component in code, to hold onto the value and then apply it after its loaded?
                         logger.LogInfo($"Creature Size = {GetSize(creature)}");
