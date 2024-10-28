@@ -36,8 +36,8 @@ namespace CreatureConfigSize
             //SizeChanged - Bool value as to whether this creature has had its size changed or not (no shouldn't need it; if it's in the list, its size has been changed!!)
             //TechType - Only set it once (or close as possible) and pull from the list whenever needing to refer to the creature and size
             //Size Modifier - Will be the size modifier set based on the techtype; won't need to rerandomise again, so this won't change and can be static?
-            public List<string> creatureSizeInfo = new List<string>();
-            //internal Dictionary<string, float> creatureDictionary { get; } = new Dictionary<string, float>();
+            //public List<string> creatureSizeInfo = new List<string>();
+            public Dictionary<string, float> creatureSizeDictionary = new Dictionary<string, float>();
         }
 
         private void Awake()

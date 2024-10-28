@@ -83,18 +83,17 @@ namespace CreatureConfigSize
                         string creatureId = creature.GetComponent<PrefabIdentifier>().Id;
                         logger.LogInfo($"ID of {techType} = {creatureId}");
 
-                        if(!creatureSizeInfoList.creatureSizeInfo.Contains(creatureId))
+                        if(!creatureSizeInfoList.creatureSizeDictionary.ContainsKey(creatureId))
                         {
                             logger.LogInfo($"Size not randomised/ID not logged.");
-                            creatureSizeInfoList.creatureSizeInfo.Add(creature.GetComponent<PrefabIdentifier>().Id);
-                            //creatureSizeInfoList.creatureDictionary.Add(creature.GetComponent<PrefabIdentifier>().Id, creature.transform.localScale.x);
+                            creatureSizeInfoList.creatureSizeDictionary.Add(creature.GetComponent<PrefabIdentifier>().Id, GetSize(creature));
                         }
                         else
                         {
                             logger.LogInfo($"Size already randomised/ID already logged.");
                         }
 
-                        logger.LogInfo($"Length of ID List = {creatureSizeInfoList.creatureSizeInfo.Count}");
+                        logger.LogInfo($"Length of ID Dictionary = {creatureSizeInfoList.creatureSizeDictionary.Count}");
                         #endregion
 
                         //Maybe I create a component in code, to hold onto the value and then apply it after its loaded?
