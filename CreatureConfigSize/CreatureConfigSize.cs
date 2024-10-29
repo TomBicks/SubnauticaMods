@@ -66,10 +66,17 @@ namespace CreatureConfigSize
                 logger.LogInfo($"Creature {techType} found");
                 ErrorMessage.AddMessage($"Creature {techType} found");
 
-                //TODO!! Check for whether it's a baby or not and assign it the unused TechType, for my own sanity making checks in future
+                //As Reefbacks share the same TechType with baby Reefbacks, despite both existing, manually apply it, so they can be seperately resized
                 if (techType == TechType.Reefback)
                 {
+                    //DEBUG!!
                     logger.LogInfo($"{creature.name}");
+
+                    if(creature.name == "ReefbackBaby(Clone)")
+                    {
+                        creature.GetComponent<TechTag>().type = TechType.ReefbackBaby;
+                        techType = TechType.ReefbackBaby;
+                    }
                 }
 
                 //Make sure the creature also has a techtype, so we can filter by it; can't think of anything that doesn't, but it's a good precaution
