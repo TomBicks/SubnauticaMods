@@ -79,64 +79,50 @@ namespace CreatureConfigSize
                     }
                 }
 
-                //Make sure the creature also has a techtype, so we can filter by it; can't think of anything that doesn't, but it's a good precaution
-                //TODO!! Maybe I should make this, instead of checking for no TechType, check whether it's a techtype included in one of my reference dictionaries!
-                //This would mean that any creature with a techtype, that I'm not meaning to affect, wouldn't be included here!
-                if (techType != TechType.None)
+                //Retrieve the unique id of this creature
+                //NOTE!! Remember, "id" is the private value of UniqueIdentifier, "Id" is the exposed, public accessor; we need to use "Id"
+                string creatureId = creature.GetComponent<PrefabIdentifier>().Id;
+                logger.LogInfo($"ID of {techType} = {creatureId}");
+
+                //Check whether we've already randomised the size of this creature, as its id should already be in our dictionary if so
+                if (!creatureSizeInfoList.creatureSizeDictionary.ContainsKey(creatureId))
                 {
-                    //Further check to make sure creature isn't a school of fish; they don't like being scaled up, despite having the creature component
-                    if (techType != TechType.HoopfishSchool)
-                    {
-                        //Retrieve the unique id of this creature
-                        //NOTE!! Remember, "id" is the private value of UniqueIdentifier, "Id" is the exposed, public accessor; we need to use "Id"
-                        string creatureId = creature.GetComponent<PrefabIdentifier>().Id;
-                        logger.LogInfo($"ID of {techType} = {creatureId}");
+                    logger.LogInfo($"Size not randomised/ID not logged.");
 
-                        //Check whether we've already randomised the size of this creature, as its id should already be in our dictionary if so
-                        if (!creatureSizeInfoList.creatureSizeDictionary.ContainsKey(creatureId))
-                        {
-                            logger.LogInfo($"Size not randomised/ID not logged.");
+                    //Generate a modifier for the creature's size
+                    //Based on either the creature's size class, retrieved from the CreatureSizeReference array, or the min and max values in the json file, if complex is on
+                    float modifier = GetCreatureSizeModifier(techType);
+                    logger.LogInfo($"Creature Modifier = {modifier}");
 
-                            //Generate a modifier for the creature's size
-                            //Based on either the creature's size class, retrieved from the CreatureSizeReference array, or the min and max values in the json file, if complex is on
-                            float modifier = GetCreatureSizeModifier(techType);
-                            logger.LogInfo($"Creature Modifier = {modifier}");
+                    //Once we've retrieved the modifier, apply it by multiplying the creature's size by the modifier
+                    SetSize(creature, modifier);
+                    ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
 
-                            //Once we've retrieved the modifier, apply it by multiplying the creature's size by the modifier
-                            SetSize(creature, modifier);
-                            ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
-
-                            //Add unique id and applied size to dictionary, to document that we *have* randomised this creature's size
-                            creatureSizeInfoList.creatureSizeDictionary.Add(creature.GetComponent<PrefabIdentifier>().Id, modifier);
-                        }
-                        else
-                        {
-                            logger.LogInfo($"Size already randomised/ID already logged.");
-
-                            float modifier = creatureSizeInfoList.creatureSizeDictionary[creatureId];
-
-                            //Reapply the modifier, in case it expires if we reload with the creature unloaded
-                            SetSize(creature, modifier);
-                            ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
-                        }
-
-                        //logger.LogInfo($"Length of ID Dictionary = {creatureSizeInfoList.creatureSizeDictionary.Count}");
-
-                        var size = GetSize(creature);
-                        logger.LogInfo($"Creature Size After = {size}");
-
-                        //Need to check whether creature can be picked up and placed in alien containment, regardless of whether the creature has had its size randomised or not, as these reset at startup
-                        //Check whether the creature is eligible to be picked up (and have the Pickupable component) or not
-                        CheckPickupableComponent(creature, size);
-
-                        //Check whether the creature is eligible to be placed in alien containment up (and have the WPC component) or not
-                        CheckWaterParkCreatureComponent(creature, size);
-                    }
+                    //Add unique id and applied size to dictionary, to document that we *have* randomised this creature's size
+                    creatureSizeInfoList.creatureSizeDictionary.Add(creature.GetComponent<PrefabIdentifier>().Id, modifier);
                 }
                 else
                 {
-                    logger.LogError($"Error! Creature {__instance.name} has no TechType!");
+                    logger.LogInfo($"Size already randomised/ID already logged.");
+
+                    float modifier = creatureSizeInfoList.creatureSizeDictionary[creatureId];
+
+                    //Reapply the modifier, in case it expires if we reload with the creature unloaded
+                    SetSize(creature, modifier);
+                    ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
                 }
+
+                //logger.LogInfo($"Length of ID Dictionary = {creatureSizeInfoList.creatureSizeDictionary.Count}");
+
+                var size = GetSize(creature);
+                logger.LogInfo($"Creature Size After = {size}");
+
+                //Need to check whether creature can be picked up and placed in alien containment, regardless of whether the creature has had its size randomised or not, as these reset at startup
+                //Check whether the creature is eligible to be picked up (and have the Pickupable component) or not
+                CheckPickupableComponent(creature, size);
+
+                //Check whether the creature is eligible to be placed in alien containment up (and have the WPC component) or not
+                CheckWaterParkCreatureComponent(creature, size);
             }
         }
 
