@@ -23,7 +23,7 @@ namespace CreatureConfigSize
 
         [HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.Awake))]
         [HarmonyPostfix] //Using LiveMixin because creatures in containment don't trigger Creature events (because their creature component is disabled)
-        //Using .Awake to set up the placeholder WPC data, as by .Start it's pulling null references and breaking
+        //Using .Awake to set up the placeholder WPC data, as otherwise by .Start it's pulling null references and breaking
         public static void PostLiveMixinAwake(Creature __instance)
         {
             GameObject creature = __instance.gameObject;
@@ -52,15 +52,19 @@ namespace CreatureConfigSize
         //Using .Start for everything else because size changes don't take effect if done in .Awake
         public static void PostLiveMixinStart(Creature __instance)
         {
-            //NOTE!! This might exclude creatures we've seen not work with the command, like Blood Crawlers
-            if(__instance.gameObject.GetComponent<Creature>() != null)
-            {
-                //Reference the gameObject Class directly, as none of the functionality uses the Creature class specifically
-                GameObject creature = __instance.gameObject;
+            //Reference the gameObject Class directly, as we don't need the Creature class specifically
+            GameObject creature = __instance.gameObject;
 
-                TechType techType = CraftData.GetTechType(creature);
-                ErrorMessage.AddMessage($"Creature {techType} found");
+            //Retrieve the TechType of the creature; we'll use this for filtering from the reference tables for only things we intend to resize
+            TechType techType = CraftData.GetTechType(creature);
+
+            //NOTE!! Unclear whether any creatures that exist lack this component, so this *should* work for everything
+            //Floaters lack this; are we really changing the check *just* to include them?
+            //if (creature.GetComponent<Creature>() != null)
+            if (PickupableReference.ContainsKey(techType))
+            {
                 logger.LogInfo($"Creature {techType} found");
+                ErrorMessage.AddMessage($"Creature {techType} found");
 
                 //TODO!! Check for whether it's a baby or not and assign it the unused TechType, for my own sanity making checks in future
                 if (techType == TechType.Reefback)
@@ -68,79 +72,63 @@ namespace CreatureConfigSize
                     logger.LogInfo($"{creature.name}");
                 }
 
-                
+                //Make sure the creature also has a techtype, so we can filter by it; can't think of anything that doesn't, but it's a good precaution
+                //TODO!! Maybe I should make this, instead of checking for no TechType, check whether it's a techtype included in one of my reference dictionaries!
+                //This would mean that any creature with a techtype, that I'm not meaning to affect, wouldn't be included here!
                 if (techType != TechType.None)
                 {
-                    //Further check to make sure creature isn't a school of fish; they don't like being scaled up, though have the creature component
+                    //Further check to make sure creature isn't a school of fish; they don't like being scaled up, despite having the creature component
                     if (techType != TechType.HoopfishSchool)
                     {
-                        //NOTE!! We apply them if their size is 1, as this is hopefully the baseline for many creatures
-                        //NOTE 2!! Unfortunately, not all creatures start at size 1; notably small fish and Sea Treaders
-
-                        #region Unique ID test
-                        //DEBUG!! Add creature to the json list, to test whether it works
-                        //NOTE!! Remember, "id" is the private value of UniqueIdentifier, "Id" is the exposed, public accessor
+                        //Retrieve the unique id of this creature
+                        //NOTE!! Remember, "id" is the private value of UniqueIdentifier, "Id" is the exposed, public accessor; we need to use "Id"
                         string creatureId = creature.GetComponent<PrefabIdentifier>().Id;
                         logger.LogInfo($"ID of {techType} = {creatureId}");
 
-                        if(!creatureSizeInfoList.creatureSizeDictionary.ContainsKey(creatureId))
+                        //Check whether we've already randomised the size of this creature, as its id should already be in our dictionary if so
+                        if (!creatureSizeInfoList.creatureSizeDictionary.ContainsKey(creatureId))
                         {
                             logger.LogInfo($"Size not randomised/ID not logged.");
-                            creatureSizeInfoList.creatureSizeDictionary.Add(creature.GetComponent<PrefabIdentifier>().Id, GetSize(creature));
+
+                            //Generate a modifier for the creature's size
+                            //Based on either the creature's size class, retrieved from the CreatureSizeReference array, or the min and max values in the json file, if complex is on
+                            float modifier = GetCreatureSizeModifier(techType);
+                            logger.LogInfo($"Creature Modifier = {modifier}");
+
+                            //Once we've retrieved the modifier, apply it by multiplying the creature's size by the modifier
+                            SetSize(creature, modifier);
+                            ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
+
+                            //Add unique id and applied size to dictionary, to document that we *have* randomised this creature's size
+                            creatureSizeInfoList.creatureSizeDictionary.Add(creature.GetComponent<PrefabIdentifier>().Id, modifier);
                         }
                         else
                         {
                             logger.LogInfo($"Size already randomised/ID already logged.");
-                        }
 
-                        logger.LogInfo($"Length of ID Dictionary = {creatureSizeInfoList.creatureSizeDictionary.Count}");
-                        #endregion
+                            float modifier = creatureSizeInfoList.creatureSizeDictionary[creatureId];
 
-                        //Maybe I create a component in code, to hold onto the value and then apply it after its loaded?
-                        logger.LogInfo($"Creature Size = {GetSize(creature)}");
-                        if (GetSize(creature) == 1)
-                        {
-                            //Generate a modifier based on the creature's size class, retrieved from the CreatureSizeReference array
-                            float modifier = GetCreatureSizeModifier(techType);
-                            logger.LogInfo($"Creature Modifier = {modifier}");
-
-                            //Once we've retrieved the modifier, apply the change to size, by the modifier
+                            //Reapply the modifier, in case it expires if we reload with the creature unloaded
                             SetSize(creature, modifier);
-
                             ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
                         }
 
-                        #region DEBUG!! Test for checking for creatures who's size isn't 1 set by the game
-                        //If the creature value rounded has more than 1 decimal place, then it's not one set by me and needs changing
-                        //ERROR!! This will not work longterm, because fauna growing up in the tank will falsely trigger this
-                        decimal creatureSize = (decimal)GetSize(creature);
-                        if ((Decimal.Round(creatureSize, 1) != creatureSize))
-                        {
-                            logger.LogInfo($"Size of {techType} was set by game; resizing.");
-                            //Generate a modifier based on the creature's size class, retrieved from the CreatureSizeReference array
-                            float modifier = GetCreatureSizeModifier(techType);
-                            logger.LogInfo($"Creature Modifier = {modifier}");
-
-                            //Once we've retrieved the modifier, apply the change to size, by the modifier
-                            SetSize(creature, modifier);
-
-                            ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
-                        }
-                        #endregion
+                        //logger.LogInfo($"Length of ID Dictionary = {creatureSizeInfoList.creatureSizeDictionary.Count}");
 
                         var size = GetSize(creature);
                         logger.LogInfo($"Creature Size After = {size}");
 
+                        //Need to check whether creature can be picked up and placed in alien containment, regardless of whether the creature has had its size randomised or not, as these reset at startup
                         //Check whether the creature is eligible to be picked up (and have the Pickupable component) or not
                         CheckPickupableComponent(creature, size);
 
                         //Check whether the creature is eligible to be placed in alien containment up (and have the WPC component) or not
-                        CheckWaterParkCreatureComponent(__instance.gameObject, size);
+                        CheckWaterParkCreatureComponent(creature, size);
                     }
                 }
                 else
                 {
-                    logger.LogWarning($"Error! Creature {__instance.name} has no TechType!");
+                    logger.LogError($"Error! Creature {__instance.name} has no TechType!");
                 }
             }
         }
@@ -369,7 +357,7 @@ namespace CreatureConfigSize
                 }
                 else
                 {
-                    logger.LogWarning($"Error! Could not retrieve size class for TechType {techType}!");
+                    logger.LogError($"Error! Could not retrieve size class for TechType {techType}!");
                 }
                 #endregion
             }
