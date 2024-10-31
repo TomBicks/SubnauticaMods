@@ -10,8 +10,8 @@ namespace CreatureConfigSize
         public static readonly TechType[][] CreatureSizeClassReference = {
             //Size Class - Small
             new TechType[] {TechType.Biter, TechType.Bladderfish, TechType.Bleeder, TechType.Blighter, TechType.Shuttlebug, TechType.Boomerang, TechType.CaveCrawler, TechType.Crash,
-                TechType.Eyeye, TechType.Floater, TechType.GarryFish, TechType.HoleFish, TechType.Hoopfish, TechType.HoopfishSchool, TechType.Hoverfish, TechType.LavaLarva, TechType.LavaBoomerang,
-                TechType.LavaEyeye, TechType.Mesmer, TechType.Oculus, TechType.Peeper, TechType.Reginald, TechType.Jumper, TechType.Skyray, TechType.Spadefish, TechType.Spinefish},
+                TechType.Eyeye, TechType.Floater, TechType.GarryFish, TechType.HoleFish, TechType.Hoopfish, TechType.Hoverfish, TechType.LavaBoomerang, TechType.LavaLarva,
+                TechType.Mesmer, TechType.Oculus, TechType.Peeper, TechType.LavaEyeye, TechType.Reginald, TechType.Skyray, TechType.Spadefish, TechType.Spinefish, TechType.Jumper},
             //Size Class - Medium
             new TechType[] {TechType.Shocker, TechType.BoneShark, TechType.Crabsnake, TechType.CrabSquid, TechType.Cutefish, TechType.GhostRayRed, TechType.Gasopod, TechType.GhostRayBlue,
                 TechType.Jellyray, TechType.LavaLizard, TechType.RabbitRay, TechType.SpineEel, TechType.Sandshark, TechType.SeaEmperorBaby, TechType.Stalker, TechType.Warper},
@@ -74,7 +74,7 @@ namespace CreatureConfigSize
             { TechType.GhostLeviathanJuvenile, (0.1f, 0.2f) }, //Done - NOTE!! Ghost Juveniles are approximately 63% the size of adults; making pickup up to 0.2 just because (easier on player to obtain)
             { TechType.ReaperLeviathan, (0.1f, 0.2f) }, //Done
             { TechType.Reefback, (0.1f, 0.1f) }, //Done - TODO!! Flora on back acts weirdly when scaled down, and they still produce large bubbles and tiger plants; want to disable them
-            { TechType.ReefbackBaby, (0.1f, 0.2f) }, //Done - Baby seems to be about 25% the size of the adult; TODO!! Reefback and ReefbackBaby both share the same techtype of Reefback, despite being different models, different base sizes, and despite ReefbackBaby techtype existing
+            { TechType.ReefbackBaby, (0.1f, 0.2f) }, //Done - Baby seems to be about 25% the size of the adult
             { TechType.SeaDragon, (0.1f, 0.1f) }, //Done, Made pickupable at minimum size, just so it's even possible to put it in containment
             { TechType.SeaEmperorJuvenile, (0.1f, 0.1f) }, //Done - Made pickupable at minimum size, just so it's even possible to put it in containment
             { TechType.SeaTreader, (0.1f, 0.1f) } //Done
@@ -149,7 +149,7 @@ namespace CreatureConfigSize
             { TechType.GhostLeviathanJuvenile, (0.1f, 0.2f) }, //Done - NOTE!! Ghost Juveniles are approximately 63% the size of adults; 0.2 works good enough in small containment
             { TechType.ReaperLeviathan, (0.1f, 0.2f) }, //Done - Reaper won't fit in the containment at anything larger than 12% size
             { TechType.Reefback, (0.1f, 0.1f) }, //Done - ERROR!! Scaling down the Reefback doesn't scale down the physics of the flora on its back, causing graphical issues
-            { TechType.ReefbackBaby, (0.1f, 0.4f) }, //Done - NOTE!! Reefback and ReefbackBaby both share the same techtype of Reefback, despite being different models, different base sizes, and despite ReefbackBaby techtype existing
+            { TechType.ReefbackBaby, (0.1f, 0.4f) }, //Done
             { TechType.SeaDragon, (0.1f, 0.1f) }, //Done - ERROR!! Sea Dragon does not appear to swim around in the tank without Sea Dragon component being enabled
             { TechType.SeaEmperorJuvenile, (0.1f, 0.1f) }, //Done - The grown up sea emperors; 6% size is honestly the largest it fits without clipping; so only minimum size sea emperor will fit
             //{ TechType.SeaTreader, (0.1f, 0.1f) } //ERROR!! Sea Treader has no locomotion component, instead having a unique component to move on the ground, and thus breaks in containment
