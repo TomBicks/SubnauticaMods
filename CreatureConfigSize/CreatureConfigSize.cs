@@ -32,7 +32,7 @@ namespace CreatureConfigSize
             
         }
 
-        [HarmonyPatch(typeof(Atlas), nameof(Atlas.GetSprite), typeof(string))]
+        /*[HarmonyPatch(typeof(Atlas), nameof(Atlas.GetSprite), typeof(string))]
         [HarmonyPostfix]
         public static void PostAtlasGetSprite(string __instance)
         {
@@ -46,7 +46,7 @@ namespace CreatureConfigSize
             {
                 logger.LogInfo("GetSprite is null");
             }
-        }
+        }*/
 
         [HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.Awake))]
         [HarmonyPostfix] //Using LiveMixin because creatures in containment don't trigger Creature events (because their creature component is disabled)
@@ -85,25 +85,22 @@ namespace CreatureConfigSize
             //Retrieve the TechType of the creature; we'll use this for filtering from the reference tables for only things we intend to resize
             TechType techType = CraftData.GetTechType(creature);
 
-            //NOTE!! Unclear whether any creatures that exist lack this component, so this *should* work for everything
-            //Floaters lack this; are we really changing the check *just* to include them?
-            //if (creature.GetComponent<Creature>() != null)
+            //If creature techtype is part of our reference tables, i.e. is this a creature we're looking to randomise (means we won't touch modded creatures accidentally)
             if (PickupableReference.ContainsKey(techType))
             {
                 logger.LogInfo($"Creature {techType} found");
                 ErrorMessage.AddMessage($"Creature {techType} found");
 
                 //As Reefbacks share the same TechType with baby Reefbacks, despite both existing, manually apply it, so they can be seperately resized
-                if (techType == TechType.Reefback)
+                //NOTE!! Below is the Class ID for the ReefbackBaby prefab, so this checks if it's a reefback baby
+                if (creature.GetComponent<PrefabIdentifier>().ClassId == "34765384-821f-41ad-b716-1b68c507e4f2")
                 {
                     //DEBUG!!
-                    logger.LogInfo($"{creature.name}");
+                    logger.LogInfo($"{creature.GetComponent<PrefabIdentifier>().ClassId}");
 
-                    if(creature.name == "ReefbackBaby(Clone)")
-                    {
-                        creature.GetComponent<TechTag>().type = TechType.ReefbackBaby;
-                        techType = TechType.ReefbackBaby;
-                    }
+                    creature.GetComponent<TechTag>().type = TechType.ReefbackBaby;
+                    //Update the local variable for techType, so that the TechType is up to date for this method going forward
+                    techType = TechType.ReefbackBaby;
                 }
 
                 //Retrieve the unique id of this creature
