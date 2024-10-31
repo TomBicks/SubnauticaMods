@@ -2,7 +2,6 @@
 using static CreatureConfigSize.CreatureConfigSizePlugin;
 using static CreatureConfigSize.References;
 using UnityEngine;
-using System;
 
 namespace CreatureConfigSize
 {
@@ -14,11 +13,39 @@ namespace CreatureConfigSize
         public static void PrePlayerStart()
         {
             //Add inventory size of the Reaper Leviathan when picking it up
+            //TODO!! Check if the EntitySlot.Types are relevant when deciding what size a creature is in inventory
             //CraftData.itemSizes.Add(TechType.ReaperLeviathan, new Vector2int(3, 3));
 
             //DEBUG!! Showcase what options are on or off
             logger.LogInfo($"All Pickupable = {config.AllowAllPickupable}");
             logger.LogInfo($"All WaterPark = {config.AllowAllWaterPark}");
+            //EnumHandler.AddEntry<CraftData.
+
+            //SpriteManager.Group.
+            /*Enum.TryParse("test", out TechType test);
+            Atlas.Sprite test2 = SpriteManager.Get(TechType.Nickel);
+            //Atlas._nameToSprite.Add("reaper", test2);
+
+            Atlas.Sprite reaperSprite = ImageUtils.LoadSpriteFromFile("");
+            PrefabInfo Info = PrefabInfo.WithTechType("Reaper", "Reaper", "Test.").WithIcon(reaperSprite);
+            var coalPrefab = new CustomPrefab(Info);ZsortOffset*/
+            
+        }
+
+        [HarmonyPatch(typeof(Atlas), nameof(Atlas.GetSprite), typeof(string))]
+        [HarmonyPostfix]
+        public static void PostAtlasGetSprite(string __instance)
+        {
+            //VERY BAD, DO NOT DO
+            //ERROR!! Can't patch into this because of the staggering amount of textures, presumably
+            if (__instance != null)
+            {
+                logger.LogInfo($"GetSprite = {__instance}");
+            }
+            else 
+            {
+                logger.LogInfo("GetSprite is null");
+            }
         }
 
         [HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.Awake))]
