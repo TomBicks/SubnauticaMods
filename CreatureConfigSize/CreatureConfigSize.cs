@@ -2,6 +2,9 @@
 using static CreatureConfigSize.CreatureConfigSizePlugin;
 using static CreatureConfigSize.References;
 using UnityEngine;
+using Nautilus.Handlers;
+using System.IO;
+using System.Reflection;
 
 namespace CreatureConfigSize
 {
@@ -14,39 +17,48 @@ namespace CreatureConfigSize
         {
             //Add inventory size of the Reaper Leviathan when picking it up
             //TODO!! Check if the EntitySlot.Types are relevant when deciding what size a creature is in inventory
-            //CraftData.itemSizes.Add(TechType.ReaperLeviathan, new Vector2int(3, 3));
+            CraftData.itemSizes.Add(TechType.ReaperLeviathan, new Vector2int(4, 4));
 
+            //Register the sprite to the desired TechType
+            //Sprite reaperIcon = SpriteHandler.RegisterSprite(SpriteManager.Group.Item, "reaperIcon", "filepath");
+            //NOTE!! Regarding the reaper sprite, I scaled in down to 128*128, then sharpened by 1
+
+            //Get the filepath to the mod assets folder
+            string iconFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Assets");
+            //Apply reaper icon to reaper techtype
+            SpriteHandler.RegisterSprite(TechType.ReaperLeviathan, Path.Combine(iconFilePath, "reaper_icon2.png"));
+            //Add display name to reaper techtype
+            LanguageHandler.SetTechTypeName(TechType.ReaperLeviathan, "Reaper Leviathan");
+            //Add description to reaper techtype
+            LanguageHandler.SetTechTypeTooltip(TechType.ReaperLeviathan, "Vast leviathan with aggressive tendencies.");
+
+
+            /*Sprites needed
+             * Reaper (Done)
+             * Sea Dragon
+             * Ghost Leviathan (same can be used for both adult and juvenile
+             * Reefback baby (can hopefully retrieve the one for the adult to use)
+             * Sea Emperor juvenile
+             * Sea Emporer Baby
+             * Sea Treader
+             * Skyray
+             * Cave Crawler
+             * Blood Crawler
+             * Shuttlebug???
+             * Warper
+             * Lava Larva
+             * Red Ghostray
+             * Blue Ghostray
+             * Spineel
+             * Bleeder
+             * Biter
+             * Blighter
+            */
+            
             //DEBUG!! Showcase what options are on or off
             logger.LogInfo($"All Pickupable = {config.AllowAllPickupable}");
             logger.LogInfo($"All WaterPark = {config.AllowAllWaterPark}");
-            //EnumHandler.AddEntry<CraftData.
-
-            //SpriteManager.Group.
-            /*Enum.TryParse("test", out TechType test);
-            Atlas.Sprite test2 = SpriteManager.Get(TechType.Nickel);
-            //Atlas._nameToSprite.Add("reaper", test2);
-
-            Atlas.Sprite reaperSprite = ImageUtils.LoadSpriteFromFile("");
-            PrefabInfo Info = PrefabInfo.WithTechType("Reaper", "Reaper", "Test.").WithIcon(reaperSprite);
-            var coalPrefab = new CustomPrefab(Info);ZsortOffset*/
-            
         }
-
-        /*[HarmonyPatch(typeof(Atlas), nameof(Atlas.GetSprite), typeof(string))]
-        [HarmonyPostfix]
-        public static void PostAtlasGetSprite(string __instance)
-        {
-            //VERY BAD, DO NOT DO
-            //ERROR!! Can't patch into this because of the staggering amount of textures, presumably
-            if (__instance != null)
-            {
-                logger.LogInfo($"GetSprite = {__instance}");
-            }
-            else 
-            {
-                logger.LogInfo("GetSprite is null");
-            }
-        }*/
 
         [HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.Awake))]
         [HarmonyPostfix] //Using LiveMixin because creatures in containment don't trigger Creature events (because their creature component is disabled)
