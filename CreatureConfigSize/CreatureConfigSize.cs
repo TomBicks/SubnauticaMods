@@ -60,6 +60,22 @@ namespace CreatureConfigSize
             logger.LogInfo($"All WaterPark = {config.AllowAllWaterPark}");
         }
 
+        internal class CreatureInventoryInfo
+        {
+            int invSize; //How big the creature is in the inventory (e.g. 4 is 4*4 large in inventory)
+            string iconName; //The filename of the icon file
+            string name; //The displayed name of the creature in the inventory
+            string tooltip; //The displayed tooltip of the creature in the inventory
+        }
+
+        internal List<CreatureInventoryInfo> CreatureInventoryList = new List<CreatureInventoryInfo>();
+
+        internal void SetCreatureInvInfo()
+        {
+            for(int i = 0; i < CreatureInvInfo.Count; i++) { }
+            var() = CreatureInvInfo[i];
+        }
+
         [HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.Awake))]
         [HarmonyPostfix] //Using LiveMixin because creatures in containment don't trigger Creature events (because their creature component is disabled)
         //Using .Awake to set up the placeholder WPC data, as otherwise by .Start it's pulling null references and breaking
