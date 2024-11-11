@@ -2,7 +2,9 @@
 using static CreatureConfigSize.CreatureConfigSizePlugin;
 using static CreatureConfigSize.References;
 using UnityEngine;
-using System;
+using Nautilus.Handlers;
+using System.IO;
+using System.Reflection;
 
 namespace CreatureConfigSize
 {
@@ -14,21 +16,74 @@ namespace CreatureConfigSize
         public static void PrePlayerStart()
         {
             //Add inventory size of the Reaper Leviathan when picking it up
-            //CraftData.itemSizes.Add(TechType.ReaperLeviathan, new Vector2int(3, 3));
+            //TODO!! Check if the EntitySlot.Types are relevant when deciding what size a creature is in inventory
+            CraftData.itemSizes.Add(TechType.ReaperLeviathan, new Vector2int(4, 4));
 
+            //Register the sprite to the desired TechType
+            //Sprite reaperIcon = SpriteHandler.RegisterSprite(SpriteManager.Group.Item, "reaperIcon", "filepath");
+            //NOTE!! Regarding the reaper sprite, I scaled in down to 128*128, then sharpened by 1
+
+            //Get the filepath to the mod assets folder
+            string iconFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Assets");
+            //Apply reaper icon to reaper techtype
+            SpriteHandler.RegisterSprite(TechType.ReaperLeviathan, Path.Combine(iconFilePath, "reaper_icon2.png"));
+            //Add display name to reaper techtype
+            LanguageHandler.SetTechTypeName(TechType.ReaperLeviathan, "Reaper Leviathan");
+            //Add description to reaper techtype
+            LanguageHandler.SetTechTypeTooltip(TechType.ReaperLeviathan, "Vast leviathan with aggressive tendencies.");
+
+
+            /*Sprites needed
+             * Reaper (Done)
+             * Sea Dragon (Done)
+             * Ghost Leviathan (same can be used for both adult and juvenile) (Done)
+             * Reefback baby (can hopefully retrieve the one used for adult to use for baby as well)
+             * Sea Emperor Juvenile (Done)
+             * Sea Emporer Baby (Done)
+             * Sea Treader (Done)
+             * Skyray (Done)
+             * Cave Crawler (Done)
+             * Blood Crawler (Done)
+             * Shuttlebug (Not sure if they don't already have an icon??? CHECK!!) (Done)
+             * Warper (Done)
+             * Lava Larva (Done)
+             * Red Ghostray (Done)
+             * Blue Ghostray (Done)
+             * Spineel (Done)
+             * Bleeder (Done)
+             * Biter (Done)
+             * Blighter (Done)
+            */
+            
             //DEBUG!! Showcase what options are on or off
             logger.LogInfo($"All Pickupable = {config.AllowAllPickupable}");
             logger.LogInfo($"All WaterPark = {config.AllowAllWaterPark}");
         }
 
+        internal class CreatureInventoryInfo
+        {
+            int invSize; //How big the creature is in the inventory (e.g. 4 is 4*4 large in inventory)
+            string iconName; //The filename of the icon file
+            string name; //The displayed name of the creature in the inventory
+            string tooltip; //The displayed tooltip of the creature in the inventory
+        }
+
+        internal List<CreatureInventoryInfo> CreatureInventoryList = new List<CreatureInventoryInfo>();
+
+        internal void SetCreatureInvInfo()
+        {
+            for(int i = 0; i < CreatureInvInfo.Count; i++) { }
+            var() = CreatureInvInfo[i];
+        }
+
         [HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.Awake))]
         [HarmonyPostfix] //Using LiveMixin because creatures in containment don't trigger Creature events (because their creature component is disabled)
-        //Using .Awake to set up the placeholder WPC data, as by .Start it's pulling null references and breaking
+        //Using .Awake to set up the placeholder WPC data, as otherwise by .Start it's pulling null references and breaking
         public static void PostLiveMixinAwake(Creature __instance)
         {
             GameObject creature = __instance.gameObject;
             TechType techType = CraftData.GetTechType(creature);
-            logger.LogInfo($"(PostLiveMixinAwake) entity is {techType}");
+            //logger.LogInfo($"(PostLiveMixinAwake) entity is {techType}");
 
             //If the creature can be in a WaterPark but isn't normally, we need to create a new blank placeholder WPC data at start
             //Otherwise it breaks, because they're null otherwise, on account of not normally having WPC component
@@ -52,77 +107,74 @@ namespace CreatureConfigSize
         //Using .Start for everything else because size changes don't take effect if done in .Awake
         public static void PostLiveMixinStart(Creature __instance)
         {
-            //NOTE!! This might exclude creatures we've seen not work with the command, like Blood Crawlers
-            if(__instance.gameObject.GetComponent<Creature>() != null)
+            //Reference the gameObject Class directly, as we don't need the Creature class specifically
+            GameObject creature = __instance.gameObject;
+
+            //Retrieve the TechType of the creature; we'll use this for filtering from the reference tables for only things we intend to resize
+            TechType techType = CraftData.GetTechType(creature);
+
+            //If creature techtype is part of our reference tables, i.e. is this a creature we're looking to randomise (means we won't touch modded creatures accidentally)
+            if (PickupableReference.ContainsKey(techType))
             {
-                //Reference the gameObject Class directly, as none of the functionality uses the Creature class specifically
-                GameObject creature = __instance.gameObject;
-
-                TechType techType = CraftData.GetTechType(creature);
-                ErrorMessage.AddMessage($"Creature {techType} found");
                 logger.LogInfo($"Creature {techType} found");
+                ErrorMessage.AddMessage($"Creature {techType} found");
 
-                //TODO!! Check for whether it's a baby or not and assign it the unused TechType, for my own sanity making checks in future
-                if (techType == TechType.Reefback)
+                //As Reefbacks share the same TechType with baby Reefbacks, despite both existing, manually apply it, so they can be seperately resized
+                //NOTE!! Below is the Class ID for the ReefbackBaby prefab, so this checks if it's a reefback baby
+                if (creature.GetComponent<PrefabIdentifier>().ClassId == "34765384-821f-41ad-b716-1b68c507e4f2")
                 {
-                    logger.LogInfo($"{creature.name}");
+                    //DEBUG!!
+                    logger.LogInfo($"{creature.GetComponent<PrefabIdentifier>().ClassId}");
+
+                    creature.GetComponent<TechTag>().type = TechType.ReefbackBaby;
+                    //Update the local variable for techType, so that the TechType is up to date for this method going forward
+                    techType = TechType.ReefbackBaby;
                 }
 
-                
-                if (techType != TechType.None)
+                //Retrieve the unique id of this creature
+                //NOTE!! Remember, "id" is the private value of UniqueIdentifier, "Id" is the exposed, public accessor; we need to use "Id"
+                string creatureId = creature.GetComponent<PrefabIdentifier>().Id;
+                logger.LogInfo($"ID of {techType} = {creatureId}");
+
+                //Check whether we've already randomised the size of this creature, as its id should already be in our dictionary if so
+                if (!creatureSizeInfoList.creatureSizeDictionary.ContainsKey(creatureId))
                 {
-                    //Further check to make sure creature isn't a school of fish; they don't like being scaled up, though have the creature component
-                    if (techType != TechType.HoopfishSchool)
-                    {
-                        //NOTE!! We apply them if their size is 1, as this is hopefully the baseline for many creatures
-                        //NOTE 2!! Unfortunately, not all creatures start at size 1; notably small fish and Sea Treaders
+                    logger.LogInfo($"Size not randomised/ID not logged.");
 
-                        //Maybe I create a component in code, to hold onto the value and then apply it after its loaded?
-                        logger.LogInfo($"Creature Size = {GetSize(creature)}");
-                        if (GetSize(creature) == 1)
-                        {
-                            //Generate a modifier based on the creature's size class, retrieved from the CreatureSizeReference array
-                            float modifier = GetCreatureSizeModifier(techType);
-                            logger.LogInfo($"Creature Modifier = {modifier}");
+                    //Generate a modifier for the creature's size
+                    //Based on either the creature's size class, retrieved from the CreatureSizeReference array, or the min and max values in the json file, if complex is on
+                    float modifier = GetCreatureSizeModifier(techType);
+                    logger.LogInfo($"Creature Modifier = {modifier}");
 
-                            //Once we've retrieved the modifier, apply the change to size, by the modifier
-                            SetSize(creature, modifier);
+                    //Once we've retrieved the modifier, apply it by multiplying the creature's size by the modifier
+                    SetSize(creature, modifier);
+                    ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
 
-                            ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
-                        }
-
-                        #region DEBUG!! Test for checking for creatures who's size isn't 1 set by the game
-                        //If the creature value rounded has more than 1 decimal place, then it's not one set by me and needs changing
-                        //ERROR!! This will not work longterm, because fauna growing up in the tank will falsely trigger this
-                        decimal creatureSize = (decimal)GetSize(creature);
-                        if ((Decimal.Round(creatureSize, 1) != creatureSize))
-                        {
-                            logger.LogInfo($"Size of {techType} was set by game; resizing.");
-                            //Generate a modifier based on the creature's size class, retrieved from the CreatureSizeReference array
-                            float modifier = GetCreatureSizeModifier(techType);
-                            logger.LogInfo($"Creature Modifier = {modifier}");
-
-                            //Once we've retrieved the modifier, apply the change to size, by the modifier
-                            SetSize(creature, modifier);
-
-                            ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
-                        }
-                        #endregion
-
-                        var size = GetSize(creature);
-                        logger.LogInfo($"Creature Size After = {size}");
-
-                        //Check whether the creature is eligible to be picked up (and have the Pickupable component) or not
-                        CheckPickupableComponent(creature, size);
-
-                        //Check whether the creature is eligible to be placed in alien containment up (and have the WPC component) or not
-                        CheckWaterParkCreatureComponent(__instance.gameObject, size);
-                    }
+                    //Add unique id and applied size to dictionary, to document that we *have* randomised this creature's size
+                    creatureSizeInfoList.creatureSizeDictionary.Add(creature.GetComponent<PrefabIdentifier>().Id, modifier);
                 }
                 else
                 {
-                    logger.LogWarning($"Error! Creature {__instance.name} has no TechType!");
+                    logger.LogInfo($"Size already randomised/ID already logged.");
+
+                    float modifier = creatureSizeInfoList.creatureSizeDictionary[creatureId];
+
+                    //Reapply the modifier, in case it expires if we reload with the creature unloaded
+                    SetSize(creature, modifier);
+                    ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
                 }
+
+                //logger.LogInfo($"Length of ID Dictionary = {creatureSizeInfoList.creatureSizeDictionary.Count}");
+
+                var size = GetSize(creature);
+                logger.LogInfo($"Creature Size After = {size}");
+
+                //Need to check whether creature can be picked up and placed in alien containment, regardless of whether the creature has had its size randomised or not, as these reset at startup
+                //Check whether the creature is eligible to be picked up (and have the Pickupable component) or not
+                CheckPickupableComponent(creature, size);
+
+                //Check whether the creature is eligible to be placed in alien containment up (and have the WPC component) or not
+                CheckWaterParkCreatureComponent(creature, size);
             }
         }
 
@@ -350,7 +402,7 @@ namespace CreatureConfigSize
                 }
                 else
                 {
-                    logger.LogWarning($"Error! Could not retrieve size class for TechType {techType}!");
+                    logger.LogError($"Error! Could not retrieve size class for TechType {techType}!");
                 }
                 #endregion
             }

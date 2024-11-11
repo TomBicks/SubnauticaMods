@@ -2,6 +2,8 @@
 using BepInEx.Logging;
 using HarmonyLib;
 using Nautilus.Handlers;
+using Nautilus.Json.Attributes;
+using Nautilus.Json;
 using Nautilus.Options.Attributes;
 using System.Collections.Generic;
 
@@ -13,13 +15,30 @@ namespace CreatureConfigSize
     {
         private const string myGUID = "com.jukebox.creatureconfigsize";
         private const string pluginName = "Creature Config - Size";
-        private const string versionString = "0.5.0";
+        private const string versionString = "0.8.0";
 
         private static readonly Harmony harmony = new Harmony(myGUID);
 
         internal static ManualLogSource logger { get; private set; }
 
         internal static Config config { get; } = OptionsPanelHandler.RegisterModOptions<Config>();
+
+        //TODO!! Maybe think of a better, more fitting name?
+        internal static CreatureSizeInfoList creatureSizeInfoList { get; } = SaveDataHandler.RegisterSaveDataCache<CreatureSizeInfoList>();
+
+        [FileName("creature_size_info_list")]
+        internal class CreatureSizeInfoList : SaveDataCache
+        {
+            //NOTE!! Should this be a dictionary instead, with the prefabId being the key, holding a class with all the relevant info as the value?
+
+            //A list (with its own class, like I did with MoreLeviathanSpawns), that maybe lists size modifier, default size?
+            //TODO!! Check QCreatureConfig for some inspiration for what might be useful to include
+            //SizeChanged - Bool value as to whether this creature has had its size changed or not (no shouldn't need it; if it's in the list, its size has been changed!!)
+            //TechType - Only set it once (or close as possible) and pull from the list whenever needing to refer to the creature and size
+            //Size Modifier - Will be the size modifier set based on the techtype; won't need to rerandomise again, so this won't change and can be static?
+            //public List<string> creatureSizeInfo = new List<string>();
+            public Dictionary<string, float> creatureSizeDictionary = new Dictionary<string, float>();
+        }
 
         private void Awake()
         {
