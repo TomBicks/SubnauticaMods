@@ -35,24 +35,24 @@ namespace CreatureConfigSize
 
             /*Sprites needed
              * Reaper (Done)
-             * Sea Dragon
-             * Ghost Leviathan (same can be used for both adult and juvenile
-             * Reefback baby (can hopefully retrieve the one for the adult to use)
-             * Sea Emperor juvenile
-             * Sea Emporer Baby
-             * Sea Treader
-             * Skyray
-             * Cave Crawler
-             * Blood Crawler
-             * Shuttlebug???
-             * Warper
-             * Lava Larva
-             * Red Ghostray
-             * Blue Ghostray
-             * Spineel
-             * Bleeder
-             * Biter
-             * Blighter
+             * Sea Dragon (Done)
+             * Ghost Leviathan (same can be used for both adult and juvenile) (Done)
+             * Reefback baby (can hopefully retrieve the one used for adult to use for baby as well)
+             * Sea Emperor Juvenile (Done)
+             * Sea Emporer Baby (Done)
+             * Sea Treader (Done)
+             * Skyray (Done)
+             * Cave Crawler (Done)
+             * Blood Crawler (Done)
+             * Shuttlebug (Not sure if they don't already have an icon??? CHECK!!) (Done)
+             * Warper (Done)
+             * Lava Larva (Done)
+             * Red Ghostray (Done)
+             * Blue Ghostray (Done)
+             * Spineel (Done)
+             * Bleeder (Done)
+             * Biter (Done)
+             * Blighter (Done)
             */
             
             //DEBUG!! Showcase what options are on or off
