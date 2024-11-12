@@ -5,6 +5,7 @@ using UnityEngine;
 using Nautilus.Handlers;
 using System.IO;
 using System.Reflection;
+using System.Collections.Generic;
 
 namespace CreatureConfigSize
 {
@@ -15,23 +16,7 @@ namespace CreatureConfigSize
         [HarmonyPrefix]
         public static void PrePlayerStart()
         {
-            //Add inventory size of the Reaper Leviathan when picking it up
-            //TODO!! Check if the EntitySlot.Types are relevant when deciding what size a creature is in inventory
-            CraftData.itemSizes.Add(TechType.ReaperLeviathan, new Vector2int(4, 4));
-
-            //Register the sprite to the desired TechType
-            //Sprite reaperIcon = SpriteHandler.RegisterSprite(SpriteManager.Group.Item, "reaperIcon", "filepath");
-            //NOTE!! Regarding the reaper sprite, I scaled in down to 128*128, then sharpened by 1
-
-            //Get the filepath to the mod assets folder
-            string iconFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Assets");
-            //Apply reaper icon to reaper techtype
-            SpriteHandler.RegisterSprite(TechType.ReaperLeviathan, Path.Combine(iconFilePath, "reaper_icon2.png"));
-            //Add display name to reaper techtype
-            LanguageHandler.SetTechTypeName(TechType.ReaperLeviathan, "Reaper Leviathan");
-            //Add description to reaper techtype
-            LanguageHandler.SetTechTypeTooltip(TechType.ReaperLeviathan, "Vast leviathan with aggressive tendencies.");
-
+            SetCreatureInvInfo();
 
             /*Sprites needed
              * Reaper (Done)
@@ -60,20 +45,64 @@ namespace CreatureConfigSize
             logger.LogInfo($"All WaterPark = {config.AllowAllWaterPark}");
         }
 
-        internal class CreatureInventoryInfo
+        internal class CreatureInvInfo
         {
-            int invSize; //How big the creature is in the inventory (e.g. 4 is 4*4 large in inventory)
-            string iconName; //The filename of the icon file
-            string name; //The displayed name of the creature in the inventory
-            string tooltip; //The displayed tooltip of the creature in the inventory
+            internal TechType techType { get; set; } //The TechType of the creature
+            internal int invSize; //How big the creature is in the inventory (e.g. 4 is 4*4 large in inventory)
+            internal string iconName; //The filename of the icon file
+            internal string name; //The displayed name of the creature in the inventory
+            internal string tooltip; //The displayed tooltip of the creature in the inventory
+
+            //Create a constructor to streamline defining entries
+            internal CreatureInvInfo(TechType techType, int invSize, string iconName, string name, string tooltip)
+            {
+                this.techType = techType;
+                this.invSize = invSize;
+                this.iconName = iconName;
+                this.name = name;
+                this.tooltip = tooltip;
+            }
+
+            //Create a deconstructor to streamline retrieving entries
+            public void Deconstruct(out TechType techType, out int invSize, out string iconName, out string name, out string tooltip)
+            {
+                techType = this.techType;
+                invSize = this.invSize;
+                iconName = this.iconName;
+                name = this.name;
+                tooltip = this.tooltip;
+            }
         }
 
-        internal List<CreatureInventoryInfo> CreatureInventoryList = new List<CreatureInventoryInfo>();
-
-        internal void SetCreatureInvInfo()
+        internal static List<CreatureInvInfo> CreatureInvList = new List<CreatureInvInfo>()
         {
-            for(int i = 0; i < CreatureInvInfo.Count; i++) { }
-            var() = CreatureInvInfo[i];
+            new CreatureInvInfo(TechType.Biter, 1, "biter_icon", "Biter", "Small, aggressive carnivore."),
+            new CreatureInvInfo(TechType.Bleeder, 1, "bleeder_icon", "Bleeder", "Parasite attracted to blood."),
+            new CreatureInvInfo(TechType.ReaperLeviathan, 4, "reaper_icon", "Reaper Leviathan", "Vast leviathan with aggressive tendencies.")
+        };
+
+        internal static void SetCreatureInvInfo()
+        {
+            for(int i = 0; i < CreatureInvList.Count; i++)
+            {
+                var (techType, invSize, iconName, name, tooltip) = CreatureInvList[i];
+                //Set size of creature in inventory (invSize * invSize)
+                //TODO!! Check if the EntitySlot.Types are relevant when deciding what size a creature is in inventory
+                CraftData.itemSizes.Add(techType, new Vector2int(invSize, invSize));
+
+                //Register the sprite to the desired TechType
+                //Sprite reaperIcon = SpriteHandler.RegisterSprite(SpriteManager.Group.Item, "reaperIcon", "filepath");
+                //NOTE!! Regarding the reaper sprite, I scaled in down to 128*128, then sharpened by 1
+
+                //Get the filepath to the mod assets folder
+                string iconFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Assets");
+                //Apply icon sprite to the desired techtype
+                SpriteHandler.RegisterSprite(techType, Path.Combine(iconFilePath, iconName + ".png"));
+                //Add display name to the desired techtype
+                LanguageHandler.SetTechTypeName(techType, name);
+                //Add item description to the desired techtype
+                LanguageHandler.SetTechTypeTooltip(techType, tooltip);
+            }
         }
 
         [HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.Awake))]
