@@ -41,14 +41,27 @@ namespace CreatureConfigSize
 
                     if (parent != null)
                     {
-                        //Update the localscale of the creature
-                        ErrorMessage.AddMessage($"Setting size of {techType} to {modifier}");
-                        logger.LogMessage($"Setting size of {techType} to {modifier}");
-                        parent.transform.localScale = new Vector3(modifier, modifier, modifier);
+                        //Check if this creature's unique id is in the creature size dictionary
+                        string creatureId = parent.GetComponent<PrefabIdentifier>().Id;
+                        if(creatureSizeInfoList.creatureSizeDictionary.ContainsKey(creatureId))
+                        {
+                            //Update the localscale of the creature
+                            ErrorMessage.AddMessage($"Setting size of {techType} to {modifier}");
+                            logger.LogMessage($"Setting size of {techType} to {modifier}");
+                            SetSize(parent, modifier);
 
-                        //Go through checks it eligible for either pickupable or waterpark components
-                        CheckPickupableComponent(parent, modifier);
-                        CheckWaterParkCreatureComponent(parent, modifier);
+                            //Go through checks it eligible for either pickupable or waterpark components
+                            CheckPickupableComponent(parent, modifier);
+                            CheckWaterParkCreatureComponent(parent, modifier);
+
+                            //Update the size of this creature in the creature size dictionary
+                            creatureSizeInfoList.creatureSizeDictionary[creatureId] = modifier;
+                        }
+                        else
+                        {
+                            ErrorMessage.AddWarning("Creature is not in size dictionary!");
+                            logger.LogError("Creature is not in size dictionary!");
+                        }
                     }
                 }
                 else

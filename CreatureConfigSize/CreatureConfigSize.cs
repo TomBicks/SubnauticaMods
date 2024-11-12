@@ -340,7 +340,7 @@ namespace CreatureConfigSize
             return false;
         }
 
-        public static void SetWaterParkData(ref WaterParkCreatureData data, float modifier, TechType techType)
+        internal static void SetWaterParkData(ref WaterParkCreatureData data, float modifier, TechType techType)
         {
             //NOTE!! Each particular creature shares a WaterParkCreatureData (e.g. Hoopfish_WaterParkCreatureData)
             //This means two things; one, I can't change one SpineFish without changing the other, and two, I need to create one for the creatures that don't usually go in containment, like leviathans
@@ -364,7 +364,7 @@ namespace CreatureConfigSize
             data.canBreed = GetSizeClass(techType) != SizeClass.Large;
         }
 
-        public static bool GetInsideWaterPark(GameObject creature)
+        internal static bool GetInsideWaterPark(GameObject creature)
         {
             //DEBUG!!
             TechType techType = CraftData.GetTechType(creature);
@@ -467,7 +467,7 @@ namespace CreatureConfigSize
             return modifier;
         }
 
-        private static void SetSize(GameObject creature, float modifier)
+        internal static void SetSize(GameObject creature, float modifier)
         {
             creature.transform.localScale = new Vector3(modifier, modifier, modifier);
         }
