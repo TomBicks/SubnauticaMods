@@ -235,7 +235,7 @@ namespace CreatureConfigSize
 
                 if (insideWaterPark)
                 {
-                    logger.LogWarning($"(Pickupable) {techType} is already inside alien containment! Calcuating original size modifier from current size!");
+                    logger.LogInfo($"(Pickupable) {techType} is already inside alien containment! Calcuating original size modifier from current size!");
 
                     //By performing the calculation to get maxSize for WPC data (x * 0.6), but in reverse (x / 0.6), we get our old size back and original size modifier
                     modifier = size / 0.6f;
@@ -243,12 +243,11 @@ namespace CreatureConfigSize
                 }
                 else
                 {
-                    logger.LogWarning($"(Pickupable) {techType} is not inside alien containment! Using current size for size modifier!");
+                    logger.LogInfo($"(Pickupable) {techType} is not inside alien containment! Using current size for size modifier!");
 
                     //If the creature isn't in alien containment, this means its current size is equal to its size modifier
                     modifier = size;
                 }
-
 
                 //Use original size modifier to determine if eligible for pickupable component
                 if ((modifier >= min && modifier <= max) || config.AllowAllPickupable)
@@ -264,11 +263,17 @@ namespace CreatureConfigSize
                 {
                     //If creature is ineligable for the component and has one, remove it (and will return false by default)
                     //NOTE!! If creature is in alien containment, we DO NOT remove this component; IsPickupableOutside is used instead to remove the component when the creature is placed outside
-                    if(componentExists || insideWaterPark)
+                    if(componentExists || !insideWaterPark)
                     {
                         var component = creature.GetComponent<Pickupable>();
                         UnityEngine.Object.Destroy(component);
                     }
+                }
+
+                //If *somehow* the creature is in alien containment *without* the pickupable component, add it in, as a final check
+                if(insideWaterPark && !componentExists)
+                {
+                    logger.LogWarning($"Warning! {techType} in alien containment without pickupable component! Adding component.");
                 }
             }
             else
