@@ -78,7 +78,9 @@ namespace CreatureConfigSize
         {
             new CreatureInvInfo(TechType.Biter, 1, "biter_icon", "Biter", "Small, aggressive carnivore."),
             new CreatureInvInfo(TechType.Bleeder, 1, "bleeder_icon", "Bleeder", "Parasite attracted to blood."),
-            new CreatureInvInfo(TechType.ReaperLeviathan, 4, "reaper_icon", "Reaper Leviathan", "Vast leviathan with aggressive tendencies.")
+            new CreatureInvInfo(TechType.ReaperLeviathan, 4, "reaper_icon", "Reaper Leviathan", "Vast leviathan with aggressive tendencies."),
+            new CreatureInvInfo(TechType.SeaEmperorJuvenile, 4, "sea_emperor_icon", "Sea Emperor Leviathan Juvenile", "Vast leviathan capable of producing Enzyme 42."),
+            new CreatureInvInfo(TechType.SeaEmperorBaby, 3, "sea_emperor_baby_icon", "Sea Emperor Leviathan Baby", "Juvenile leviathan capable of producing Enzyme 42. Taken shortly after being born.")
         };
 
         internal static void SetCreatureInvInfo()
@@ -198,6 +200,9 @@ namespace CreatureConfigSize
                 var size = GetSize(creature);
                 logger.LogInfo($"Creature Size After = {size}");
 
+                //Scale floater's bouyancy with their new size, because why not; it's cool!
+                if(techType == TechType.Floater) { creature.GetComponent<Floater>().buoyantForce = 8 * size; }
+
                 //Need to check whether creature can be picked up and placed in alien containment, regardless of whether the creature has had its size randomised or not, as these reset at startup
                 //Check whether the creature is eligible to be picked up (and have the Pickupable component) or not
                 CheckPickupableComponent(creature, size);
@@ -288,7 +293,6 @@ namespace CreatureConfigSize
             if(WaterParkReference.ContainsKey(techType))
             {
                 var (min, max) = WaterParkReference[techType];
-
 
                 //Calculate the creature's original size modifier whether its current size or a larger size if the creature is in containment and has been shrunk to 60%
                 float modifier;
