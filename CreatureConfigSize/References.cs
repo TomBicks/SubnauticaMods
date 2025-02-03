@@ -25,59 +25,59 @@ namespace CreatureConfigSize
         public static readonly Dictionary<TechType, (float min, float max)> PickupableReference = new Dictionary<TechType, (float, float)>()
         {
             //Small Fish
-            { TechType.Biter, (0.1f, 2.0f) }, //Done
-            { TechType.Bladderfish, (0.1f, 2.0f) }, //Done
-            { TechType.Bleeder, (0.1f, 2.5f) }, //Done
-            { TechType.Blighter, (0.1f, 2.0f) }, //Done
-            { TechType.Shuttlebug, (0.1f, 0.7f) }, //Blood Crawler TechType, Done
-            { TechType.Boomerang, (0.1f, 1.6f) }, //Done
-            { TechType.CaveCrawler, (0.1f, 1.4f) }, //Done
-            { TechType.Crash,(0.1f, 1.3f) }, //Crashfish TechType, Done
-            { TechType.Eyeye, (0.1f, 2.0f) }, //Done
-            { TechType.Floater, (0.1f, 2.0f) }, //Done
-            { TechType.GarryFish, (0.1f, 2.0f) }, //Done
-            { TechType.HoleFish, (0.1f, 2.0f) }, //Done
-            { TechType.Hoopfish, (0.1f, 2.0f) }, //Done
-            { TechType.Hoverfish, (0.1f, 2.0f) }, //Done
-            { TechType.LavaBoomerang, (0.1f, 1.6f) }, //Magmarang TechType, Done
-            { TechType.LavaLarva, (0.1f, 1.0f) }, //Done
-            { TechType.Mesmer,(0.1f, 1.5f) }, //Done
-            { TechType.Oculus, (0.1f, 2.0f) }, //Done
-            { TechType.Peeper, (0.1f, 2.0f) }, //Done
-            { TechType.LavaEyeye, (0.1f, 2.0f) }, //Done
-            { TechType.Reginald, (0.1f, 2.0f) }, //Done
-            { TechType.Skyray, (0.1f, 1.7f) }, //Done
-            { TechType.Spadefish, (0.1f, 1.5f) }, //Done
-            { TechType.Spinefish, (0.1f, 2.0f) }, //Done
-            { TechType.Jumper, (0.1f, 1.5f) }, //Shuttlebug TechType, Done
+            { TechType.Biter, (0.0f, 2.0f) }, //Done
+            { TechType.Bladderfish, (0.0f, 2.0f) }, //Done
+            { TechType.Bleeder, (0.0f, 2.5f) }, //Done
+            { TechType.Blighter, (0.0f, 2.0f) }, //Done
+            { TechType.Shuttlebug, (0.0f, 0.7f) }, //Blood Crawler TechType, Done
+            { TechType.Boomerang, (0.0f, 1.6f) }, //Done
+            { TechType.CaveCrawler, (0.0f, 1.4f) }, //Done
+            { TechType.Crash,(0.0f, 1.3f) }, //Crashfish TechType, Done
+            { TechType.Eyeye, (0.0f, 2.0f) }, //Done
+            { TechType.Floater, (0.0f, 2.0f) }, //Done
+            { TechType.GarryFish, (0.0f, 2.0f) }, //Done
+            { TechType.HoleFish, (0.0f, 2.0f) }, //Done
+            { TechType.Hoopfish, (0.0f, 2.0f) }, //Done
+            { TechType.Hoverfish, (0.0f, 2.0f) }, //Done
+            { TechType.LavaBoomerang, (0.0f, 1.6f) }, //Magmarang TechType, Done
+            { TechType.LavaLarva, (0.0f, 1.0f) }, //Done
+            { TechType.Mesmer,(0.0f, 1.5f) }, //Done
+            { TechType.Oculus, (0.0f, 2.0f) }, //Done
+            { TechType.Peeper, (0.0f, 2.0f) }, //Done
+            { TechType.LavaEyeye, (0.0f, 2.0f) }, //Done
+            { TechType.Reginald, (0.0f, 2.0f) }, //Done
+            { TechType.Skyray, (0.0f, 1.7f) }, //Done
+            { TechType.Spadefish, (0.0f, 1.5f) }, //Done
+            { TechType.Spinefish, (0.0f, 2.0f) }, //Done
+            { TechType.Jumper, (0.0f, 1.5f) }, //Shuttlebug TechType, Done
 
             //Medium Fish
-            { TechType.Shocker, (0.1f, 0.1f) }, //Done
-            { TechType.BoneShark, (0.1f, 0.3f) }, //Done
-            { TechType.Crabsnake, (0.1f, 0.1f) }, //Done
-            { TechType.CrabSquid, (0.1f, 0.2f) }, //Done
-            { TechType.Cutefish, (0.1f, 1.7f) }, //Done
-            { TechType.GhostRayRed, (0.1f, 0.1f) }, //Done
-            { TechType.Gasopod, (0.1f, 0.2f) }, //Done
-            { TechType.GhostRayBlue, (0.1f, 0.1f) }, //Done
-            { TechType.Jellyray, (0.1f, 0.3f) }, //Done
-            { TechType.LavaLizard, (0.1f, 0.3f) }, //Done
-            { TechType.RabbitRay, (0.1f, 0.7f) }, //Done
-            { TechType.SpineEel, (0.1f, 0.2f) }, //River Prowler TechType, Done
-            { TechType.Sandshark, (0.1f, 0.2f) }, //Done
-            { TechType.SeaEmperorBaby, (0.1f, 0.5f) }, //Done - feels cruel to grab them, but they *are* cute
-            { TechType.Stalker, (0.1f, 0.3f) }, //Done
-            { TechType.Warper, (0.1f, 0.3f) }, //Done
+            { TechType.Shocker, (0.0f, 0.1f) }, //Done
+            { TechType.BoneShark, (0.0f, 0.3f) }, //Done
+            { TechType.Crabsnake, (0.0f, 0.1f) }, //Done
+            { TechType.CrabSquid, (0.0f, 0.2f) }, //Done
+            { TechType.Cutefish, (0.0f, 1.7f) }, //Done
+            { TechType.GhostRayRed, (0.0f, 0.1f) }, //Done
+            { TechType.Gasopod, (0.0f, 0.2f) }, //Done
+            { TechType.GhostRayBlue, (0.0f, 0.1f) }, //Done
+            { TechType.Jellyray, (0.0f, 0.3f) }, //Done
+            { TechType.LavaLizard, (0.0f, 0.3f) }, //Done
+            { TechType.RabbitRay, (0.0f, 0.7f) }, //Done
+            { TechType.SpineEel, (0.0f, 0.2f) }, //River Prowler TechType, Done
+            { TechType.Sandshark, (0.0f, 0.2f) }, //Done
+            { TechType.SeaEmperorBaby, (0.0f, 0.5f) }, //Done - feels cruel to grab them, but they *are* cute
+            { TechType.Stalker, (0.0f, 0.3f) }, //Done
+            { TechType.Warper, (0.0f, 0.3f) }, //Done
 
             //Leviathans
-            { TechType.GhostLeviathan, (0.1f, 0.1f) }, //Done - Made pickupable at minimum size, just so it's even possible to put it in containment
-            { TechType.GhostLeviathanJuvenile, (0.1f, 0.2f) }, //Done - NOTE!! Ghost Juveniles are approximately 63% the size of adults; making pickup up to 0.2 just because (easier on player to obtain)
-            { TechType.ReaperLeviathan, (0.1f, 0.2f) }, //Done
-            { TechType.Reefback, (0.1f, 0.1f) }, //Done - TODO!! Flora on back acts weirdly when scaled down, and they still produce large bubbles and tiger plants; want to disable them
-            { TechType.ReefbackBaby, (0.1f, 0.2f) }, //Done - Baby seems to be about 25% the size of the adult
-            { TechType.SeaDragon, (0.1f, 0.1f) }, //Done, Made pickupable at minimum size, just so it's even possible to put it in containment
-            { TechType.SeaEmperorJuvenile, (0.1f, 0.1f) }, //Done - Made pickupable at minimum size, just so it's even possible to put it in containment
-            { TechType.SeaTreader, (0.1f, 0.1f) } //Done
+            { TechType.GhostLeviathan, (0.0f, 0.1f) }, //Done - Made pickupable at minimum size, just so it's even possible to put it in containment
+            { TechType.GhostLeviathanJuvenile, (0.0f, 0.2f) }, //Done - NOTE!! Ghost Juveniles are approximately 63% the size of adults; making pickup up to 0.2 just because (easier on player to obtain)
+            { TechType.ReaperLeviathan, (0.0f, 0.2f) }, //Done
+            { TechType.Reefback, (0.0f, 0.1f) }, //Done - TODO!! Flora on back acts weirdly when scaled down, and they still produce large bubbles and tiger plants; want to disable them
+            { TechType.ReefbackBaby, (0.0f, 0.2f) }, //Done - Baby seems to be about 25% the size of the adult
+            { TechType.SeaDragon, (0.0f, 0.1f) }, //Done, Made pickupable at minimum size, just so it's even possible to put it in containment
+            { TechType.SeaEmperorJuvenile, (0.0f, 0.1f) }, //Done - Made pickupable at minimum size, just so it's even possible to put it in containment
+            { TechType.SeaTreader, (0.0f, 0.1f) } //Done
         };
 
         //Dictionary used to reference the min and max values a creature can be whilst still able to placed in an alien containment (big fish tank)
@@ -98,61 +98,61 @@ namespace CreatureConfigSize
             //Also, this is likely the solution I want for the skyray too, to trigger the drowning animation
 
             //Small Fish
-            { TechType.Biter, (0.1f, 5.0f) }, //Done
-            { TechType.Bladderfish, (0.1f, 5.0f) }, //Done
-            { TechType.Bleeder, (0.1f, 7.0f) }, //Done
-            { TechType.Blighter, (0.1f, 5.0f) }, //Done
-            { TechType.Shuttlebug, (0.1f, 0.7f) }, //Blood Crawler TechType, Done - TODO!! Same as Sea Dragon; They don't animate in the tank, unless their creature component is reactivated
-            { TechType.Boomerang, (0.1f, 4.0f) }, //Done
-            { TechType.CaveCrawler, (0.1f, 2.0f) }, //Done - TODO!! Cave Crawlers mostly work in containment, but just spam their walking animation, even when still
-            { TechType.Crash, (0.1f, 4.0f) }, //Crashfish TechType, Done
-            { TechType.Eyeye, (0.1f, 5.0f) }, //Done
-            { TechType.Floater, (0.1f, 1.0f) }, //Done
-            { TechType.GarryFish, (0.1f, 5.0f) }, //Done
-            { TechType.HoleFish, (0.1f, 5.0f) }, //Done
-            { TechType.Hoopfish, (0.1f, 5.0f) }, //Done
-            { TechType.Hoverfish, (0.1f, 4.0f) }, //Done
-            { TechType.LavaBoomerang, (0.1f, 4.0f) }, //Magmarang TechType, Done
-            { TechType.LavaLarva, (0.1f, 1.5f) }, //Done
-            { TechType.Mesmer, (0.1f, 2.0f) }, //Done
-            { TechType.Oculus, (0.1f, 5.0f) }, //Done
-            { TechType.Peeper, (0.1f, 5.0f) }, //Done
-            { TechType.LavaEyeye, (0.1f, 5.0f) }, //Done
-            { TechType.Reginald, (0.1f, 5.0f) }, //Done
-            { TechType.Skyray, (0.1f, 1.7f) }, //Done, TODO!! Figure out how to have it start drowning if placed in Alien Containment
+            { TechType.Biter, (0.0f, 5.0f) }, //Done
+            { TechType.Bladderfish, (0.0f, 5.0f) }, //Done
+            { TechType.Bleeder, (0.0f, 7.0f) }, //Done
+            { TechType.Blighter, (0.0f, 5.0f) }, //Done
+            { TechType.Shuttlebug, (0.0f, 0.7f) }, //Blood Crawler TechType, Done - TODO!! Same as Sea Dragon; They don't animate in the tank, unless their creature component is reactivated
+            { TechType.Boomerang, (0.0f, 4.0f) }, //Done
+            { TechType.CaveCrawler, (0.0f, 2.0f) }, //Done - TODO!! Cave Crawlers mostly work in containment, but just spam their walking animation, even when still
+            { TechType.Crash, (0.0f, 4.0f) }, //Crashfish TechType, Done
+            { TechType.Eyeye, (0.0f, 5.0f) }, //Done
+            { TechType.Floater, (0.0f, 1.0f) }, //Done
+            { TechType.GarryFish, (0.0f, 5.0f) }, //Done
+            { TechType.HoleFish, (0.0f, 5.0f) }, //Done
+            { TechType.Hoopfish, (0.0f, 5.0f) }, //Done
+            { TechType.Hoverfish, (0.0f, 4.0f) }, //Done
+            { TechType.LavaBoomerang, (0.0f, 4.0f) }, //Magmarang TechType, Done
+            { TechType.LavaLarva, (0.0f, 1.5f) }, //Done
+            { TechType.Mesmer, (0.0f, 2.0f) }, //Done
+            { TechType.Oculus, (0.0f, 5.0f) }, //Done
+            { TechType.Peeper, (0.0f, 5.0f) }, //Done
+            { TechType.LavaEyeye, (0.0f, 5.0f) }, //Done
+            { TechType.Reginald, (0.0f, 5.0f) }, //Done
+            { TechType.Skyray, (0.0f, 1.7f) }, //Done, TODO!! Figure out how to have it start drowning if placed in Alien Containment
             //For reference, how it works is that the drowning component makes the BirdSml animated play the drowning animation; trouble is, it's part of the SkyRay component, which is disabled...
             //...when placed in Alien Containment; maybe just make it that if SkyRay is placed in there, just don't disable it's component, because it's not like it will be in there long
-            { TechType.Spadefish, (0.1f, 2.5f) }, //Done
-            { TechType.Spinefish, (0.1f, 5.0f) }, //Done
-            { TechType.Jumper, (0.1f, 3.5f) }, //Shuttlebug TechType, Done
+            { TechType.Spadefish, (0.0f, 2.5f) }, //Done
+            { TechType.Spinefish, (0.0f, 5.0f) }, //Done
+            { TechType.Jumper, (0.0f, 3.5f) }, //Shuttlebug TechType, Done
 
             //Medium Fish
-            { TechType.Shocker, (0.1f, 0.4f) }, //Done
-            { TechType.BoneShark, (0.1f, 0.5f) }, //Done
-            { TechType.Crabsnake, (0.1f, 0.3f) }, //Done
-            { TechType.CrabSquid, (0.1f, 0.2f) }, //Done
-            { TechType.Cutefish, (0.1f, 2.5f) }, //Done
-            { TechType.GhostRayRed, (0.1f, 0.5f) }, //Done
-            { TechType.Gasopod, (0.1f, 0.7f) }, //Done
-            { TechType.GhostRayBlue, (0.1f, 0.5f) }, //Done
-            { TechType.Jellyray, (0.1f, 0.9f) }, //Done
-            { TechType.LavaLizard, (0.1f, 1.0f) }, //Done
-            { TechType.RabbitRay, (0.1f, 1.5f) }, //Done
-            { TechType.SpineEel, (0.1f, 0.5f) }, //River Prowler TechType, Done
-            { TechType.Sandshark, (0.1f, 0.6f) }, //Done - NOTE!! Sandshark seems to rapidly shrink and expand when up against the walls of containment...just, what?
-            { TechType.SeaEmperorBaby, (0.1f, 1.0f) }, //Done
-            { TechType.Stalker, (0.1f, 0.7f) }, //Done
-            { TechType.Warper, (1.0f, 1.0f) }, //NOT DONE YET!! TODO Make the Warper eventually leave the tank, as well as maybe kill any infected fish? Or is this just mean?
+            { TechType.Shocker, (0.0f, 0.4f) }, //Done
+            { TechType.BoneShark, (0.0f, 0.5f) }, //Done
+            { TechType.Crabsnake, (0.0f, 0.3f) }, //Done
+            { TechType.CrabSquid, (0.0f, 0.2f) }, //Done
+            { TechType.Cutefish, (0.0f, 2.5f) }, //Done
+            { TechType.GhostRayRed, (0.0f, 0.5f) }, //Done
+            { TechType.Gasopod, (0.0f, 0.7f) }, //Done
+            { TechType.GhostRayBlue, (0.0f, 0.5f) }, //Done
+            { TechType.Jellyray, (0.0f, 0.9f) }, //Done
+            { TechType.LavaLizard, (0.0f, 1.0f) }, //Done
+            { TechType.RabbitRay, (0.0f, 1.5f) }, //Done
+            { TechType.SpineEel, (0.0f, 0.5f) }, //River Prowler TechType, Done
+            { TechType.Sandshark, (0.0f, 0.6f) }, //Done - NOTE!! Sandshark seems to rapidly shrink and expand when up against the walls of containment...just, what?
+            { TechType.SeaEmperorBaby, (0.0f, 1.0f) }, //Done
+            { TechType.Stalker, (0.0f, 0.7f) }, //Done
+            { TechType.Warper, (0.0f, 1.0f) }, //NOT DONE YET!! TODO Make the Warper eventually leave the tank, as well as maybe kill any infected fish? Or is this just mean (make it a config option)?
 
             //Leviathans
-            { TechType.GhostLeviathan, (0.1f, 0.1f) }, //Done - 6% size is honestly the largest it fits without clipping; so only minimum size ghost will fit
-            { TechType.GhostLeviathanJuvenile, (0.1f, 0.2f) }, //Done - NOTE!! Ghost Juveniles are approximately 63% the size of adults; 0.2 works good enough in small containment
-            { TechType.ReaperLeviathan, (0.1f, 0.2f) }, //Done - Reaper won't fit in the containment at anything larger than 12% size
-            { TechType.Reefback, (0.1f, 0.1f) }, //Done - ERROR!! Scaling down the Reefback doesn't scale down the physics of the flora on its back, causing graphical issues
-            { TechType.ReefbackBaby, (0.1f, 0.4f) }, //Done
-            { TechType.SeaDragon, (0.1f, 0.1f) }, //Done - ERROR!! Sea Dragon does not appear to swim around in the tank without Sea Dragon component being enabled
-            { TechType.SeaEmperorJuvenile, (0.1f, 0.1f) }, //Done - The grown up sea emperors; 6% size is honestly the largest it fits without clipping; so only minimum size sea emperor will fit
-            //{ TechType.SeaTreader, (0.1f, 0.1f) } //ERROR!! Sea Treader has no locomotion component, instead having a unique component to move on the ground, and thus breaks in containment
+            { TechType.GhostLeviathan, (0.0f, 0.1f) }, //Done - 6% size is honestly the largest it fits without clipping; so only minimum size ghost will fit
+            { TechType.GhostLeviathanJuvenile, (0.0f, 0.2f) }, //Done - NOTE!! Ghost Juveniles are approximately 63% the size of adults; 0.2 works good enough in small containment
+            { TechType.ReaperLeviathan, (0.0f, 0.2f) }, //Done - Reaper won't fit in the containment at anything larger than 12% size
+            { TechType.Reefback, (0.0f, 0.1f) }, //Done - ERROR!! Scaling down the Reefback doesn't scale down the physics of the flora on its back, causing graphical issues
+            { TechType.ReefbackBaby, (0.0f, 0.4f) }, //Done
+            { TechType.SeaDragon, (0.0f, 0.1f) }, //Done - ERROR!! Sea Dragon does not appear to swim around in the tank without Sea Dragon component being enabled
+            { TechType.SeaEmperorJuvenile, (0.0f, 0.1f) }, //Done - The grown up sea emperors; 6% size is honestly the largest it fits without clipping; so only minimum size sea emperor will fit
+            //{ TechType.SeaTreader, (0.0f, 0.1f) } //ERROR!! Sea Treader has no locomotion component, instead having a unique component to move on the ground, and thus breaks in containment
         };
         #endregion
     }
