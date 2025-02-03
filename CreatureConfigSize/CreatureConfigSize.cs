@@ -394,9 +394,6 @@ namespace CreatureConfigSize
 
         internal static bool GetInsideWaterPark(GameObject creature)
         {
-            //DEBUG!!
-            TechType techType = CraftData.GetTechType(creature);
-
             if(creature.GetComponentInParent<WaterPark>() != null)
             {
                 //logger.LogInfo($"{techType} is in a WaterPark");
@@ -471,6 +468,12 @@ namespace CreatureConfigSize
                 {
                     //Generate a size modifier based on the min and max values of the dictionary in config (text file able to be manually edited by users)
                     var (min, max) = config.CreatureSizeRangeReference[techType];
+                    //Make sure minimum is less than the maximum size range
+                    if(min > max) 
+                    {
+                        logger.LogError($"Error! Minimum size for {techType} of {min} is greater than maximum size of {max}! Raising minimum to match maximum.");
+                        min = max; 
+                    }
                     modifier = GenerateSizeModifier(min, max);
                 }
                 #endregion
