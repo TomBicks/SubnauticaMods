@@ -192,6 +192,7 @@ namespace CreatureConfigSize
 
                     //Reapply the modifier, in case it expires if we reload with the creature unloaded
                     SetSize(creature, modifier);
+                    logger.LogInfo($"Changed size of {techType} to {modifier}");
                     ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
                 }
 
@@ -215,6 +216,9 @@ namespace CreatureConfigSize
         //Check whether the creature's size makes it eligible or not for the Pickupable component, and to add it or remove it
         public static bool CheckPickupableComponent(GameObject creature, float size)
         {
+            //Result of whether the creature needs a Pickupable component or not
+            bool result = false;
+
             //Generate techtype to check the dictionary for creature's entry
             TechType techType = CraftData.GetTechType(creature);
 
@@ -249,15 +253,15 @@ namespace CreatureConfigSize
                     modifier = size;
                 }
 
-                //Use original size modifier to determine if eligible for pickupable component
-                if ((modifier >= min && modifier <= max) || config.AllowAllPickupable)
+                //Use original size modifier to determine if eligible for pickupable component (also eligibile if set to allow all or if *already in* containment)
+                if ((modifier >= min && modifier <= max) || config.AllowAllPickupable ||insideWaterPark)
                 {
-                    //If creature is eligible for the component and doesn't have one, add it and return true
+                    //If creature is eligible for the component and doesn't have one, add it; return true if it needed one at all
                     if(!componentExists)
                     {
                         creature.AddComponent<Pickupable>();
-                        return true;
                     }
+                    result = true;
                 }
                 else
                 {
@@ -269,20 +273,14 @@ namespace CreatureConfigSize
                         UnityEngine.Object.Destroy(component);
                     }
                 }
-
-                //If *somehow* the creature is in alien containment *without* the pickupable component, add it in, as a final check
-                if(insideWaterPark && !componentExists)
-                {
-                    logger.LogWarning($"Warning! {techType} in alien containment without pickupable component! Adding component.");
-                }
             }
             else
             {
                 ErrorMessage.AddError($"{techType} is not in the pickupable reference dictionary!");
             }
 
-            //Return false if any of the if statements are false
-            return false;
+            //Return whether the creature needs a Pickupable component or not
+            return result;
         }
 
         //TODO!! Look into hooking into when a creatures hatches from an egg, and set its size there randomly (can be outside the range of pickupable, but within the range of what will fit
@@ -292,10 +290,19 @@ namespace CreatureConfigSize
         //Check whether the creature's size makes it eligible or not for the WaterParkCreature component, and to add it or remove it
         public static bool CheckWaterParkCreatureComponent(GameObject creature, float size)
         {
+            //Result of whether the creature needs a WaterParkCreature component or not
+            bool result = false;
+
             //Generate techtype to check the dictionary for creature's entry
             TechType techType = CraftData.GetTechType(creature);
 
-            if(WaterParkReference.ContainsKey(techType))
+            //Whether the creature has a WaterParkCreature component already or not
+            bool componentExists = !(creature.GetComponent<WaterParkCreature>() == null);
+
+            //Whether the creature is in alien containment or not
+            bool insideWaterPark = GetInsideWaterPark(creature);
+
+            if (WaterParkReference.ContainsKey(techType))
             {
                 var (min, max) = WaterParkReference[techType];
 
@@ -318,26 +325,41 @@ namespace CreatureConfigSize
                     modifier = size;
                 }
 
+                //DEBUG!!
+                logger.LogWarning($"(WaterParkCreature) {techType}'s modifier is {modifier}");
 
-                if ((modifier >= min && modifier <= max) || config.AllowAllWaterPark)
+                //Use original size modifier to determine if eligible for WPC component (also eligibile if set to allow all or if *already in* containment)
+                if ((modifier >= min && modifier <= max) || config.AllowAllWaterPark || insideWaterPark)
                 {
-                    //NOTE!! NEED TO MAKE SURE THIS IS RUNNING WELL
-                    //THIS MIGHT USELESS CODE!!
-
-                    //Ensure the creature has the WaterParkCreature component
                     WaterParkCreature wpc = creature.EnsureComponent<WaterParkCreature>();
 
-                    //Create an empty WaterParkCreatureData for us to populate, if it's empty
-                    if (wpc.data == null)
+                    //If creature is eligible for the component and doesn't have one, add it; return true if it needed one at all
+                    if (!componentExists)
                     {
-                        //Because I'm setting this in LiveMixin.Awake, this SHOULD NOT trigger
-                        logger.LogError($"Error! WaterParkCreature component data for {techType} is null!");
+                        //Ensure creature has WaterParkCreature component if it needs one added, and make sure it has blank data
+                        //If we need to create a component, that means the previous reference to 'wpc' was null, so we override it with this new and shiny one
+                        wpc = creature.EnsureComponent<WaterParkCreature>();
+                        wpc.data = ScriptableObject.CreateInstance<WaterParkCreatureData>();
                     }
 
-                    //Use appropriate size to calculate WPC data
-                    SetWaterParkData(ref wpc.data, size, techType);
+                    result = true;
+                }
+                else
+                {
+                    //If creature is ineligable for the component and has one, remove it (and will return false by default)
+                    //NOTE!! If creature is in alien containment, we DO NOT remove this component
+                    if(componentExists && !insideWaterPark)
+                    {
+                        var component = creature.GetComponent<WaterParkCreature>();
+                        UnityEngine.Object.Destroy(component);
+                    }
+                }
 
-                    return true;
+                //Use appropriate size to calculate WPC data
+                //NOTE!! Always update WaterParkCreature data, so long as the component exists, just in case it's a creature in containment that shouldn't be there
+                if(!(creature.GetComponent<WaterParkCreature>() == null))
+                {
+                    SetWaterParkData(ref creature.GetComponent<WaterParkCreature>().data, modifier, techType);
                 }
             }
             else
@@ -345,17 +367,14 @@ namespace CreatureConfigSize
                 ErrorMessage.AddError($"{techType} is not in the waterpark reference dictionary!");
             }
 
-            //Return false if any of the if statements are false
-            return false;
+            //Return whether the creature needs a WaterParkCreature component or not
+            return result;
         }
 
         internal static void SetWaterParkData(ref WaterParkCreatureData data, float modifier, TechType techType)
         {
-            //NOTE!! Each particular creature shares a WaterParkCreatureData (e.g. Hoopfish_WaterParkCreatureData)
-            //This means two things; one, I can't change one SpineFish without changing the other, and two, I need to create one for the creatures that don't usually go in containment, like leviathans
-
-            //2nd NOTE!! When loading into a save, with a creature such as a reaper in containment (a creature I added a waterparkcomponent to), the data is empty and null upon loading the save
-            //Will likely need to look into repopulating the data every time I load in
+            //NOTE!! WPC data needs to be repopulated every new session for creatures with usually no WPC component, and for every other creature we want to differentiate
+            logger.LogWarning($"(WaterParkData) Setting {techType}'s WPC data values to {modifier * 0.1f}, {modifier * 0.6f}, and {modifier}");
             data.initialSize = modifier * 0.1f;
             data.maxSize = modifier * 0.6f;
             data.outsideSize = modifier;

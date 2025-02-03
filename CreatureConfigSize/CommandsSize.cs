@@ -45,9 +45,10 @@ namespace CreatureConfigSize
                         string creatureId = parent.GetComponent<PrefabIdentifier>().Id;
                         if(creatureSizeInfoList.creatureSizeDictionary.ContainsKey(creatureId))
                         {
-                            //Update the localscale of the creature
+                            //Update the localscale of the creature (if setting size of creature in containment, set the size to be 60% of what the user enters, for consistency)
                             ErrorMessage.AddMessage($"Setting size of {techType} to {modifier}");
                             logger.LogMessage($"Setting size of {techType} to {modifier}");
+                            if(GetInsideWaterPark(parent)) { modifier = modifier * 0.6f; }
                             SetSize(parent, modifier);
 
                             //Go through checks it eligible for either pickupable or waterpark components
@@ -55,6 +56,8 @@ namespace CreatureConfigSize
                             CheckWaterParkCreatureComponent(parent, modifier);
 
                             //Update the size of this creature in the creature size dictionary
+                            ErrorMessage.AddMessage($"Updating listed size of {techType} from {creatureSizeInfoList.creatureSizeDictionary[creatureId]} to {modifier}");
+                            logger.LogMessage($"Updating listed size of {techType} from {creatureSizeInfoList.creatureSizeDictionary[creatureId]} to {modifier}");
                             creatureSizeInfoList.creatureSizeDictionary[creatureId] = modifier;
                         }
                         else
@@ -98,7 +101,7 @@ namespace CreatureConfigSize
                 TechType techType = CraftData.GetTechType(target);
 
                 //NOTE!! Needed to refer to parent objects with Creature component, as some creatures have child objects that interfere with the raycast
-                if (target.GetComponentInParent<Creature>() is CaveCrawler)
+                if (techType is TechType.CaveCrawler || techType is TechType.Shuttlebug || techType is TechType.SeaDragon)
                 {
                     logger.LogError($"{target}");
                     GameObject parent = target.GetComponentInParent<Creature>().gameObject;
@@ -110,10 +113,10 @@ namespace CreatureConfigSize
                     {
                         //Fix the creature!
                         //Renable the creature component, as for these creatures much of the animation is contained there
-                        //Then, MAYBE!!, as a precaution, turn on friendly, so they don't try to attack the player when they're 'fixed'
+                        //Seemingly no need to make them friendly to the player, as much of their attack functions seem to get disabled when they're placed in containment
                         ErrorMessage.AddMessage($"Fixing {techType}");
                         parent.GetComponent<CaveCrawler>().enabled = true;
-                        parent.GetComponent<CaveCrawler>().friendlyToPlayer = true;
+                        //parent.GetComponent<CaveCrawler>().friendlyToPlayer = true;
                     }
                 }
                 else
