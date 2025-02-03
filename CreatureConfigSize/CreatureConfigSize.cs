@@ -263,7 +263,7 @@ namespace CreatureConfigSize
                 {
                     //If creature is ineligable for the component and has one, remove it (and will return false by default)
                     //NOTE!! If creature is in alien containment, we DO NOT remove this component; IsPickupableOutside is used instead to remove the component when the creature is placed outside
-                    if(componentExists || !insideWaterPark)
+                    if(componentExists && !insideWaterPark)
                     {
                         var component = creature.GetComponent<Pickupable>();
                         UnityEngine.Object.Destroy(component);
