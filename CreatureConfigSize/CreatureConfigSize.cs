@@ -6,6 +6,7 @@ using Nautilus.Handlers;
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
+using static RootMotion.FinalIK.GenericPoser;
 
 namespace CreatureConfigSize
 {
@@ -174,7 +175,7 @@ namespace CreatureConfigSize
 
                     //Generate a modifier for the creature's size
                     //Based on either the creature's size class, retrieved from the CreatureSizeReference array, or the min and max values in the json file, if complex is on
-                    float modifier = GetCreatureSizeModifier(techType);
+                    float modifier = GetCreatureSizeModifier(creature);
                     logger.LogInfo($"Creature Modifier = {modifier}");
 
                     //Once we've retrieved the modifier, apply it by multiplying the creature's size by the modifier
@@ -364,7 +365,7 @@ namespace CreatureConfigSize
             }
             else
             {
-                ErrorMessage.AddError($"{techType} is not in the waterpark reference dictionary!");
+                logger.LogError($"Error! {techType} is not in the waterpark reference dictionary!");
             }
 
             //Return whether the creature needs a WaterParkCreature component or not
@@ -427,10 +428,16 @@ namespace CreatureConfigSize
             return SizeClass.None;
         }
 
-        private static float GetCreatureSizeModifier(TechType techType)
+        private static float GetCreatureSizeModifier(GameObject creature)
         {
-            //Return a default modifier of 1 if no size class can be found in the reference array
-            var modifier = 1.0f;
+            //Declare min and max variables
+            var (min, max) = (1.0f,1.0f);
+
+            //Generate techtype to check the dictionary for creature's entry
+            TechType techType = CraftData.GetTechType(creature);
+
+            //Whether the creature is in alien containment or not
+            bool insideWaterPark = GetInsideWaterPark(creature);
 
             if (!config.ComplexSizeEnabled)
             {
@@ -438,25 +445,28 @@ namespace CreatureConfigSize
                 //Try to get the size class of the given TechType
                 SizeClass sizeClass = GetSizeClass(techType);
 
-                //If we found a size class, generate a modifier for it, then break from the loop
+                //If we found a size class, retrieve minimum and maximum size ranges
                 if (sizeClass != SizeClass.None)
                 {
                     switch (sizeClass)
                     {
                         case SizeClass.Small:
-                            modifier = GenerateSizeModifier(config.SmallCreatureMinSize, config.SmallCreatureMaxSize);
+                            min = config.SmallCreatureMinSize;
+                            max = config.SmallCreatureMaxSize;
                             break;
                         case SizeClass.Medium:
-                            modifier = GenerateSizeModifier(config.MedCreatureMinSize, config.MedCreatureMaxSize);
+                            min = config.MedCreatureMinSize;
+                            max = config.MedCreatureMaxSize;
                             break;
                         case SizeClass.Large:
-                            modifier = GenerateSizeModifier(config.LargeCreatureMinSize, config.LargeCreatureMaxSize);
+                            min = config.LargeCreatureMinSize;
+                            max = config.LargeCreatureMaxSize;
                             break;
                     }
                 }
                 else
                 {
-                    logger.LogError($"Error! Could not retrieve size class for TechType {techType}!");
+                    logger.LogError($"Error! Could not retrieve size class ranges for TechType {techType}!");
                 }
                 #endregion
             }
@@ -466,18 +476,35 @@ namespace CreatureConfigSize
                 //Try to get the size range of the given TechType
                 if (config.CreatureSizeRangeReference.ContainsKey(techType))
                 {
-                    //Generate a size modifier based on the min and max values of the dictionary in config (text file able to be manually edited by users)
-                    var (min, max) = config.CreatureSizeRangeReference[techType];
-                    //Make sure minimum is less than the maximum size range
-                    if(min > max) 
-                    {
-                        logger.LogError($"Error! Minimum size for {techType} of {min} is greater than maximum size of {max}! Raising minimum to match maximum.");
-                        min = max; 
-                    }
-                    modifier = GenerateSizeModifier(min, max);
+                    //Retrieve minimum and maximum size ranges from the dictionary in config (text file able to be manually edited by users)
+                    (min, max) = config.CreatureSizeRangeReference[techType];
+                }
+                else
+                {
+                    ErrorMessage.AddError($"Error! {techType} is not in the size range reference dictionary!");
                 }
                 #endregion
             }
+
+            //If the creature is in alien containment, then the max value must not exceed the containment's limits, so we change it to make sure
+            if (insideWaterPark && WaterParkReference.ContainsKey(techType)) 
+            {
+                logger.LogWarning($"Warning! {techType}'s maximum size range of {max} exceeds WaterPark safe capacity! Clamping to {WaterParkReference[techType].max}.");
+                max = WaterParkReference[techType].max; 
+            }
+
+            //If minimum size range is greater than maximum, make them equal to the current max size
+            if (min > max)
+            {
+                logger.LogError($"Error! Minimum size for {techType} of {min} is greater than maximum size of {max}! Raising minimum to match maximum.");
+                min = max;
+            }
+
+            //Returns a default modifier of 1 if no size class can be found in the reference array, as both min and max will both still be 1
+            var modifier = GenerateSizeModifier(min, max);
+
+            //If the creature's size modifier is being determined whilst in alien containment, such as with a hatching creature, make sure it's clear it's 60% smaller in containment than outside
+            if (insideWaterPark) { modifier *= 0.6f; }
 
             return modifier;
         }

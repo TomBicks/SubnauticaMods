@@ -89,9 +89,9 @@ namespace CreatureConfigSize
         //but can't when you place them outside containment; i.e. IsOutsidePickupable = false in WPC data
         public static readonly Dictionary<TechType, (float min, float max)> WaterParkReference = new Dictionary<TechType, (float, float)>()
         {
-            //NOTE!! The creature is 60% of its initial size in containment; these ranges are for their initial size! E.g. a 4x Ampeel is 2.4x in containment (the max size I'm okay with)
-            //NOTE!! Ampeels and Crabsquids hatched from eggs have a different maxSize (0.12 and 0.1 respectively, as opposed to the 0.6 of most small fish); should I worry? No;...
-            //...it just means creatures hatched from eggs might be smaller on average grown up, or larger on average when first hatched
+            //NOTE!! The creature is 60% of its initial size in containment; these ranges are for their initial size! E.g. a 0.6x Ampeel is 0.36x in containment (the max size I'm okay with)
+            //NOTE!! Ampeels and Crabsquids hatched from eggs have a different maxSize (0.12 and 0.1 respectively, as opposed to the 0.6 of most small fish); however...
+            //...This is not an issue, as creatures hatching from eggs still randomise size. The only issue is their present size is not recognised as their full size outside
 
             //TODO!! If I don't disable the behaviour of shuttlebugs and cave crawlers, they actually looks really cool in containment!
             //Also seems to be okay for the sea dragon
@@ -127,7 +127,7 @@ namespace CreatureConfigSize
             { TechType.Jumper, (0.0f, 3.5f) }, //Shuttlebug TechType, Done
 
             //Medium Fish
-            { TechType.Shocker, (0.0f, 0.4f) }, //Done
+            { TechType.Shocker, (0.0f, 0.6f) }, //Done
             { TechType.BoneShark, (0.0f, 0.5f) }, //Done
             { TechType.Crabsnake, (0.0f, 0.3f) }, //Done
             { TechType.CrabSquid, (0.0f, 0.2f) }, //Done
