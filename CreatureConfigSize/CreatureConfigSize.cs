@@ -6,7 +6,6 @@ using Nautilus.Handlers;
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
-using static RootMotion.FinalIK.GenericPoser;
 
 namespace CreatureConfigSize
 {
@@ -44,37 +43,10 @@ namespace CreatureConfigSize
             //DEBUG!! Showcase what options are on or off
             logger.LogInfo($"All Pickupable = {config.AllowAllPickupable}");
             logger.LogInfo($"All WaterPark = {config.AllowAllWaterPark}");
+            logger.LogInfo($"Complex Size Calculations = {config.ComplexSizeEnabled}");
         }
 
-        internal class CreatureInvInfo
-        {
-            internal TechType techType { get; set; } //The TechType of the creature
-            internal int invSize; //How big the creature is in the inventory (e.g. 4 is 4*4 large in inventory)
-            internal string iconName; //The filename of the icon file
-            internal string name; //The displayed name of the creature in the inventory
-            internal string tooltip; //The displayed tooltip of the creature in the inventory
-
-            //Create a constructor to streamline defining entries
-            internal CreatureInvInfo(TechType techType, int invSize, string iconName, string name, string tooltip)
-            {
-                this.techType = techType;
-                this.invSize = invSize;
-                this.iconName = iconName;
-                this.name = name;
-                this.tooltip = tooltip;
-            }
-
-            //Create a deconstructor to streamline retrieving entries
-            public void Deconstruct(out TechType techType, out int invSize, out string iconName, out string name, out string tooltip)
-            {
-                techType = this.techType;
-                invSize = this.invSize;
-                iconName = this.iconName;
-                name = this.name;
-                tooltip = this.tooltip;
-            }
-        }
-
+        //Create list of creatures and their info to add to the game
         internal static List<CreatureInvInfo> CreatureInvList = new List<CreatureInvInfo>()
         {
             new CreatureInvInfo(TechType.Biter, 1, "biter_icon", "Biter", "Small, aggressive carnivore."),
@@ -84,6 +56,7 @@ namespace CreatureConfigSize
             new CreatureInvInfo(TechType.SeaEmperorBaby, 3, "sea_emperor_baby_icon", "Sea Emperor Leviathan Baby", "Juvenile leviathan capable of producing Enzyme 42. Taken shortly after being born.")
         };
 
+        //Iterate through each of the creatures and add their info
         internal static void SetCreatureInvInfo()
         {
             for(int i = 0; i < CreatureInvList.Count; i++)
