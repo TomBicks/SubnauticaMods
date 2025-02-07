@@ -18,28 +18,6 @@ namespace CreatureConfigSize
         {
             SetCreatureInvInfo();
 
-            /*Sprites needed
-             * Reaper (Done)
-             * Sea Dragon (Done)
-             * Ghost Leviathan (same can be used for both adult and juvenile) (Done)
-             * Reefback baby (can hopefully retrieve the one used for adult to use for baby as well)
-             * Sea Emperor Juvenile (Done)
-             * Sea Emporer Baby (Done)
-             * Sea Treader (Done)
-             * Skyray (Done)
-             * Cave Crawler (Done)
-             * Blood Crawler (Done)
-             * Shuttlebug (Doesn't need one; already has an entry)
-             * Warper (Done)
-             * Lava Larva (Done)
-             * Red Ghostray (Done)
-             * Blue Ghostray (Done)
-             * Spineel (Done)
-             * Bleeder (Done)
-             * Biter (Done)
-             * Blighter (Done)
-            */
-            
             //DEBUG!! Showcase what options are on or off
             logger.LogInfo($"All Pickupable = {config.AllowAllPickupable}");
             logger.LogInfo($"All WaterPark = {config.AllowAllWaterPark}");
@@ -49,24 +27,25 @@ namespace CreatureConfigSize
         //Create list of creatures and their info to add to the game
         internal static List<CreatureInvInfo> CreatureInvList = new List<CreatureInvInfo>()
         {
+            //TODO!! Should I see if I can make some of the bigger creatures in inventory's sprites bigger? Like ghost and sea dragon having a bigger sprite, so it's less blurry in inventory?
             new CreatureInvInfo(TechType.Biter, 1, "biter_icon", "Biter", "Small, aggressive carnivore."),
-            new CreatureInvInfo(TechType.Bleeder, 1, "bleeder_icon", "Bleeder", "Parasite attracted to blood."),
-            new CreatureInvInfo(TechType.Blighter, 1, "blighter_icon", "Blighter", ""),
-            new CreatureInvInfo(TechType.Shuttlebug, 2, "blood_crawler_icon", "Blood Crawler", ""),
-            new CreatureInvInfo(TechType.CaveCrawler, 2, "cave_crawler_icon", "Cave Crawler", ""),
-            new CreatureInvInfo(TechType.GhostRayRed, 3, "crimson_ray_icon", "Crimson Ray", ""),
-            new CreatureInvInfo(TechType.GhostLeviathan, 5, "ghost_icon", "Ghost Leviathan", ""),
-            new CreatureInvInfo(TechType.GhostLeviathanJuvenile, 4, "ghost_icon", "Ghost Leviathan Juvenile", ""),
-            new CreatureInvInfo(TechType.GhostRayBlue, 3, "ghostray_icon", "Ghostray", ""),
-            new CreatureInvInfo(TechType.LavaLarva, 2, "lava_larva_icon", "Lava Larva", ""),
-            new CreatureInvInfo(TechType.ReaperLeviathan, 4, "reaper_icon", "Reaper Leviathan", "Vast leviathan with aggressive tendencies."),
-            new CreatureInvInfo(TechType.SpineEel, 3, "river_prowler_icon", "River Prowler", ""),
-            new CreatureInvInfo(TechType.SeaDragon, 5, "sea_dragon_icon", "Sea Dragon Leviathan", ""),
-            new CreatureInvInfo(TechType.SeaEmperorJuvenile, 4, "sea_emperor_icon", "Sea Emperor Leviathan Juvenile", "Vast leviathan capable of producing Enzyme 42."),
+            new CreatureInvInfo(TechType.Bleeder, 1, "bleeder_icon", "Bleeder", "Small parasite attracted to blood."),
+            new CreatureInvInfo(TechType.Blighter, 1, "blighter_icon", "Blighter", "Small, aggressive carnivore. Largely blind."),
+            new CreatureInvInfo(TechType.Shuttlebug, 2, "blood_crawler_icon", "Blood Crawler", "Small, aggressive scavengers with elongated legs. Semi-terrestrial, though largely found in the deep sea."),
+            new CreatureInvInfo(TechType.CaveCrawler, 2, "cave_crawler_icon", "Cave Crawler", "Small, aggressive scavengers. Semi-terrestrial."),
+            new CreatureInvInfo(TechType.GhostRayRed, 3, "crimson_ray_icon", "Crimson Ray", "Docile, deep-sea ray capable of surviving extreme temperatures."),
+            new CreatureInvInfo(TechType.GhostLeviathan, 5, "ghost_icon", "Ghost Leviathan", "Vast leviathan with aggressive tendencies. Hunts until it grows so large that it must migrate beyond the Crater's Edge to sustain itself."),
+            new CreatureInvInfo(TechType.GhostLeviathanJuvenile, 4, "ghost_icon", "Ghost Leviathan Juvenile", "Vast leviathan with aggressive tendencies. Hunts in the Lost River, before migrating to the surface as it reaches adulthood."),
+            new CreatureInvInfo(TechType.GhostRayBlue, 3, "ghostray_icon", "Ghostray", "Docile, deep-sea ray with entirely translucent skin."),
+            new CreatureInvInfo(TechType.LavaLarva, 2, "lava_larva_icon", "Lava Larva", "Parasite that can drain nearby thermal and electric energy."),
+            new CreatureInvInfo(TechType.ReaperLeviathan, 4, "reaper_icon", "Reaper Leviathan", "Vast leviathan with aggressive tendencies. Uses echo-location to hunt its prey."),
+            new CreatureInvInfo(TechType.SpineEel, 3, "river_prowler_icon", "River Prowler", "Large, aggressive predator. Capable of pulling in prey with its tendrils."),
+            new CreatureInvInfo(TechType.SeaDragon, 5, "sea_dragon_icon", "Sea Dragon Leviathan", "Vast leviathan with aggressive tendencies. Capable of consuming and expelling molten materials."),
+            new CreatureInvInfo(TechType.SeaEmperorJuvenile, 4, "sea_emperor_icon", "Sea Emperor Leviathan Juvenile", "Vast leviathan capable of producing Enzyme 42. Even at this size, this is only a juvenile."),
             new CreatureInvInfo(TechType.SeaEmperorBaby, 3, "sea_emperor_baby_icon", "Sea Emperor Leviathan Baby", "Juvenile leviathan capable of producing Enzyme 42. Taken shortly after being born."),
-            new CreatureInvInfo(TechType.SeaTreader, 4, "sea_treader_icon", "Sea Treader Leviathan", ""),
-            new CreatureInvInfo(TechType.Skyray, 2, "skyray_icon", "Skyray", ""),
-            new CreatureInvInfo(TechType.Warper, 3, "warper_icon", "Warper", "")
+            new CreatureInvInfo(TechType.SeaTreader, 4, "sea_treader_icon", "Sea Treader Leviathan", "Large, herbivorous leviathan. Migratory."),
+            new CreatureInvInfo(TechType.Skyray, 2, "skyray_icon", "Skyray", "Small, avian often found over large landmasses. Cannot swim."),
+            new CreatureInvInfo(TechType.Warper, 3, "warper_icon", "Warper", "Aggressive creature capable of teleportation.") //Make it have two options? Nah, even the original entry doesn't have two versions, just two seperate entries.
         };
 
         //Iterate through each of the creatures and add their info
