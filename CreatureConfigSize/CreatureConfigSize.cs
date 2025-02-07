@@ -6,6 +6,8 @@ using Nautilus.Handlers;
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
+using static HandReticle;
+using System.Globalization;
 
 namespace CreatureConfigSize
 {
@@ -91,6 +93,67 @@ namespace CreatureConfigSize
                 {
                     logger.LogInfo($"(PostLiveMixinAwake) WaterParkCreatureData of {techType} is null! Creating placeholder!");
                     wpc.data = ScriptableObject.CreateInstance<WaterParkCreatureData>();
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(WaterParkCreature), nameof(WaterParkCreature.OnAddToWP))]
+        [HarmonyPostfix] //After adding to containment, check if creature needs any additional changes (usually reenabling certain components, so they look nicer in containment
+        public static void PostOnAddToWP(WaterParkCreature __instance)
+        {
+            GameObject creature = __instance.gameObject;
+
+            TechType techType = CraftData.GetTechType(creature);
+
+            Creature component = null;
+
+            switch (techType)
+            {
+                case TechType.CaveCrawler:
+                    logger.LogInfo($"Enabling {techType}");
+                    ErrorMessage.AddMessage($"Enabling {techType}");
+                    component = creature.GetComponent<Creature>();
+                    break;
+                case TechType.Shuttlebug: //Blood Crawler
+                    logger.LogInfo($"Enabling {techType}");
+                    ErrorMessage.AddMessage($"Enabling {techType}");
+                    component = creature.GetComponent<Creature>();
+                    break;
+                case TechType.SeaDragon:
+                    logger.LogInfo($"Enabling {techType}");
+                    ErrorMessage.AddMessage($"Enabling {techType}");
+                    component = creature.GetComponent<Creature>();
+                    break;
+                case TechType.Skyray:
+                    logger.LogInfo($"Enabling {techType}");
+                    ErrorMessage.AddMessage($"Enabling {techType}");
+                    Skyray birdComponent = creature.GetComponent<Skyray>();
+                    birdComponent.drowning = true; //Makes sure the skyray is animating that it is drowning in containment
+                    component = birdComponent;
+                    break;
+                case TechType.Warper:
+                    logger.LogInfo($"Warper is warping out of containment");
+                    ErrorMessage.AddMessage($"Warper has warped out of containment!");
+                    System.Random rand = new System.Random();
+                    if(rand.Next(1, 20) == 20) //1/20 chance for it to warp out of containment (this also occurs on load-in)
+                    {
+                        Warper warperComponent = creature.GetComponent<Warper>();
+                        warperComponent.WarpOut();
+                    }
+                    break;
+            }
+
+            if(component != null)
+            {
+                component.enabled = true;
+            }
+            else
+            {
+                //No error for Warper, as it's unique in that it's not reenabling a component, but just having a chance to warp out of containment
+                if(techType != TechType.Warper)
+                {
+                    logger.LogInfo($"Error! No Creature component found for {techType}!");
+                    ErrorMessage.AddMessage($"Error! No Creature component found for {techType}!");
                 }
             }
         }
