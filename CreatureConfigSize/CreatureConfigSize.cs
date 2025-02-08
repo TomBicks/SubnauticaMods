@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using static HandReticle;
 using System.Globalization;
+using UnityEngine.AddressableAssets;
 
 namespace CreatureConfigSize
 {
@@ -104,6 +105,17 @@ namespace CreatureConfigSize
             GameObject creature = __instance.gameObject;
 
             TechType techType = CraftData.GetTechType(creature);
+
+            //TRY AND GET GUID OF PEEPER; WE KNOW IT SHOULD BE 41070d44a15a89941ba4c2a459370e98
+            if(techType == TechType.Peeper)
+            {
+                //AssetReferenceGameObject child = AssetReference; //???
+                //Need to retrive GUID for the prefabs of the creatures I'm gonna be making 'libe-birth'
+                logger.LogInfo($"Peeper added to WP");
+                ErrorMessage.AddMessage($"Peeper added to WP");
+                //UnityEditor.AssetDatabase.GetAssetPath;
+                //string GUID = AssetPathToGUID("asset path");
+            }
 
             Creature component = null;
 
@@ -413,8 +425,17 @@ namespace CreatureConfigSize
                 data.isPickupableOutside = withinRange;
             }
 
-            //If creature is large, it cannot breed in containment
-            data.canBreed = GetSizeClass(techType) != SizeClass.Large;
+            if(techType == TechType.ReaperLeviathan)
+            {
+                data.canBreed = true;
+                AssetReferenceGameObject peeper = new AssetReferenceGameObject("41070d44a15a89941ba4c2a459370e98");
+                data.eggOrChildPrefab = peeper;
+            }
+            else
+            {
+                //If creature is large, it cannot breed in containment
+                data.canBreed = GetSizeClass(techType) != SizeClass.Large;
+            }
         }
 
         internal static bool GetInsideWaterPark(GameObject creature)
