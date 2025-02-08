@@ -7,7 +7,6 @@ using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
-using UWE;
 using Nautilus.Extensions;
 
 namespace CreatureConfigSize
@@ -20,13 +19,6 @@ namespace CreatureConfigSize
         public static void PrePlayerStart()
         {
             SetCreatureInvInfo();
-
-            //DEBUG!! TEST TO SPAWN A SANDSHARK USING CLASSID
-            //2nd method seems to work
-            //AssetReferenceGameObject sandshark = new AssetReferenceGameObject("5e5f00b4-1531-45c0-8aca-84cbd3b580a4");
-            //sandshark.InstantiateAsync();
-            AssetReferenceGameObject sandshark2 = new AssetReferenceGameObject("WorldEntities/Creatures/SandShark.prefab");
-            sandshark2.InstantiateAsync();
 
             //DEBUG!! Showcase what options are on or off
             logger.LogInfo($"All Pickupable = {config.AllowAllPickupable}");
@@ -424,56 +416,15 @@ namespace CreatureConfigSize
             //TRY AND GET GUID OF PEEPER; WE KNOW IT SHOULD BE 41070d44a15a89941ba4c2a459370e98
             if (techType == TechType.ReaperLeviathan)
             {
-                //AssetReferenceGameObject child = AssetReference; //???
-                //Need to retrive GUID for the prefabs of the creatures I'm gonna be making 'libe-birth'
-                logger.LogInfo($"Peeper added to WP");
-                ErrorMessage.AddMessage($"Peeper added to WP");
-
-                //NOTE!! Testing on this shows that .prefab results can *not* create peepers to be born
-                //However, using the GUID I found and using that to generate an AssetReference does work
-                //Method 1 - returns .prefab
-                string test;
-                PrefabDatabase.TryGetPrefabFilename("3fcd548b-781f-46ba-b076-7412608deeef", out test);
-                AssetReferenceGameObject testPeeper = new AssetReferenceGameObject(test);
-                logger.LogInfo($"Test GUID = {test}");
-
-                //Method 2 - returns .prefab (RuntimeKey is valid)
-                AssetReferenceGameObject simplePeeper = new AssetReferenceGameObject("3fcd548b-781f-46ba-b076-7412608deeef");
-                logger.LogInfo($"Test Peeper GUID = {simplePeeper}");
-                logger.LogInfo($"Test Peeper Runtime Key Validity = {simplePeeper.RuntimeKeyIsValid()}");
-
-                //ERROR!! UnityEditor.AssetDatabase only works within the editor, as it's a part of UnityEditor
-                //string GUID = AssetDatabase.AssetPathToGUID("asset path");
-
-                //Method 3 - returns GUID (RuntimeKey is valid)
-                AssetReferenceGameObject peeper = new AssetReferenceGameObject("41070d44a15a89941ba4c2a459370e98");
-                logger.LogInfo($"Peeper = {peeper}");
-                logger.LogInfo($"Peeper Runtime Key Validity = {peeper.RuntimeKeyIsValid()}");
-                logger.LogInfo($"Peeper GUID = {peeper.AssetGUID}");
-
-                //Test 4 - resource comes up blank
-                GameObject resource = (GameObject)Resources.Load("Assets/AddressableResources/WorldEntities/Creatures/Peeper.prefab");
-                //AssetReferenceGameObject resourcePeeper = AssetReferenceGameObject(resource);
-                logger.LogInfo($"Resource Peeper = {resource}");
-                //logger.LogInfo($"Resource Peeper GUID = {resource}");
-
-                //Method 5 - WORKS! (.ForceValid() is key, no pun intended)
-                AssetReferenceGameObject sandshark = new AssetReferenceGameObject("WorldEntities/Creatures/SandShark.prefab");
-                logger.LogInfo($"Sandshark = {sandshark}");
-                //sandshark.RuntimeKey = ("WorldEntities/Creatures/SandShark.prefab");
-                sandshark.ForceValid();
-                logger.LogInfo($"Sandshark Runtime Key Validity = {sandshark.RuntimeKeyIsValid()}");
-                logger.LogInfo($"Sandshark GUID = {sandshark.AssetGUID}");
+                //Retrieve reference to Reaper Leviathan prefab
+                //NOTE!! Prefab filepaths can be found here: https://github.com/SubnauticaModding/Nautilus/blob/master/Nautilus/Documentation/resources/SN1-PrefabPaths.json
+                AssetReferenceGameObject reaper = new AssetReferenceGameObject("WorldEntities/Creatures/ReaperLeviathan.prefab");
+                //Force the RuntimeKey to be valid, so that it passes the checks to be able to be born in containment
+                reaper.ForceValid();
 
                 data.canBreed = true;
-                data.eggOrChildPrefab = sandshark;
+                data.eggOrChildPrefab = reaper;
             }
-            /*else if (techType == TechType.ReaperLeviathan)
-            {
-                data.canBreed = true;
-                AssetReferenceGameObject peeper = new AssetReferenceGameObject("41070d44a15a89941ba4c2a459370e98");
-                data.eggOrChildPrefab = peeper;
-            }*/
             else
             {
                 //If creature is large, it cannot breed in containment
