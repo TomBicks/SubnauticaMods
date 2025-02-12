@@ -413,6 +413,9 @@ namespace CreatureConfigSize
                 data.isPickupableOutside = withinRange;
             }
 
+            //TODO!! Make a list of AssetRefereGameObjects (made using the prefab string) and techType (for example, .ReaperLeviathan to go along with this prefab)
+            //Then, after forcing all of the list to be valid, making a dictionary filled with valid AssetRefereGameObjects, with the techtypes as the key
+
             //TRY AND GET GUID OF PEEPER; WE KNOW IT SHOULD BE 41070d44a15a89941ba4c2a459370e98
             if (techType == TechType.ReaperLeviathan)
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine.AddressableAssets;
 
 namespace CreatureConfigSize
 {
@@ -83,7 +84,7 @@ namespace CreatureConfigSize
         //Dictionary used to reference the min and max values a creature can be whilst still able to placed in an alien containment (big fish tank)
         //NOTE!! Likely need to make sure the range includes the regular size of fish that can be hatched via eggs
         //This does bring up the great question of what occurs with my mod when creatures are hatched from eggs however
-        
+
         //NOTE 2!! Are there *any* cases where a creature that can be picked up *could not* be added to a WaterPark?
         //YES, there are; instances where a creature can fit in the tank, but can't be picked up, are those that grow too big, e.g. stalkers, where you can pick them up
         //but can't when you place them outside containment; i.e. IsOutsidePickupable = false in WPC data
@@ -155,5 +156,18 @@ namespace CreatureConfigSize
             //{ TechType.SeaTreader, (0.0f, 0.1f) } //ERROR!! Sea Treader has no locomotion component, instead having a unique component to move on the ground, and thus breaks in containment
         };
         #endregion
+
+        //A list to iterate through, forcing each of the new AssetReferenceGameObject's RuntimeKeys to be valid, before entering the values into the public reference dicitonary
+        private static readonly List<(AssetReferenceGameObject, TechType)> AssetFilepathAndTechType = new List<(AssetReferenceGameObject, TechType)>()
+        {
+            { (new AssetReferenceGameObject("WorldEntities/Creatures/ReaperLeviathan.prefab"), TechType.ReaperLeviathan) }
+        };
+
+        //Make function here to popualte the dictionary below, after validating keys!
+
+        public static readonly Dictionary<TechType, AssetReferenceGameObject> AssetPrefabReference = new Dictionary<TechType, AssetReferenceGameObject>()
+        {
+
+        };
     }
 }
