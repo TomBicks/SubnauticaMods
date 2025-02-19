@@ -94,18 +94,14 @@ namespace CreatureConfigSize
             //NOTE!! Ampeels and Crabsquids hatched from eggs have a different maxSize (0.12 and 0.1 respectively, as opposed to the 0.6 of most small fish); however...
             //...This is not an issue, as creatures hatching from eggs still randomise size. The only issue is their present size is not recognised as their full size outside
 
-            //TODO!! If I don't disable the behaviour of shuttlebugs and cave crawlers, they actually looks really cool in containment!
-            //Also seems to be okay for the sea dragon
-            //Also, this is likely the solution I want for the skyray too, to trigger the drowning animation
-
             //Small Fish
             { TechType.Biter, (0.0f, 5.0f) }, //Done
             { TechType.Bladderfish, (0.0f, 5.0f) }, //Done
             { TechType.Bleeder, (0.0f, 7.0f) }, //Done
             { TechType.Blighter, (0.0f, 5.0f) }, //Done
-            { TechType.Shuttlebug, (0.0f, 0.7f) }, //Blood Crawler TechType, Done - TODO!! Same as Sea Dragon; They don't animate in the tank, unless their creature component is reactivated
+            { TechType.Shuttlebug, (0.0f, 0.7f) }, //Blood Crawler TechType, Don
             { TechType.Boomerang, (0.0f, 4.0f) }, //Done
-            { TechType.CaveCrawler, (0.0f, 2.0f) }, //Done - TODO!! Cave Crawlers mostly work in containment, but just spam their walking animation, even when still
+            { TechType.CaveCrawler, (0.0f, 2.0f) }, //Done
             { TechType.Crash, (0.0f, 4.0f) }, //Crashfish TechType, Done
             { TechType.Eyeye, (0.0f, 5.0f) }, //Done
             { TechType.Floater, (0.0f, 1.0f) }, //Done
@@ -120,9 +116,7 @@ namespace CreatureConfigSize
             { TechType.Peeper, (0.0f, 5.0f) }, //Done
             { TechType.LavaEyeye, (0.0f, 5.0f) }, //Done
             { TechType.Reginald, (0.0f, 5.0f) }, //Done
-            { TechType.Skyray, (0.0f, 1.7f) }, //Done, TODO!! Figure out how to have it start drowning if placed in Alien Containment
-            //For reference, how it works is that the drowning component makes the BirdSml animated play the drowning animation; trouble is, it's part of the SkyRay component, which is disabled...
-            //...when placed in Alien Containment; maybe just make it that if SkyRay is placed in there, just don't disable it's component, because it's not like it will be in there long
+            { TechType.Skyray, (0.0f, 1.7f) }, //Done
             { TechType.Spadefish, (0.0f, 2.5f) }, //Done
             { TechType.Spinefish, (0.0f, 5.0f) }, //Done
             { TechType.Jumper, (0.0f, 3.5f) }, //Shuttlebug TechType, Done
@@ -140,10 +134,10 @@ namespace CreatureConfigSize
             { TechType.LavaLizard, (0.0f, 1.0f) }, //Done
             { TechType.RabbitRay, (0.0f, 1.5f) }, //Done
             { TechType.SpineEel, (0.0f, 0.5f) }, //River Prowler TechType, Done
-            { TechType.Sandshark, (0.0f, 0.6f) }, //Done - NOTE!! Sandshark seems to rapidly shrink and expand when up against the walls of containment...just, what?
+            { TechType.Sandshark, (0.0f, 0.6f) }, //Done
             { TechType.SeaEmperorBaby, (0.0f, 1.0f) }, //Done
             { TechType.Stalker, (0.0f, 0.7f) }, //Done
-            { TechType.Warper, (0.0f, 1.0f) }, //NOT DONE YET!! TODO Make the Warper eventually leave the tank, as well as maybe kill any infected fish? Or is this just mean (make it a config option)?
+            { TechType.Warper, (0.0f, 1.0f) }, //Done
 
             //Leviathans
             { TechType.GhostLeviathan, (0.0f, 0.1f) }, //Done - 6% size is honestly the largest it fits without clipping; so only minimum size ghost will fit
@@ -151,23 +145,97 @@ namespace CreatureConfigSize
             { TechType.ReaperLeviathan, (0.0f, 0.2f) }, //Done - Reaper won't fit in the containment at anything larger than 12% size
             { TechType.Reefback, (0.0f, 0.1f) }, //Done - ERROR!! Scaling down the Reefback doesn't scale down the physics of the flora on its back, causing graphical issues
             { TechType.ReefbackBaby, (0.0f, 0.4f) }, //Done
-            { TechType.SeaDragon, (0.0f, 0.1f) }, //Done - ERROR!! Sea Dragon does not appear to swim around in the tank without Sea Dragon component being enabled
+            { TechType.SeaDragon, (0.0f, 0.1f) }, //Done
             { TechType.SeaEmperorJuvenile, (0.0f, 0.1f) }, //Done - The grown up sea emperors; 6% size is honestly the largest it fits without clipping; so only minimum size sea emperor will fit
             //{ TechType.SeaTreader, (0.0f, 0.1f) } //ERROR!! Sea Treader has no locomotion component, instead having a unique component to move on the ground, and thus breaks in containment
         };
         #endregion
 
-        //A list to iterate through, forcing each of the new AssetReferenceGameObject's RuntimeKeys to be valid, before entering the values into the public reference dicitonary
-        private static readonly List<(AssetReferenceGameObject, TechType)> AssetFilepathAndTechType = new List<(AssetReferenceGameObject, TechType)>()
-        {
-            { (new AssetReferenceGameObject("WorldEntities/Creatures/ReaperLeviathan.prefab"), TechType.ReaperLeviathan) }
-        };
-
-        //Make function here to popualte the dictionary below, after validating keys!
-
+        //List of prefab references for creatures that can't normally breed, so we assign them a child prefab
         public static readonly Dictionary<TechType, AssetReferenceGameObject> AssetPrefabReference = new Dictionary<TechType, AssetReferenceGameObject>()
         {
+            //Small Fish - NOTE!! Shuttlebugs (Jumpers) have their own eggs
+            { TechType.Biter, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            //{ TechType.Bladderfish, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            { TechType.Bleeder, new AssetReferenceGameObject("WorldEntities/Creatures/Bleeder.prefab") },
+            { TechType.Blighter, new AssetReferenceGameObject("WorldEntities/Creatures/Biter_02.prefab") },
+            { TechType.Shuttlebug, new AssetReferenceGameObject("WorldEntities/Creatures/CaveCrawler_03.prefab") }, //TODO!! Is this correct?
+            //{ TechType.Boomerang, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            { TechType.CaveCrawler, new AssetReferenceGameObject("WorldEntities/Creatures/CaveCrawler.prefab") },
+            //{ TechType.Crash, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            //{ TechType.Eyeye, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            { TechType.Floater, new AssetReferenceGameObject("WorldEntities/Environment/Floater.prefab") },
+            //{ TechType.GarryFish, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            //{ TechType.HoleFish, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            //{ TechType.Hoopfish, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            //{ TechType.Hoverfish, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            //{ TechType.LavaBoomerang, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            { TechType.LavaLarva, new AssetReferenceGameObject("WorldEntities/Creatures/LavaLarva.prefab") },
+            //{ TechType.Mesmer, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            //{ TechType.Oculus, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            //{ TechType.Peeper, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            //{ TechType.LavaEyeye, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            //{ TechType.Reginald, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            { TechType.Skyray, new AssetReferenceGameObject("WorldEntities/Creatures/Skyray.prefab") },
+            //{ TechType.Spadefish, new AssetReferenceGameObject("WorldEntities/Creatures/Skyray.prefab") },
+            //{ TechType.Spinefish, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            //{ TechType.Jumper, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
 
+            //Medium Fish
+            //{ TechType.Shocker, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            //{ TechType.BoneShark, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            //{ TechType.Crabsnake, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            //{ TechType.CrabSquid, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            { TechType.Cutefish, new AssetReferenceGameObject("WorldEntities/Eggs/CuteEgg.prefab") }, //Cutefish have eggs but can't normally lay them
+            { TechType.GhostRayRed, new AssetReferenceGameObject("WorldEntities/Creatures/GhostRayRed.prefab") },
+            //{ TechType.Gasopod, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            { TechType.GhostRayBlue, new AssetReferenceGameObject("WorldEntities/Creatures/GhostRayBlue.prefab") },
+            //{ TechType.Jellyray, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            //{ TechType.LavaLizard, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            //{ TechType.RabbitRay, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            { TechType.SpineEel, new AssetReferenceGameObject("WorldEntities/Creatures/SpineEel.prefab") },
+            //{ TechType.Sandshark, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            { TechType.SeaEmperorBaby, new AssetReferenceGameObject("WorldEntities/Creatures/SeaEmperorBaby.prefab") },
+            //{ TechType.Stalker, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            { TechType.Warper, new AssetReferenceGameObject("WorldEntities/Creatures/Warper.prefab") }, //TODO!! Should they breed at all? should they warp more in? WarperSpawner?
+
+            //Leviathans
+            { TechType.GhostLeviathan, new AssetReferenceGameObject("WorldEntities/Creatures/GhostLeviathan.prefab") },
+            { TechType.GhostLeviathanJuvenile, new AssetReferenceGameObject("WorldEntities/Creatures/GhostLeviathanJuvenile.prefab") },
+            { TechType.ReaperLeviathan, new AssetReferenceGameObject("WorldEntities/Creatures/ReaperLeviathan.prefab") },
+            { TechType.Reefback, new AssetReferenceGameObject("WorldEntities/Creatures/Reefback.prefab") },
+            //{ TechType.ReefbackBaby, new AssetReferenceGameObject("WorldEntities/Creatures/ReaperLeviathan.prefab") },
+            { TechType.SeaDragon, new AssetReferenceGameObject("WorldEntities/Creatures/SeaDragon.prefab") }, //TODO!! "WorldEntities/Environment/Precursor/LostRiverBase/Precursor_LostRiverBase_SeaDragonEggShell.prefab" works, though missing most proper physics
+            { TechType.SeaEmperorJuvenile, new AssetReferenceGameObject("WorldEntities/Creatures/SeaEmperorJuvenile.prefab") },
+            //{ TechType.SeaTreader, new AssetReferenceGameObject("WorldEntities/Creatures/SeaTreader.prefab") } //TODO!! Still doesn't work in containment
         };
+
+        //Validates each value of AssetPrefabReference, ensuring the prefab reference is valid and, if so, forcing their RuntimeKey to be valid
+        internal static void ValidateAssetPrefabReference()
+        {
+            foreach(AssetReferenceGameObject prefabReference in AssetPrefabReference.Values)
+            {
+
+            }
+
+            /*for(var i = 0; i < AssetFilepathAndTechType.Count; i++)
+            {
+                AssetReferenceGameObject test = AssetFilepathAndTechType[i];
+                bool prefabValid = true;
+
+                try
+
+                catch
+
+                if(prefabValid)
+                {
+                    AssetFilepathAndTechType[i].ForceValid();
+                    TechType techType = AssetFilepathAndTechType[i];
+                    AssetPrefabReference.Add(TechType.ReaperLeviathan, new AssetReferenceGameObject("WorldEntities/Creatures/ReaperLeviathan.prefab"));
+
+                    var DictResult = AssetPrefabReference.Keys;
+                }
+            }*/
+        }
     }
 }

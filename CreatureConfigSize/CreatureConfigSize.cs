@@ -47,7 +47,7 @@ namespace CreatureConfigSize
             new CreatureInvInfo(TechType.SeaEmperorBaby, 3, "sea_emperor_baby_icon", "Sea Emperor Leviathan Baby", "Juvenile leviathan capable of producing Enzyme 42. Taken shortly after being born."),
             new CreatureInvInfo(TechType.SeaTreader, 4, "sea_treader_icon", "Sea Treader Leviathan", "Large, herbivorous leviathan. Migratory."),
             new CreatureInvInfo(TechType.Skyray, 2, "skyray_icon", "Skyray", "Small, avian often found over large landmasses. Cannot swim."),
-            new CreatureInvInfo(TechType.Warper, 3, "warper_icon", "Warper", "Aggressive creature capable of teleportation.") //Make it have two options? Nah, even the original entry doesn't have two versions, just two seperate entries.
+            new CreatureInvInfo(TechType.Warper, 3, "warper_icon", "Warper", "Aggressive creature capable of teleportation. May warp out of containment")
         };
 
         //Iterate through each of the creatures and add their info
@@ -132,11 +132,12 @@ namespace CreatureConfigSize
                     component = birdComponent;
                     break;
                 case TechType.Warper:
-                    logger.LogInfo($"Warper is warping out of containment");
-                    ErrorMessage.AddMessage($"Warper has warped out of containment!");
                     System.Random rand = new System.Random();
-                    if(rand.Next(1, 20) == 20) //1/20 chance for it to warp out of containment (this also occurs on load-in)
+                    var escapeChance = 4; //Warper escape is 1/escapeChance chance for it to warp out of containment (this also occurs on load-in)
+                    if (rand.Next(1, escapeChance+1) == escapeChance) //Add 1 to maxValue, as it's not inclusive of the range
                     {
+                        logger.LogInfo($"Warper is warping out of containment");
+                        ErrorMessage.AddMessage($"Warper has warped out of containment!");
                         Warper warperComponent = creature.GetComponent<Warper>();
                         warperComponent.WarpOut();
                     }
