@@ -429,6 +429,15 @@ namespace CreatureConfigSize
                 data.canBreed = true;
                 data.eggOrChildPrefab = reaper;
             }
+            else if(techType == TechType.SeaEmperorBaby)
+            {
+                AssetReferenceGameObject seaEmperorJuvenile = new AssetReferenceGameObject("WorldEntities/Creatures/SeaEmperorJuvenile.prefab");
+                //Force the RuntimeKey to be valid, so that it passes the checks to be able to be born in containment
+                seaEmperorJuvenile.ForceValid();
+
+                data.canBreed = false;
+                data.adultPrefab = seaEmperorJuvenile;
+            }
             else
             {
                 //If creature is large, it cannot breed in containment

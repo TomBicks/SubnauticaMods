@@ -156,48 +156,22 @@ namespace CreatureConfigSize
         {
             //Small Fish - NOTE!! Shuttlebugs (Jumpers) have their own eggs
             { TechType.Biter, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
-            //{ TechType.Bladderfish, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
             { TechType.Bleeder, new AssetReferenceGameObject("WorldEntities/Creatures/Bleeder.prefab") },
             { TechType.Blighter, new AssetReferenceGameObject("WorldEntities/Creatures/Biter_02.prefab") },
             { TechType.Shuttlebug, new AssetReferenceGameObject("WorldEntities/Creatures/CaveCrawler_03.prefab") }, //TODO!! Is this correct?
-            //{ TechType.Boomerang, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
             { TechType.CaveCrawler, new AssetReferenceGameObject("WorldEntities/Creatures/CaveCrawler.prefab") },
-            //{ TechType.Crash, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
-            //{ TechType.Eyeye, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
             { TechType.Floater, new AssetReferenceGameObject("WorldEntities/Environment/Floater.prefab") },
-            //{ TechType.GarryFish, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
-            //{ TechType.HoleFish, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
-            //{ TechType.Hoopfish, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
-            //{ TechType.Hoverfish, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
-            //{ TechType.LavaBoomerang, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
             { TechType.LavaLarva, new AssetReferenceGameObject("WorldEntities/Creatures/LavaLarva.prefab") },
-            //{ TechType.Mesmer, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
-            //{ TechType.Oculus, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
-            //{ TechType.Peeper, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
-            //{ TechType.LavaEyeye, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
-            //{ TechType.Reginald, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
-            { TechType.Skyray, new AssetReferenceGameObject("WorldEntities/Creatures/Skyray.prefab") },
-            //{ TechType.Spadefish, new AssetReferenceGameObject("WorldEntities/Creatures/Skyray.prefab") },
-            //{ TechType.Spinefish, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
+            //{ TechType.Skyray, new AssetReferenceGameObject("WorldEntities/Creatures/Skyray.prefab") },
             //{ TechType.Jumper, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
 
             //Medium Fish
-            //{ TechType.Shocker, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
-            //{ TechType.BoneShark, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
-            //{ TechType.Crabsnake, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
-            //{ TechType.CrabSquid, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
             { TechType.Cutefish, new AssetReferenceGameObject("WorldEntities/Eggs/CuteEgg.prefab") }, //Cutefish have eggs but can't normally lay them
             { TechType.GhostRayRed, new AssetReferenceGameObject("WorldEntities/Creatures/GhostRayRed.prefab") },
-            //{ TechType.Gasopod, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
             { TechType.GhostRayBlue, new AssetReferenceGameObject("WorldEntities/Creatures/GhostRayBlue.prefab") },
-            //{ TechType.Jellyray, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
-            //{ TechType.LavaLizard, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
-            //{ TechType.RabbitRay, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
             { TechType.SpineEel, new AssetReferenceGameObject("WorldEntities/Creatures/SpineEel.prefab") },
-            //{ TechType.Sandshark, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
-            { TechType.SeaEmperorBaby, new AssetReferenceGameObject("WorldEntities/Creatures/SeaEmperorBaby.prefab") },
-            //{ TechType.Stalker, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
-            { TechType.Warper, new AssetReferenceGameObject("WorldEntities/Creatures/Warper.prefab") }, //TODO!! Should they breed at all? should they warp more in? WarperSpawner?
+            //{ TechType.SeaEmperorBaby, new AssetReferenceGameObject("WorldEntities/Creatures/SeaEmperorBaby.prefab") }, //It's a baby; can't breed; probably can't grow up either though? Unless that's what adultPrefab is???
+            //{ TechType.Warper, new AssetReferenceGameObject("WorldEntities/Creatures/Warper.prefab") }, //TODO!! Should they breed at all? should they warp more in? WarperSpawner?
 
             //Leviathans
             { TechType.GhostLeviathan, new AssetReferenceGameObject("WorldEntities/Creatures/GhostLeviathan.prefab") },
