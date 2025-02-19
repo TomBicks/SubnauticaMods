@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Nautilus.Extensions;
 using UnityEngine.AddressableAssets;
 
 namespace CreatureConfigSize
@@ -152,64 +153,38 @@ namespace CreatureConfigSize
         #endregion
 
         //List of prefab references for creatures that can't normally breed, so we assign them a child prefab
+        //Each of the AssetReferences is forcibly validated, ensuring their RuntimeKey is valid
+        //NOTE!! Prefab filepaths can be found here: https://github.com/SubnauticaModding/Nautilus/blob/master/Nautilus/Documentation/resources/SN1-PrefabPaths.jsonn 
         public static readonly Dictionary<TechType, AssetReferenceGameObject> AssetPrefabReference = new Dictionary<TechType, AssetReferenceGameObject>()
         {
             //Small Fish - NOTE!! Shuttlebugs (Jumpers) have their own eggs
-            { TechType.Biter, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
-            { TechType.Bleeder, new AssetReferenceGameObject("WorldEntities/Creatures/Bleeder.prefab") },
-            { TechType.Blighter, new AssetReferenceGameObject("WorldEntities/Creatures/Biter_02.prefab") },
-            { TechType.Shuttlebug, new AssetReferenceGameObject("WorldEntities/Creatures/CaveCrawler_03.prefab") }, //TODO!! Is this correct?
-            { TechType.CaveCrawler, new AssetReferenceGameObject("WorldEntities/Creatures/CaveCrawler.prefab") },
-            { TechType.Floater, new AssetReferenceGameObject("WorldEntities/Environment/Floater.prefab") },
-            { TechType.LavaLarva, new AssetReferenceGameObject("WorldEntities/Creatures/LavaLarva.prefab") },
+            { TechType.Biter, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab").ForceValid() },
+            { TechType.Bleeder, new AssetReferenceGameObject("WorldEntities/Creatures/Bleeder.prefab").ForceValid() },
+            { TechType.Blighter, new AssetReferenceGameObject("WorldEntities/Creatures/Biter_02.prefab").ForceValid() },
+            { TechType.Shuttlebug, new AssetReferenceGameObject("WorldEntities/Creatures/CaveCrawler_03.prefab").ForceValid() }, //TODO!! Is this correct?
+            { TechType.CaveCrawler, new AssetReferenceGameObject("WorldEntities/Creatures/CaveCrawler.prefab").ForceValid() },
+            { TechType.Floater, new AssetReferenceGameObject("WorldEntities/Environment/Floater.prefab").ForceValid() },
+            { TechType.LavaLarva, new AssetReferenceGameObject("WorldEntities/Creatures/LavaLarva.prefab").ForceValid() },
             //{ TechType.Skyray, new AssetReferenceGameObject("WorldEntities/Creatures/Skyray.prefab") },
             //{ TechType.Jumper, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
 
             //Medium Fish
-            { TechType.Cutefish, new AssetReferenceGameObject("WorldEntities/Eggs/CuteEgg.prefab") }, //Cutefish have eggs but can't normally lay them
-            { TechType.GhostRayRed, new AssetReferenceGameObject("WorldEntities/Creatures/GhostRayRed.prefab") },
-            { TechType.GhostRayBlue, new AssetReferenceGameObject("WorldEntities/Creatures/GhostRayBlue.prefab") },
-            { TechType.SpineEel, new AssetReferenceGameObject("WorldEntities/Creatures/SpineEel.prefab") },
+            { TechType.Cutefish, new AssetReferenceGameObject("WorldEntities/Eggs/CuteEgg.prefab").ForceValid() }, //Cutefish have eggs but can't normally lay them
+            { TechType.GhostRayRed, new AssetReferenceGameObject("WorldEntities/Creatures/GhostRayRed.prefab").ForceValid() },
+            { TechType.GhostRayBlue, new AssetReferenceGameObject("WorldEntities/Creatures/GhostRayBlue.prefab").ForceValid() },
+            { TechType.SpineEel, new AssetReferenceGameObject("WorldEntities/Creatures/SpineEel.prefab").ForceValid() },
             //{ TechType.SeaEmperorBaby, new AssetReferenceGameObject("WorldEntities/Creatures/SeaEmperorBaby.prefab") }, //It's a baby; can't breed; probably can't grow up either though? Unless that's what adultPrefab is???
             //{ TechType.Warper, new AssetReferenceGameObject("WorldEntities/Creatures/Warper.prefab") }, //TODO!! Should they breed at all? should they warp more in? WarperSpawner?
 
             //Leviathans
-            { TechType.GhostLeviathan, new AssetReferenceGameObject("WorldEntities/Creatures/GhostLeviathan.prefab") },
-            { TechType.GhostLeviathanJuvenile, new AssetReferenceGameObject("WorldEntities/Creatures/GhostLeviathanJuvenile.prefab") },
-            { TechType.ReaperLeviathan, new AssetReferenceGameObject("WorldEntities/Creatures/ReaperLeviathan.prefab") },
-            { TechType.Reefback, new AssetReferenceGameObject("WorldEntities/Creatures/Reefback.prefab") },
+            { TechType.GhostLeviathan, new AssetReferenceGameObject("WorldEntities/Creatures/GhostLeviathan.prefab").ForceValid() },
+            //{ TechType.GhostLeviathanJuvenile, new AssetReferenceGameObject("WorldEntities/Creatures/GhostLeviathanJuvenile.prefab") },
+            { TechType.ReaperLeviathan, new AssetReferenceGameObject("WorldEntities/Creatures/ReaperLeviathan.prefab").ForceValid() },
+            { TechType.Reefback, new AssetReferenceGameObject("WorldEntities/Creatures/Reefback.prefab").ForceValid() },
             //{ TechType.ReefbackBaby, new AssetReferenceGameObject("WorldEntities/Creatures/ReaperLeviathan.prefab") },
-            { TechType.SeaDragon, new AssetReferenceGameObject("WorldEntities/Creatures/SeaDragon.prefab") }, //TODO!! "WorldEntities/Environment/Precursor/LostRiverBase/Precursor_LostRiverBase_SeaDragonEggShell.prefab" works, though missing most proper physics
-            { TechType.SeaEmperorJuvenile, new AssetReferenceGameObject("WorldEntities/Creatures/SeaEmperorJuvenile.prefab") },
+            { TechType.SeaDragon, new AssetReferenceGameObject("WorldEntities/Creatures/SeaDragon.prefab").ForceValid() }, //TODO!! "WorldEntities/Environment/Precursor/LostRiverBase/Precursor_LostRiverBase_SeaDragonEggShell.prefab" works, though missing most proper physics
+            { TechType.SeaEmperorJuvenile, new AssetReferenceGameObject("WorldEntities/Creatures/SeaEmperorJuvenile.prefab").ForceValid() },
             //{ TechType.SeaTreader, new AssetReferenceGameObject("WorldEntities/Creatures/SeaTreader.prefab") } //TODO!! Still doesn't work in containment
         };
-
-        //Validates each value of AssetPrefabReference, ensuring the prefab reference is valid and, if so, forcing their RuntimeKey to be valid
-        internal static void ValidateAssetPrefabReference()
-        {
-            foreach(AssetReferenceGameObject prefabReference in AssetPrefabReference.Values)
-            {
-
-            }
-
-            /*for(var i = 0; i < AssetFilepathAndTechType.Count; i++)
-            {
-                AssetReferenceGameObject test = AssetFilepathAndTechType[i];
-                bool prefabValid = true;
-
-                try
-
-                catch
-
-                if(prefabValid)
-                {
-                    AssetFilepathAndTechType[i].ForceValid();
-                    TechType techType = AssetFilepathAndTechType[i];
-                    AssetPrefabReference.Add(TechType.ReaperLeviathan, new AssetReferenceGameObject("WorldEntities/Creatures/ReaperLeviathan.prefab"));
-
-                    var DictResult = AssetPrefabReference.Keys;
-                }
-            }*/
-        }
     }
 }

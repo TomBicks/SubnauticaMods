@@ -148,15 +148,6 @@ namespace CreatureConfigSize
             {
                 component.enabled = true;
             }
-            else
-            {
-                //No error for Warper, as it's unique in that it's not reenabling a component, but just having a chance to warp out of containment
-                if(techType != TechType.Warper)
-                {
-                    logger.LogInfo($"Error! No Creature component found for {techType}!");
-                    ErrorMessage.AddMessage($"Error! No Creature component found for {techType}!");
-                }
-            }
         }
 
         [HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.Start))]
@@ -417,31 +408,30 @@ namespace CreatureConfigSize
             //TODO!! Make a list of AssetRefereGameObjects (made using the prefab string) and techType (for example, .ReaperLeviathan to go along with this prefab)
             //Then, after forcing all of the list to be valid, making a dictionary filled with valid AssetRefereGameObjects, with the techtypes as the key
 
-            //TRY AND GET GUID OF PEEPER; WE KNOW IT SHOULD BE 41070d44a15a89941ba4c2a459370e98
-            if (techType == TechType.ReaperLeviathan)
+            //Check if AssetPrefabRefernces has an entry for this creature; if not, ignore it (excluding the few baby/juvenile creatures we instead prevent from breeding and assign an adultPrefab to)
+            if (AssetPrefabReference.ContainsKey(techType))
             {
-                //Retrieve reference to Reaper Leviathan prefab
-                //NOTE!! Prefab filepaths can be found here: https://github.com/SubnauticaModding/Nautilus/blob/master/Nautilus/Documentation/resources/SN1-PrefabPaths.json
-                AssetReferenceGameObject reaper = new AssetReferenceGameObject("WorldEntities/Creatures/ReaperLeviathan.prefab");
-                //Force the RuntimeKey to be valid, so that it passes the checks to be able to be born in containment
-                reaper.ForceValid();
-
                 data.canBreed = true;
-                data.eggOrChildPrefab = reaper;
-            }
-            else if(techType == TechType.SeaEmperorBaby)
-            {
-                AssetReferenceGameObject seaEmperorJuvenile = new AssetReferenceGameObject("WorldEntities/Creatures/SeaEmperorJuvenile.prefab");
-                //Force the RuntimeKey to be valid, so that it passes the checks to be able to be born in containment
-                seaEmperorJuvenile.ForceValid();
-
-                data.canBreed = false;
-                data.adultPrefab = seaEmperorJuvenile;
+                data.eggOrChildPrefab = AssetPrefabReference[techType];
             }
             else
             {
-                //If creature is large, it cannot breed in containment
-                data.canBreed = GetSizeClass(techType) != SizeClass.Large;
+                //If the creature isn't one we assigned a new prefab for its eggOrChildPrefab value, check if it's instead a baby/juvenile we need to assign an adultPrefab to
+                switch (techType)
+                {
+                    case TechType.GhostLeviathanJuvenile:
+                        data.canBreed = false;
+                        data.adultPrefab = new AssetReferenceGameObject("WorldEntities/Creatures/GhostLeviathan.prefab").ForceValid();
+                        break;
+                    case TechType.ReefbackBaby:
+                        data.canBreed = false;
+                        data.adultPrefab = new AssetReferenceGameObject("WorldEntities/Creatures/Reefback.prefab").ForceValid();
+                        break;
+                    case TechType.SeaEmperorBaby:
+                        data.canBreed = false;
+                        data.adultPrefab = new AssetReferenceGameObject("WorldEntities/Creatures/SeaEmperorJuvenile.prefab").ForceValid();
+                        break;
+                }
             }
         }
 
