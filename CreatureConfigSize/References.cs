@@ -186,5 +186,10 @@ namespace CreatureConfigSize
             { TechType.SeaEmperorJuvenile, new AssetReferenceGameObject("WorldEntities/Creatures/SeaEmperorJuvenile.prefab").ForceValid() },
             //{ TechType.SeaTreader, new AssetReferenceGameObject("WorldEntities/Creatures/SeaTreader.prefab") } //TODO!! Still doesn't work in containment
         };
+
+        public static readonly List<(TechType, float)> BioReactorChargeReference = new List<(TechType, float)>()
+        {
+            (TechType.ReaperLeviathan, 5.0f)
+        };
     }
 }

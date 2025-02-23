@@ -18,7 +18,11 @@ namespace CreatureConfigSize
         [HarmonyPrefix]
         public static void PrePlayerStart()
         {
+            //Iterate through each of the creatures and add their info
             SetCreatureInvInfo();
+
+            //Add to the BaseBioReactor's static dictionary 'charge' so that all the new creatures can be put into the bioreactor
+            AddBioReactorCharges();
 
             //DEBUG!! Showcase what options are on or off
             logger.LogInfo($"All Pickupable = {config.AllowAllPickupable}");
@@ -27,7 +31,7 @@ namespace CreatureConfigSize
         }
 
         //Create list of creatures and their info to add to the game
-        internal static List<CreatureInvInfo> CreatureInvList = new List<CreatureInvInfo>()
+        internal static readonly List<CreatureInvInfo> CreatureInvList = new List<CreatureInvInfo>()
         {
             //TODO!! Should I see if I can make some of the bigger creatures in inventory's sprites bigger? Like ghost and sea dragon having a bigger sprite, so it's less blurry in inventory?
             new CreatureInvInfo(TechType.Biter, 1, "biter_icon", "Biter", "Small, aggressive carnivore."),
@@ -68,6 +72,16 @@ namespace CreatureConfigSize
                 LanguageHandler.SetTechTypeName(techType, name);
                 //Add item description to the desired techtype
                 LanguageHandler.SetTechTypeTooltip(techType, tooltip);
+            }
+        }
+
+        //Add to the BaseBioReactor's static dictionary 'charge' so that all the new creatures can be put into the bioreactor, even one that normally cannot
+        internal static void AddBioReactorCharges()
+        {
+            for (var i = 0; i < BioReactorChargeReference.Count; i++)
+            {
+                var (techType, charge) = BioReactorChargeReference[i];
+                BaseBioReactor.charge.Add(techType, charge);
             }
         }
 
@@ -299,10 +313,6 @@ namespace CreatureConfigSize
             //Return whether the creature needs a Pickupable component or not
             return result;
         }
-
-        //TODO!! Look into hooking into when a creatures hatches from an egg, and set its size there randomly (can be outside the range of pickupable, but within the range of what will fit
-        //in alien containment; this is how you can get bigger sizes in there, if you can't pick them up); they'll still be about 33% of their size in the tank though, so they grow as
-        //newly hatched fish do
 
         //Check whether the creature's size makes it eligible or not for the WaterParkCreature component, and to add it or remove it
         public static bool CheckWaterParkCreatureComponent(GameObject creature, float size)
