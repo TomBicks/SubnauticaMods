@@ -32,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CreatureReference.cs" />
     <Compile Include="CreatureInvInfo.cs" />
     <Compile Include="CommandsSize.cs" />
     <Compile Include="References.cs" />
