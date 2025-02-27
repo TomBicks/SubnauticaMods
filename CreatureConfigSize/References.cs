@@ -187,9 +187,30 @@ namespace CreatureConfigSize
             //{ TechType.SeaTreader, new AssetReferenceGameObject("WorldEntities/Creatures/SeaTreader.prefab") } //TODO!! Still doesn't work in containment
         };
 
+        //List of charge values each creature generates when added to a Bio Reactor
         public static readonly List<(TechType, float)> BioReactorChargeReference = new List<(TechType, float)>()
         {
-            (TechType.ReaperLeviathan, 5.0f)
+            (TechType.Biter, 350f),
+            (TechType.Bleeder, 410f),
+            (TechType.Blighter, 410f),
+            //(TechType.Shuttlebug, 280f),
+            (TechType.CaveCrawler, 260f),
+            (TechType.Floater, 100f),
+            (TechType.LavaLarva, 2800f),
+            (TechType.GhostRayRed, 630f),
+            (TechType.GhostRayBlue, 560f),
+            (TechType.SpineEel, 700f),
+            (TechType.GhostLeviathan, 8000f),
+            (TechType.GhostLeviathanJuvenile, 7000f),
+            (TechType.ReaperLeviathan, 6400f),
+            //(TechType.Reefback, 820f),
+            (TechType.ReefbackBaby, 620f),
+            (TechType.SeaDragon, 10500f),
+            (TechType.SeaEmperorJuvenile, 9000f),
+            (TechType.SeaEmperorBaby, 1200f),
+            (TechType.SeaTreader, 1500f),
+            (TechType.Skyray, 210f),
+            (TechType.Warper, 1100f)
         };
     }
 }
