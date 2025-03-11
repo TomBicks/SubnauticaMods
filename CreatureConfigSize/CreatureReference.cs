@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine.AddressableAssets;
+﻿using UnityEngine.AddressableAssets;
 
 namespace CreatureConfigSize
 {
@@ -23,10 +18,11 @@ namespace CreatureConfigSize
 
 
         //Create a constructor to streamline defining entries
-        internal CreatureReference(SizeClass sizeClass, CreatureInvInfo invInfo)
+        internal CreatureReference(SizeClass sizeClass, CreatureInvInfo invInfo, float bioCharge)
         {
             this.sizeClass = sizeClass;
             this.invInfo = invInfo;
+            this.bioCharge = bioCharge;
         }
     }
 }
