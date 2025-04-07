@@ -153,12 +153,81 @@ namespace CreatureConfigDamage
 
         [HarmonyPatch(typeof(GasPod), nameof(GasPod.Start))]
         [HarmonyPostfix]
-        public static void PrefixGasPod(GasPod __instance)
+        public static void PostfixGasPod(GasPod __instance)
         {
             //NOTE!! The Gasopod only has a reference to the GasPod prefab; unlike the other projectile attacks, this doesn't state its own
                 //instead it's just spawning GasPods based on the reference to the default GasPod prefab in the files, rather than stating its own custom version
                 //As a result, we need to patch into the function used to spawn the gaspods to alter their damage
             ChangeUniqueAttack(__instance.gameObject, ref __instance.damagePerSecond, config.GasopodGasPodDmg, "GasopodGasPodDmg");
+        }
+
+        /* 80 - (80*0.52) = 38.4
+         * 80/38.4 = 2.083333333 = 1/0.48
+         * 80 - (80*0.4) = 48
+         * 80/48 = 1.666666666 = 1/0.6
+         * 80 - (80*0.12) = 70.4
+         * 80/70.4 = 1.136363636 = 1/0.88
+         * modifier = 1/(1-num2) where num2 is the % protection reinforced dive suit pieces give
+         */
+        [HarmonyPatch(typeof(DamageSystem), nameof(DamageSystem.CalculateDamage))]
+        [HarmonyPostfix]
+        public static float PostfixCalculateDamage(float damage, DamageType type, GameObject target, GameObject dealer)
+        {
+            if(dealer != null) 
+            {
+                ErrorMessage.AddMessage($"Damage {damage}, DamageType {type}, Target {target}, Dealer {dealer}");
+                logger.LogMessage($"Damage {damage}, DamageType {type}, Target {target}, Dealer {dealer}");
+                logger.LogInfo($"Source of damage is {dealer}");
+                logger.LogInfo($"TechType of source is {CraftData.GetTechType(dealer)}");
+                logger.LogInfo($"Is TechType in the reference table? {config.IgnoreArmour.ContainsKey(CraftData.GetTechType(dealer))}");
+                logger.LogInfo($"Is TechType ignoring armour? {config.IgnoreArmour[CraftData.GetTechType(dealer)]}");
+
+                bool playerTarget = target.GetComponent<Player>();
+                logger.LogInfo($"{playerTarget}");
+
+                if (playerTarget && type != DamageType.Radiation && type != DamageType.Starve)
+                {
+                    //Recalculate the armour value of any reinforced suit pieces and how much they've reduced the incoming damage
+                    float armourValue = 0f;
+                    if (Player.main.HasReinforcedSuit())
+                    {
+                        armourValue += 0.4f;
+                    }
+                    if (Player.main.HasReinforcedGloves())
+                    {
+                        armourValue += 0.12f;
+                    }
+
+                    logger.LogInfo($"Damage to Player = {damage}");
+
+                    TechType dealerTechType = CraftData.GetTechType(dealer);
+
+                    if (armourValue > 0 && config.IgnoreArmour.ContainsKey(dealerTechType))
+                    {
+                        if (config.IgnoreArmour[dealerTechType])
+                        {
+                            logger.LogError($"{dealerTechType} is ignoring armour.");
+                            logger.LogInfo($"Reduced Damage = {damage}");
+                            //Calculate what to multiply the reduced damage by to restore it back to full damage
+                            float originalDamageMultiplier = 1 / (1 - armourValue);
+
+                            logger.LogInfo($"Original Damage = {damage * originalDamageMultiplier}");
+                            damage *= originalDamageMultiplier;
+                            logger.LogInfo($"Final to Player = {damage}");
+                            return damage;
+                        }
+                        else
+                        {
+                            logger.LogError($"{dealerTechType} is not ignoring armour.");
+                            logger.LogInfo($"Final Damage to Player = {damage}");
+                        }
+                    }
+                }
+            }
+            
+            //TODO!! ALTERNATIVE!! If the player has either of the reinforced suit on, check whether the damage is above a certain threshhold
+            //For example, If the player has both, 100 damage would deal instead 48; so, if we have a damage value of 48, and can see the player is wearing both *and* we want it to ignore the damage, just set damage to 100
+            return damage; //Returns the damage value calculated at the end of the patched function, not the damage given at the start
         }
 
         /*[HarmonyPatch(typeof(HangingStinger), nameof(HangingStinger.OnCollisionEnter))]

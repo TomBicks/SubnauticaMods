@@ -1,4 +1,5 @@
-﻿using BepInEx;
+﻿using System.Collections.Generic;
+using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 using Nautilus.Handlers;
@@ -45,6 +46,7 @@ namespace CreatureConfigDamage
 
         //NOTE!! Seamoth has 300 HP, Prawn Suit has 600 HP, and Cyclops has 1500 HP. As such, some attacks designed for vehicles may do less damage than appears
 
+        #region Creature Damage Sliders
         //NOTE!! Do any of these sliders actually need the ID variable to function? Am I just wasting space and code?
         //Isn't that what the variable below is for?
         #region Ampeel
@@ -223,5 +225,35 @@ namespace CreatureConfigDamage
             Tooltip = "Damage dealt by a Warper's teleport projectile.")]
         public float WarperWarpDmg = 10F;
         #endregion
+        #endregion
+
+        public Dictionary<TechType, bool> IgnoreArmour = new Dictionary<TechType, bool>()
+        {
+            { TechType.Shocker, false }, //TechType for Ampeel
+            { TechType.Biter, false },
+            { TechType.Bladderfish, false },
+            { TechType.Bleeder, false },
+            { TechType.Blighter, false },
+            { TechType.Shuttlebug, false }, //TechType for Blood Crawler
+            { TechType.BoneShark, false },
+            { TechType.Boomerang, false },
+            { TechType.CaveCrawler, false },
+            { TechType.Crabsnake, false },
+            { TechType.CrabSquid, false },
+            { TechType.Crash, false }, //TechType for Crashfish
+            { TechType.Gasopod, false }, //TODO!! Doesn't work; No TechType for 'dealer' when damaged by the gas
+            { TechType.GhostLeviathan, false },
+            { TechType.GhostLeviathanJuvenile, false },
+            { TechType.LavaLizard, false },
+            { TechType.Mesmer, false },
+            { TechType.ReaperLeviathan, false },
+            { TechType.SpineEel, false }, //TechType for River Prowler
+            { TechType.Sandshark, false },
+            { TechType.SeaDragon, false },
+            { TechType.SeaTreader, false }, 
+            { TechType.Stalker, false },
+            { TechType.SpikePlant, false }, //TODO!! Doesn't work; No TechType for 'dealer' when shot with this projectile
+            { TechType.Warper, false }
+        };
     }
 }

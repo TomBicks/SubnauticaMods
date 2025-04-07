@@ -160,6 +160,7 @@ namespace ImmortalSnail
                 MainCameraControl.main.ShakeCamera(4f, 8f, MainCameraControl.ShakeMode.Quadratic, 1.2f); //This Works!
                 WorldForces.AddExplosion(new Vector3(0f, 0f, 0f), (double)new Utils.ScalarMonitor(0f).Get(), 8f, 5000f);
                 WorldForces.AddExplosion(default(Vector3), DayNightCycle.main.timePassed, 100f, 20f);
+                //DamageSystem.RadiusDamage();
             }
             else
             {
