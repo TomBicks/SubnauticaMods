@@ -169,21 +169,19 @@ namespace CreatureConfigDamage
          * 80/70.4 = 1.136363636 = 1/0.88
          * modifier = 1/(1-num2) where num2 is the % protection reinforced dive suit pieces give
          */
+
+        //Patch damage calculations, "ignoring" the reduction in damage from the reinforced diving suit, if a creature has been set by the user to ignore it.
+        //NOTE!! Could instead of much of this, just PreFix and check if the creature ignores damage, and the player has armour, then make the damage 'DamageType.Starve', which ignores the armour by default
+        //Only issue there would be it would remove some damage FX if it changes the damage type away from, say, Normal or Fire
+        //TODO!! Say, for example, a reaper does 80 damage. It plays an animation when it kills the player. With the armour, it deals ~38 damage. If we set it to ignore, and it kills the player, it *DOES NOT* play the kill animation
         [HarmonyPatch(typeof(DamageSystem), nameof(DamageSystem.CalculateDamage))]
         [HarmonyPostfix]
+        //TODO!! IF CAN'T FIGURE OUT THE NULL DEALER CAUSING MISSING DEATH GRAB ANIMATIONS, JUST IGNORE IT AND RELEASE IT!!
         public static float PostfixCalculateDamage(float damage, DamageType type, GameObject target, GameObject dealer)
         {
             if(dealer != null) 
             {
-                ErrorMessage.AddMessage($"Damage {damage}, DamageType {type}, Target {target}, Dealer {dealer}");
-                logger.LogMessage($"Damage {damage}, DamageType {type}, Target {target}, Dealer {dealer}");
-                logger.LogInfo($"Source of damage is {dealer}");
-                logger.LogInfo($"TechType of source is {CraftData.GetTechType(dealer)}");
-                logger.LogInfo($"Is TechType in the reference table? {config.IgnoreArmour.ContainsKey(CraftData.GetTechType(dealer))}");
-                logger.LogInfo($"Is TechType ignoring armour? {config.IgnoreArmour[CraftData.GetTechType(dealer)]}");
-
                 bool playerTarget = target.GetComponent<Player>();
-                logger.LogInfo($"{playerTarget}");
 
                 if (playerTarget && type != DamageType.Radiation && type != DamageType.Starve)
                 {
@@ -198,8 +196,6 @@ namespace CreatureConfigDamage
                         armourValue += 0.12f;
                     }
 
-                    logger.LogInfo($"Damage to Player = {damage}");
-
                     TechType dealerTechType = CraftData.GetTechType(dealer);
 
                     if (armourValue > 0 && config.IgnoreArmour.ContainsKey(dealerTechType))
@@ -208,6 +204,7 @@ namespace CreatureConfigDamage
                         {
                             logger.LogError($"{dealerTechType} is ignoring armour.");
                             logger.LogInfo($"Reduced Damage = {damage}");
+
                             //Calculate what to multiply the reduced damage by to restore it back to full damage
                             float originalDamageMultiplier = 1 / (1 - armourValue);
 
@@ -225,8 +222,6 @@ namespace CreatureConfigDamage
                 }
             }
             
-            //TODO!! ALTERNATIVE!! If the player has either of the reinforced suit on, check whether the damage is above a certain threshhold
-            //For example, If the player has both, 100 damage would deal instead 48; so, if we have a damage value of 48, and can see the player is wearing both *and* we want it to ignore the damage, just set damage to 100
             return damage; //Returns the damage value calculated at the end of the patched function, not the damage given at the start
         }
 
