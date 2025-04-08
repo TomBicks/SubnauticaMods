@@ -3,6 +3,8 @@ using BepInEx.Logging;
 using static CreatureConfigDamage.CreatureConfigDamagePlugin;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Reflection.Emit;
+using System;
 
 namespace CreatureConfigDamage
 {
@@ -123,8 +125,8 @@ namespace CreatureConfigDamage
                     ChangeUniqueAttack(__creature, ref __creature.GetComponent<GhostLeviathanMeleeAttack>().cyclopsDamage, config.GhostLeviathanJuvenileCyclopsDmg, "GhostLeviathanJuvenileCyclopsDmg"); //220; Damage dealt to cyclops
                     break;
                 case TechType.ReaperLeviathan:
-                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<ReaperMeleeAttack>().biteDamage, config.ReaperLeviathanDmg, "ReaperDmg"); //80; Damage dealt to player, seamoth and prawn suit
-                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<ReaperMeleeAttack>().cyclopsDamage, config.ReaperLeviathanCyclopsDmg, "ReaperCyclopsDmg"); //220; Damage dealt to cyclops
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<ReaperMeleeAttack>().biteDamage, config.ReaperLeviathanDmg, "ReaperLeviathanDmg"); //80; Damage dealt to player, seamoth and prawn suit
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<ReaperMeleeAttack>().cyclopsDamage, config.ReaperLeviathanCyclopsDmg, "ReaperLeviathanCyclopsDmg"); //220; Damage dealt to cyclops
                     break;
                 case TechType.SeaDragon:
                     ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaDragonMeleeAttack>().biteDamage, config.SeaDragonLeviathanBiteDmg, "SeaDragonBiteDmg"); //300; Bite (so far for player and seamoth; untested on prawn suit)
@@ -179,8 +181,13 @@ namespace CreatureConfigDamage
         //TODO!! IF CAN'T FIGURE OUT THE NULL DEALER CAUSING MISSING DEATH GRAB ANIMATIONS, JUST IGNORE IT AND RELEASE IT!!
         public static float PostfixCalculateDamage(float damage, DamageType type, GameObject target, GameObject dealer)
         {
-            if(dealer != null) 
+            logger.LogError($"damage is {damage}");
+            logger.LogError($"type is {type}");
+            logger.LogError($"target is {target}");
+            //logger.LogError($"dealer is {dealer}");
+            if (dealer != null) 
             {
+                logger.LogError($"dealer is {dealer}");
                 bool playerTarget = target.GetComponent<Player>();
 
                 if (playerTarget && type != DamageType.Radiation && type != DamageType.Starve)
@@ -224,6 +231,118 @@ namespace CreatureConfigDamage
             
             return damage; //Returns the damage value calculated at the end of the patched function, not the damage given at the start
         }
+
+        #region DEBUG!! An attempt to patch entirely overwrite the ReaperMeleeAttack.OnTouch, *just* to change the dealer from null to reaper
+        //ATTEMPT 1
+        /*[HarmonyTranspiler]
+        [HarmonyDebug]
+        [HarmonyPatch(typeof(ReaperMeleeAttack), nameof(ReaperMeleeAttack.OnTouch))]
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            //ldnull means null in IL; that's what we're looking to replace
+            //ERROR!! There are TWO nulls in the code; I need to check for the SECOND one, which I'm NOT doing yet!
+            CodeMatch nullMatch = new CodeMatch(i => i.opcode == OpCodes.Ldnull);
+
+            var newInstructions = new CodeMatcher(instructions)
+                .MatchForward(false, nullMatch)
+                .ThrowIfInvalid("Invalid")
+                .ThrowIfNotMatch("Not a match")
+                .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Ldarg_0))
+                .Insert(Transpilers.EmitDelegate<Func<ReaperMeleeAttack, GameObject>>(MyFunctionIWrote));
+
+            //stsfld <field>	Replace the value of the static field with val.
+
+            foreach (var item in newInstructions.InstructionEnumeration())
+            {
+                //logger.LogError($"{item.opcode} {item.operand}");
+            }
+
+            return newInstructions.InstructionEnumeration();
+        }*/
+
+        //ATTEMPT 2
+        [HarmonyTranspiler]
+        [HarmonyDebug]
+        [HarmonyPatch(typeof(ReaperMeleeAttack), nameof(ReaperMeleeAttack.OnTouch))]
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            var code = new List<CodeInstruction>(instructions);
+
+            int insertionIndex = -1;
+            int GoForSecondNull = 0;
+            for (int i = 0; i < code.Count - 1; i++) // -1 since we will be checking i + 1
+            {
+                if (code[i].opcode == OpCodes.Ldnull && code[i + 1].opcode == OpCodes.Ret)
+                {
+                    if(GoForSecondNull == 1)
+                    {
+                        insertionIndex = i;
+                        break;
+                    }
+                    GoForSecondNull++; //So it goes for the second instance of null, not the first
+                    //This probably doesn't work...
+                }
+            }
+
+            return code;
+        }
+
+        public static GameObject MyFunctionIWrote(ReaperMeleeAttack attack)
+        {
+            GameObject reaper = attack.reaper.gameObject;
+
+            logger.LogError("Transpiler function running");
+            logger.LogError($"Transpiler found reaper {attack} = {reaper}");
+            logger.LogError($"Found reaper is of size = {reaper.transform.localScale.x}");
+
+            return reaper;
+        }
+
+        /*[HarmonyPatch(typeof(ReaperMeleeAttack), nameof(ReaperMeleeAttack.OnTouch))]
+        [HarmonyPrefix]
+        public static void OnTouch(Collider collider, ReaperMeleeAttack __instance)
+        {
+            if (__instance.liveMixin.IsAlive() && Time.time > __instance.timeLastBite + __instance.biteInterval && __instance.reaper.Aggression.Value >= 0.5f)
+            {
+                GameObject target = __instance.GetTarget(collider);
+                if (!__instance.reaper.IsHoldingVehicle() && !__instance.playerDeathCinematic.IsCinematicModeActive())
+                {
+                    Player component = target.GetComponent<Player>();
+                    if (component != null)
+                    {
+                        if (component.CanBeAttacked() && !component.cinematicModeActive)
+                        {
+                            float num = DamageSystem.CalculateDamage(__instance.biteDamage, DamageType.Normal, component.gameObject, __instance.reaper.gameObject);
+                            if (component.GetComponent<LiveMixin>().health - num <= 0f)
+                            {
+                                __instance.playerDeathCinematic.StartCinematicMode(component);
+                                if (__instance.playerAttackSound)
+                                {
+                                    __instance.playerAttackSound.Play();
+                                }
+                                __instance.reaper.OnGrabPlayer();
+                            }
+                        }
+                    }
+                    else if (__instance.reaper.GetCanGrabVehicle())
+                    {
+                        SeaMoth component2 = target.GetComponent<SeaMoth>();
+                        if (component2 && !component2.docked)
+                        {
+                            __instance.reaper.GrabSeamoth(component2);
+                        }
+                        Exosuit component3 = target.GetComponent<Exosuit>();
+                        if (component3 && !component3.docked)
+                        {
+                            __instance.reaper.GrabExosuit(component3);
+                        }
+                    }
+                    base.OnTouch(collider);
+                    __instance.reaper.Aggression.Value -= 0.25f;
+                }
+            }
+        }*/
+        #endregion
 
         /*[HarmonyPatch(typeof(HangingStinger), nameof(HangingStinger.OnCollisionEnter))]
         [HarmonyPrefix]
