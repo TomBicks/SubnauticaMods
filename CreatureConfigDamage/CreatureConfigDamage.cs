@@ -181,14 +181,19 @@ namespace CreatureConfigDamage
         //TODO!! IF CAN'T FIGURE OUT THE NULL DEALER CAUSING MISSING DEATH GRAB ANIMATIONS, JUST IGNORE IT AND RELEASE IT!!
         public static float PostfixCalculateDamage(float damage, DamageType type, GameObject target, GameObject dealer)
         {
-            logger.LogError($"damage is {damage}");
-            logger.LogError($"type is {type}");
-            logger.LogError($"target is {target}");
+            //logger.LogError($"damage is {damage}");
+            //logger.LogError($"type is {type}");
+            //logger.LogError($"target is {target}");
             //logger.LogError($"dealer is {dealer}");
             if (dealer != null) 
             {
+                logger.LogError($"damage is {damage}");
+                logger.LogError($"type is {type}");
+                logger.LogError($"target is {target}");
                 logger.LogError($"dealer is {dealer}");
+
                 bool playerTarget = target.GetComponent<Player>();
+                logger.LogError($"player was target? {playerTarget}");
 
                 if (playerTarget && type != DamageType.Radiation && type != DamageType.Starve)
                 {
@@ -203,7 +208,11 @@ namespace CreatureConfigDamage
                         armourValue += 0.12f;
                     }
 
+                    logger.LogError($"Armour Value = {armourValue}");
+
                     TechType dealerTechType = CraftData.GetTechType(dealer);
+
+                    logger.LogError($"Dealer Techtype is {dealerTechType}");
 
                     if (armourValue > 0 && config.IgnoreArmour.ContainsKey(dealerTechType))
                     {
@@ -232,117 +241,127 @@ namespace CreatureConfigDamage
             return damage; //Returns the damage value calculated at the end of the patched function, not the damage given at the start
         }
 
-        #region DEBUG!! An attempt to patch entirely overwrite the ReaperMeleeAttack.OnTouch, *just* to change the dealer from null to reaper
         //ATTEMPT 1
-        /*[HarmonyTranspiler]
-        [HarmonyDebug]
+        [HarmonyTranspiler]
         [HarmonyPatch(typeof(ReaperMeleeAttack), nameof(ReaperMeleeAttack.OnTouch))]
+        [HarmonyDebug]
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            //ldnull means null in IL; that's what we're looking to replace
-            //ERROR!! There are TWO nulls in the code; I need to check for the SECOND one, which I'm NOT doing yet!
-            CodeMatch nullMatch = new CodeMatch(i => i.opcode == OpCodes.Ldnull);
+            Console.WriteLine($"Reaper transpiler running");
 
-            var newInstructions = new CodeMatcher(instructions)
-                .MatchForward(false, nullMatch)
-                .ThrowIfInvalid("Invalid")
-                .ThrowIfNotMatch("Not a match")
-                .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Ldarg_0))
-                .Insert(Transpilers.EmitDelegate<Func<ReaperMeleeAttack, GameObject>>(MyFunctionIWrote));
+            //Calling MatchForward Ldnull twice doesn't get you the second result
+            var matcher = new CodeMatcher(instructions)
+                .MatchForward(false, 
+                    new CodeMatch(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(Component), nameof(Component.gameObject))),
+                    //new CodeMatch(i => i.opcode == OpCodes.Ldfld && ((FieldInfo)i.operand).Name == "component"), //Searches by name of the variable, through any field; a "dirtier" approach
+                    new CodeMatch(OpCodes.Ldnull))
+                .ThrowIfInvalid("Totally Invalid")
+                .ThrowIfNotMatch("Totally Not a match")
+                .Advance(1) //Move forward 1 index, so that we replace ldnull, and not the callvirt before it
+                .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Ldarg_0)) //Set 'this' to top of stack, so next function takes that as input
+                .Insert(Transpilers.EmitDelegate<Func<ReaperMeleeAttack, GameObject>>(MyFunctionIWrote)); //Hopefully, take 'this' as input and return reference to the reaper this attack belongs to
 
-            //stsfld <field>	Replace the value of the static field with val.
+            Console.WriteLine($"CodeMatcher ran; found {matcher.Opcode} & {matcher.Operand}");
+            
 
-            foreach (var item in newInstructions.InstructionEnumeration())
+            foreach (var item in matcher.InstructionEnumeration())
             {
-                //logger.LogError($"{item.opcode} {item.operand}");
+                //FileLog.Log($"{item.opcode} {item.operand}"); //Caused an error; don't use
+                Console.WriteLine($"{item.opcode} {item.operand}");
             }
 
-            return newInstructions.InstructionEnumeration();
-        }*/
+            Console.WriteLine($"Output Log ran");
+
+            return matcher.InstructionEnumeration();
+        }
 
         //ATTEMPT 2
-        [HarmonyTranspiler]
-        [HarmonyDebug]
-        [HarmonyPatch(typeof(ReaperMeleeAttack), nameof(ReaperMeleeAttack.OnTouch))]
-        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            var code = new List<CodeInstruction>(instructions);
-
-            int insertionIndex = -1;
-            int GoForSecondNull = 0;
-            for (int i = 0; i < code.Count - 1; i++) // -1 since we will be checking i + 1
+            /*[HarmonyTranspiler]
+            [HarmonyPatch(typeof(ReaperMeleeAttack), nameof(ReaperMeleeAttack.OnTouch))]
+            [HarmonyDebug]  
+            private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
             {
-                if (code[i].opcode == OpCodes.Ldnull && code[i + 1].opcode == OpCodes.Ret)
-                {
-                    if(GoForSecondNull == 1)
-                    {
-                        insertionIndex = i;
-                        break;
-                    }
-                    GoForSecondNull++; //So it goes for the second instance of null, not the first
-                    //This probably doesn't work...
-                }
-            }
+                var code = new List<CodeInstruction>(instructions);
 
-            return code;
-        }
+                int insertionIndex = -1;
+                int GoForSecondNull = 0;
+                for (int i = 0; i < code.Count - 1; i++) // -1 since we will be checking i + 1
+                {
+                    Console.WriteLine($"Line {i} = {code[i].opcode} {code[i].operand}, Line {i}+1 = {code[i+1].opcode} {code[i+1].operand}");
+                    //if (code[i].opcode == OpCodes.Ldnull && code[i + 1].opcode == OpCodes.Ret)
+                    if (code[i].opcode == OpCodes.Callvirt && code[i + 1].opcode == OpCodes.Ldnull)
+                    {
+                        Console.WriteLine($"Found Callvirt and Ldnull at {i}");
+                        //if(GoForSecondNull == 1)
+                        //{
+                        insertionIndex = i;
+
+                        break;
+                        //}
+                        //GoForSecondNull++; //So it goes for the second instance of null, not the first
+                        //This probably doesn't work...
+                    }
+                }
+
+                //With this, our index is now behind Callvirt and Ldnull
+                //If we simply insert, we'll just add the reaper call behind both of these; we want to add this in front of Callvirt, and also remove Ldnull, or just replace it, whichever works
+                //code[insertionIndex + 1].opcode = OpCodes.Ldfld;
+                //code[insertionIndex + 1].operand = Transpilers.EmitDelegate<Func<ReaperMeleeAttack, GameObject>>(MyFunctionIWrote);
+
+                code.Insert(insertionIndex + 1, OpCodes.Ldarg_0);
+                code.Insert(insertionIndex+1, Transpilers.EmitDelegate<Func<ReaperMeleeAttack, GameObject>>(MyFunctionIWrote));
+                code.RemoveAt(insertionIndex + 2); //Remove the Ldnull, hopefully
+
+                for (int j = 0; j < code.Count - 1; j++)
+                {
+                    //Console.WriteLine($"line {item}");
+                    //logger.LogError($"{item.opcode} {item.operand}");
+                    FileLog.Log($"Logging Line {j} {code[j].opcode} {code[j].operand}");
+                    Console.WriteLine($"Logging Line {j} {code[j].opcode} {code[j].operand}");
+                }
+
+                return code;
+            }*/
+
+            //ATTEMPT 3
+            /*[HarmonyDebug]
+            [HarmonyTranspiler]
+            [HarmonyPatch(typeof(ReaperMeleeAttack), nameof(ReaperMeleeAttack.OnTouch))]
+            private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            {
+                //ldnull means null in IL; that's what we're looking to replace
+                //ERROR!! There are TWO nulls in the code; I need to check for the SECOND one, which I'm NOT doing yet!
+                CodeMatch callMatch = new CodeMatch(OpCodes.Callvirt);
+                CodeMatch nullMatch = new CodeMatch(OpCodes.Ldnull);
+
+                var newInstructions = new CodeMatcher(instructions)
+                    .MatchForward(false, callMatch, nullMatch)
+                    //ERORR!! current state is invalid ( apparently means position out of bounds / last match failed)
+                    .ThrowIfInvalid("Totally Invalid")
+                    .ThrowIfNotMatch("Totally Not a match")
+                    //ERROR?? This below might have been what was throwing errors
+                    //.SetInstructionAndAdvance(new CodeInstruction(OpCodes.Ldarg_0))
+                    .Insert(Transpilers.EmitDelegate<Func<ReaperMeleeAttack, GameObject>>(MyFunctionIWrote));
+
+                foreach (var item in newInstructions.InstructionEnumeration())
+                {
+                    FileLog.Log($"{item.opcode} {item.operand}");
+                }
+
+                return newInstructions.InstructionEnumeration();
+            }*/
 
         public static GameObject MyFunctionIWrote(ReaperMeleeAttack attack)
         {
+            logger.LogError($"Transpiler function running with {attack}");
+
             GameObject reaper = attack.reaper.gameObject;
 
-            logger.LogError("Transpiler function running");
             logger.LogError($"Transpiler found reaper {attack} = {reaper}");
             logger.LogError($"Found reaper is of size = {reaper.transform.localScale.x}");
 
             return reaper;
         }
-
-        /*[HarmonyPatch(typeof(ReaperMeleeAttack), nameof(ReaperMeleeAttack.OnTouch))]
-        [HarmonyPrefix]
-        public static void OnTouch(Collider collider, ReaperMeleeAttack __instance)
-        {
-            if (__instance.liveMixin.IsAlive() && Time.time > __instance.timeLastBite + __instance.biteInterval && __instance.reaper.Aggression.Value >= 0.5f)
-            {
-                GameObject target = __instance.GetTarget(collider);
-                if (!__instance.reaper.IsHoldingVehicle() && !__instance.playerDeathCinematic.IsCinematicModeActive())
-                {
-                    Player component = target.GetComponent<Player>();
-                    if (component != null)
-                    {
-                        if (component.CanBeAttacked() && !component.cinematicModeActive)
-                        {
-                            float num = DamageSystem.CalculateDamage(__instance.biteDamage, DamageType.Normal, component.gameObject, __instance.reaper.gameObject);
-                            if (component.GetComponent<LiveMixin>().health - num <= 0f)
-                            {
-                                __instance.playerDeathCinematic.StartCinematicMode(component);
-                                if (__instance.playerAttackSound)
-                                {
-                                    __instance.playerAttackSound.Play();
-                                }
-                                __instance.reaper.OnGrabPlayer();
-                            }
-                        }
-                    }
-                    else if (__instance.reaper.GetCanGrabVehicle())
-                    {
-                        SeaMoth component2 = target.GetComponent<SeaMoth>();
-                        if (component2 && !component2.docked)
-                        {
-                            __instance.reaper.GrabSeamoth(component2);
-                        }
-                        Exosuit component3 = target.GetComponent<Exosuit>();
-                        if (component3 && !component3.docked)
-                        {
-                            __instance.reaper.GrabExosuit(component3);
-                        }
-                    }
-                    base.OnTouch(collider);
-                    __instance.reaper.Aggression.Value -= 0.25f;
-                }
-            }
-        }*/
-        #endregion
 
         /*[HarmonyPatch(typeof(HangingStinger), nameof(HangingStinger.OnCollisionEnter))]
         [HarmonyPrefix]
