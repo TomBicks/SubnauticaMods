@@ -181,12 +181,9 @@ namespace CreatureConfigDamage
         //TODO!! IF CAN'T FIGURE OUT THE NULL DEALER CAUSING MISSING DEATH GRAB ANIMATIONS, JUST IGNORE IT AND RELEASE IT!!
         public static float PostfixCalculateDamage(float damage, DamageType type, GameObject target, GameObject dealer)
         {
-            //logger.LogError($"damage is {damage}");
-            //logger.LogError($"type is {type}");
-            //logger.LogError($"target is {target}");
-            //logger.LogError($"dealer is {dealer}");
             if (dealer != null) 
             {
+                //DEBUG!!
                 logger.LogError($"damage is {damage}");
                 logger.LogError($"type is {type}");
                 logger.LogError($"target is {target}");
@@ -241,15 +238,14 @@ namespace CreatureConfigDamage
             return damage; //Returns the damage value calculated at the end of the patched function, not the damage given at the start
         }
 
-        //ATTEMPT 1
+        //Transpile the ReaperMeleeAttack OnTouch method, replacing the null value CalculateAttack function passes to instead be a reference to the Reaper itself
         [HarmonyTranspiler]
         [HarmonyPatch(typeof(ReaperMeleeAttack), nameof(ReaperMeleeAttack.OnTouch))]
-        [HarmonyDebug]
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
+            //DEBUG!!
             Console.WriteLine($"Reaper transpiler running");
 
-            //Calling MatchForward Ldnull twice doesn't get you the second result
             var matcher = new CodeMatcher(instructions)
                 .MatchForward(false, 
                     new CodeMatch(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(Component), nameof(Component.gameObject))),
@@ -261,95 +257,20 @@ namespace CreatureConfigDamage
                 .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Ldarg_0)) //Set 'this' to top of stack, so next function takes that as input
                 .Insert(Transpilers.EmitDelegate<Func<ReaperMeleeAttack, GameObject>>(MyFunctionIWrote)); //Hopefully, take 'this' as input and return reference to the reaper this attack belongs to
 
+            //DEBUG!!
             Console.WriteLine($"CodeMatcher ran; found {matcher.Opcode} & {matcher.Operand}");
-            
 
+            //DEBUG!!
             foreach (var item in matcher.InstructionEnumeration())
             {
-                //FileLog.Log($"{item.opcode} {item.operand}"); //Caused an error; don't use
                 Console.WriteLine($"{item.opcode} {item.operand}");
             }
 
+            //DEBUG!!
             Console.WriteLine($"Output Log ran");
 
             return matcher.InstructionEnumeration();
         }
-
-        //ATTEMPT 2
-            /*[HarmonyTranspiler]
-            [HarmonyPatch(typeof(ReaperMeleeAttack), nameof(ReaperMeleeAttack.OnTouch))]
-            [HarmonyDebug]  
-            private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-            {
-                var code = new List<CodeInstruction>(instructions);
-
-                int insertionIndex = -1;
-                int GoForSecondNull = 0;
-                for (int i = 0; i < code.Count - 1; i++) // -1 since we will be checking i + 1
-                {
-                    Console.WriteLine($"Line {i} = {code[i].opcode} {code[i].operand}, Line {i}+1 = {code[i+1].opcode} {code[i+1].operand}");
-                    //if (code[i].opcode == OpCodes.Ldnull && code[i + 1].opcode == OpCodes.Ret)
-                    if (code[i].opcode == OpCodes.Callvirt && code[i + 1].opcode == OpCodes.Ldnull)
-                    {
-                        Console.WriteLine($"Found Callvirt and Ldnull at {i}");
-                        //if(GoForSecondNull == 1)
-                        //{
-                        insertionIndex = i;
-
-                        break;
-                        //}
-                        //GoForSecondNull++; //So it goes for the second instance of null, not the first
-                        //This probably doesn't work...
-                    }
-                }
-
-                //With this, our index is now behind Callvirt and Ldnull
-                //If we simply insert, we'll just add the reaper call behind both of these; we want to add this in front of Callvirt, and also remove Ldnull, or just replace it, whichever works
-                //code[insertionIndex + 1].opcode = OpCodes.Ldfld;
-                //code[insertionIndex + 1].operand = Transpilers.EmitDelegate<Func<ReaperMeleeAttack, GameObject>>(MyFunctionIWrote);
-
-                code.Insert(insertionIndex + 1, OpCodes.Ldarg_0);
-                code.Insert(insertionIndex+1, Transpilers.EmitDelegate<Func<ReaperMeleeAttack, GameObject>>(MyFunctionIWrote));
-                code.RemoveAt(insertionIndex + 2); //Remove the Ldnull, hopefully
-
-                for (int j = 0; j < code.Count - 1; j++)
-                {
-                    //Console.WriteLine($"line {item}");
-                    //logger.LogError($"{item.opcode} {item.operand}");
-                    FileLog.Log($"Logging Line {j} {code[j].opcode} {code[j].operand}");
-                    Console.WriteLine($"Logging Line {j} {code[j].opcode} {code[j].operand}");
-                }
-
-                return code;
-            }*/
-
-            //ATTEMPT 3
-            /*[HarmonyDebug]
-            [HarmonyTranspiler]
-            [HarmonyPatch(typeof(ReaperMeleeAttack), nameof(ReaperMeleeAttack.OnTouch))]
-            private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-            {
-                //ldnull means null in IL; that's what we're looking to replace
-                //ERROR!! There are TWO nulls in the code; I need to check for the SECOND one, which I'm NOT doing yet!
-                CodeMatch callMatch = new CodeMatch(OpCodes.Callvirt);
-                CodeMatch nullMatch = new CodeMatch(OpCodes.Ldnull);
-
-                var newInstructions = new CodeMatcher(instructions)
-                    .MatchForward(false, callMatch, nullMatch)
-                    //ERORR!! current state is invalid ( apparently means position out of bounds / last match failed)
-                    .ThrowIfInvalid("Totally Invalid")
-                    .ThrowIfNotMatch("Totally Not a match")
-                    //ERROR?? This below might have been what was throwing errors
-                    //.SetInstructionAndAdvance(new CodeInstruction(OpCodes.Ldarg_0))
-                    .Insert(Transpilers.EmitDelegate<Func<ReaperMeleeAttack, GameObject>>(MyFunctionIWrote));
-
-                foreach (var item in newInstructions.InstructionEnumeration())
-                {
-                    FileLog.Log($"{item.opcode} {item.operand}");
-                }
-
-                return newInstructions.InstructionEnumeration();
-            }*/
 
         public static GameObject MyFunctionIWrote(ReaperMeleeAttack attack)
         {
