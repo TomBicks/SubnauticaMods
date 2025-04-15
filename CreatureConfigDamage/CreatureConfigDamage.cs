@@ -129,13 +129,13 @@ namespace CreatureConfigDamage
                     ChangeUniqueAttack(__creature, ref __creature.GetComponent<ReaperMeleeAttack>().cyclopsDamage, config.ReaperLeviathanCyclopsDmg, "ReaperLeviathanCyclopsDmg"); //220; Damage dealt to cyclops
                     break;
                 case TechType.SeaDragon:
-                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaDragonMeleeAttack>().biteDamage, config.SeaDragonLeviathanBiteDmg, "SeaDragonBiteDmg"); //300; Bite (so far for player and seamoth; untested on prawn suit)
-                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaDragonMeleeAttack>().swatAttackDamage, config.SeaDragonLeviathanSwatDmg, "SeaDragonSwatDmg"); //70; Swatted with arms (only for player, seamoth and prawn suit)
-                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaDragonMeleeAttack>().shoveAttackDamage, config.SeaDragonLeviathanShoveDmg, "SeaDragonShoveDmg"); //250; Shove when shoving into the cyclops
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaDragonMeleeAttack>().biteDamage, config.SeaDragonLeviathanBiteDmg, "SeaDragonLeviathanBiteDmg"); //300; Bite (so far for player and seamoth; untested on prawn suit)
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaDragonMeleeAttack>().swatAttackDamage, config.SeaDragonLeviathanSwatDmg, "SeaDragonLeviathanSwatDmg"); //70; Swatted with arms (only for player, seamoth and prawn suit)
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaDragonMeleeAttack>().shoveAttackDamage, config.SeaDragonLeviathanShoveDmg, "SeaDragonLeviathanShoveDmg"); //250; Shove when shoving into the cyclops
                     GameObject __SD_projectile1 = __creature.GetComponent<RangedAttackLastTarget>().attackTypes[0].ammoPrefab;
-                    ChangeUniqueAttack(__creature, ref __SD_projectile1.GetComponent<BurningChunk>().fireDamage, config.SeaDragonLeviathanBurningChunkDmg, "SeaDragonBurningChunkDmg");
+                    ChangeUniqueAttack(__creature, ref __SD_projectile1.GetComponent<BurningChunk>().fireDamage, config.SeaDragonLeviathanBurningChunkDmg, "SeaDragonLeviathanBurningChunkDmg");
                     GameObject __SD_projectile2 = __creature.GetComponent<RangedAttackLastTarget>().attackTypes[1].ammoPrefab;
-                    ChangeUniqueAttack(__creature, ref __SD_projectile2.GetComponent<LavaMeteor>().damage, config.SeaDragonLeviathanLavaMeteorDmg, "SeaDragonLavaMeteorDmg");
+                    ChangeUniqueAttack(__creature, ref __SD_projectile2.GetComponent<LavaMeteor>().damage, config.SeaDragonLeviathanLavaMeteorDmg, "SeaDragonLeviathanLavaMeteorDmg");
                     //NOTE!! Spawns fireballs; posisbly two types; 1 LavaMeteor or <=80 BurningChunks
                         // The LavaMeteor as a prefab has a default of 10 damage; 40 when spawned by the seadragon (as this is what it is in their ammoPrefab)...
                         // ...yet one-shot a seamoth and left the player on 20 health (80 damage from inside). However, a second attempt caused 60 damage to the Seamoth
@@ -143,7 +143,7 @@ namespace CreatureConfigDamage
                         // ...yet appears to do no damage to a player, seamoth or cyclops (just a bunch of sounds akin to schools of fish hitting the screen)
                     break;
                 case TechType.SeaTreader:
-                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaTreaderMeleeAttack>().damage, config.SeaTreaderLeviathanDmg, "SeaTreaderDmg");
+                    ChangeUniqueAttack(__creature, ref __creature.GetComponent<SeaTreaderMeleeAttack>().damage, config.SeaTreaderLeviathanDmg, "SeaTreaderLeviathanDmg");
                     break;
                 case TechType.Warper:
                     ChangeUniqueAttack(__creature, ref __creature.GetComponent<WarperMeleeAttack>().biteDamage, config.WarperClawDmg, "WarperClawDmg");
@@ -241,7 +241,7 @@ namespace CreatureConfigDamage
         //Transpile the ReaperMeleeAttack OnTouch method, replacing the null value CalculateAttack function passes to instead be a reference to the Reaper itself
         [HarmonyTranspiler]
         [HarmonyPatch(typeof(ReaperMeleeAttack), nameof(ReaperMeleeAttack.OnTouch))]
-        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> ReaperTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             //DEBUG!!
             Console.WriteLine($"Reaper transpiler running");
@@ -255,7 +255,7 @@ namespace CreatureConfigDamage
                 .ThrowIfNotMatch("Totally Not a match")
                 .Advance(1) //Move forward 1 index, so that we replace ldnull, and not the callvirt before it
                 .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Ldarg_0)) //Set 'this' to top of stack, so next function takes that as input
-                .Insert(Transpilers.EmitDelegate<Func<ReaperMeleeAttack, GameObject>>(MyFunctionIWrote)); //Hopefully, take 'this' as input and return reference to the reaper this attack belongs to
+                .Insert(Transpilers.EmitDelegate<Func<ReaperMeleeAttack, GameObject>>(GetReaperReference)); //Hopefully, take 'this' as input and return reference to the reaper this attack belongs to
 
             //DEBUG!!
             Console.WriteLine($"CodeMatcher ran; found {matcher.Opcode} & {matcher.Operand}");
@@ -272,9 +272,43 @@ namespace CreatureConfigDamage
             return matcher.InstructionEnumeration();
         }
 
-        public static GameObject MyFunctionIWrote(ReaperMeleeAttack attack)
+        //Transpile the SeaDragonMeleeAttack OnTouchFront method, replacing the null value CalculateAttack function passes to instead be a reference to the Sea Dragon itself
+        [HarmonyTranspiler]
+        [HarmonyPatch(typeof(SeaDragonMeleeAttack), nameof(SeaDragonMeleeAttack.OnTouchFront))]
+        private static IEnumerable<CodeInstruction> SeaDragonTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            logger.LogError($"Transpiler function running with {attack}");
+            //DEBUG!!
+            Console.WriteLine($"Sea Dragon transpiler running");
+
+            var matcher = new CodeMatcher(instructions)
+                .MatchForward(false,
+                    new CodeMatch(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(Component), nameof(Component.gameObject))),
+                    //new CodeMatch(i => i.opcode == OpCodes.Ldfld && ((FieldInfo)i.operand).Name == "component"), //Searches by name of the variable, through any field; a "dirtier" approach
+                    new CodeMatch(OpCodes.Ldnull))
+                .ThrowIfInvalid("Totally Invalid")
+                .ThrowIfNotMatch("Totally Not a match")
+                .Advance(1) //Move forward 1 index, so that we replace ldnull, and not the callvirt before it
+                .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Ldarg_0)) //Set 'this' to top of stack, so next function takes that as input
+                .Insert(Transpilers.EmitDelegate<Func<SeaDragonMeleeAttack, GameObject>>(GetSeaDragonReference)); //Hopefully, take 'this' as input and return reference to the reaper this attack belongs to
+
+            //DEBUG!!
+            Console.WriteLine($"CodeMatcher ran; found {matcher.Opcode} & {matcher.Operand}");
+
+            //DEBUG!!
+            foreach (var item in matcher.InstructionEnumeration())
+            {
+                Console.WriteLine($"{item.opcode} {item.operand}");
+            }
+
+            //DEBUG!!
+            Console.WriteLine($"Output Log ran");
+
+            return matcher.InstructionEnumeration();
+        }
+
+        public static GameObject GetReaperReference(ReaperMeleeAttack attack)
+        {
+            logger.LogError($"Transpiler reaper function running with {attack}");
 
             GameObject reaper = attack.reaper.gameObject;
 
@@ -282,6 +316,17 @@ namespace CreatureConfigDamage
             logger.LogError($"Found reaper is of size = {reaper.transform.localScale.x}");
 
             return reaper;
+        }
+        public static GameObject GetSeaDragonReference(SeaDragonMeleeAttack attack)
+        {
+            logger.LogError($"Transpiler sea dragon function running with {attack}");
+
+            GameObject seaDragon = attack.seaDragon.gameObject;
+
+            logger.LogError($"Transpiler found sea dragon {attack} = {seaDragon}");
+            logger.LogError($"Found sea dragon is of size = {seaDragon.transform.localScale.x}");
+
+            return seaDragon;
         }
 
         /*[HarmonyPatch(typeof(HangingStinger), nameof(HangingStinger.OnCollisionEnter))]
