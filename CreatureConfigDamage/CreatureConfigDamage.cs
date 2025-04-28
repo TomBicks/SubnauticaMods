@@ -173,28 +173,17 @@ namespace CreatureConfigDamage
          */
 
         //Patch damage calculations, "ignoring" the reduction in damage from the reinforced diving suit, if a creature has been set by the user to ignore it.
-        //NOTE!! Could instead of much of this, just PreFix and check if the creature ignores damage, and the player has armour, then make the damage 'DamageType.Starve', which ignores the armour by default
-        //Only issue there would be it would remove some damage FX if it changes the damage type away from, say, Normal or Fire
-        //TODO!! Say, for example, a reaper does 80 damage. It plays an animation when it kills the player. With the armour, it deals ~38 damage. If we set it to ignore, and it kills the player, it *DOES NOT* play the kill animation
         [HarmonyPatch(typeof(DamageSystem), nameof(DamageSystem.CalculateDamage))]
         [HarmonyPostfix]
-        //TODO!! IF CAN'T FIGURE OUT THE NULL DEALER CAUSING MISSING DEATH GRAB ANIMATIONS, JUST IGNORE IT AND RELEASE IT!!
         public static float PostfixCalculateDamage(float damage, DamageType type, GameObject target, GameObject dealer)
         {
             if (dealer != null) 
             {
-                //DEBUG!!
-                logger.LogError($"damage is {damage}");
-                logger.LogError($"type is {type}");
-                logger.LogError($"target is {target}");
-                logger.LogError($"dealer is {dealer}");
-
                 bool playerTarget = target.GetComponent<Player>();
-                logger.LogError($"player was target? {playerTarget}");
 
                 if (playerTarget && type != DamageType.Radiation && type != DamageType.Starve)
                 {
-                    //Recalculate the armour value of any reinforced suit pieces and how much they've reduced the incoming damage
+                    //Recalculate the armour value of any reinforced suit pieces (and therefore how much they'll reduce the incoming damage)
                     float armourValue = 0f;
                     if (Player.main.HasReinforcedSuit())
                     {
@@ -205,31 +194,18 @@ namespace CreatureConfigDamage
                         armourValue += 0.12f;
                     }
 
-                    logger.LogError($"Armour Value = {armourValue}");
-
                     TechType dealerTechType = CraftData.GetTechType(dealer);
 
-                    logger.LogError($"Dealer Techtype is {dealerTechType}");
-
+                    //If the player is wearing armour, and the creature is set to ignore it, remove the damage reduction
                     if (armourValue > 0 && config.IgnoreArmour.ContainsKey(dealerTechType))
                     {
                         if (config.IgnoreArmour[dealerTechType])
                         {
-                            logger.LogError($"{dealerTechType} is ignoring armour.");
-                            logger.LogInfo($"Reduced Damage = {damage}");
-
                             //Calculate what to multiply the reduced damage by to restore it back to full damage
                             float originalDamageMultiplier = 1 / (1 - armourValue);
-
-                            logger.LogInfo($"Original Damage = {damage * originalDamageMultiplier}");
                             damage *= originalDamageMultiplier;
-                            logger.LogInfo($"Final to Player = {damage}");
+
                             return damage;
-                        }
-                        else
-                        {
-                            logger.LogError($"{dealerTechType} is not ignoring armour.");
-                            logger.LogInfo($"Final Damage to Player = {damage}");
                         }
                     }
                 }
@@ -238,93 +214,66 @@ namespace CreatureConfigDamage
             return damage; //Returns the damage value calculated at the end of the patched function, not the damage given at the start
         }
 
-        //Transpile the ReaperMeleeAttack OnTouch method, replacing the null value CalculateAttack function passes to instead be a reference to the Reaper itself
+        //Transpile the ReaperMeleeAttack OnTouch method, replacing the null dealer value CalculateAttack function passes to instead be a reference to the Reaper itself
         [HarmonyTranspiler]
         [HarmonyPatch(typeof(ReaperMeleeAttack), nameof(ReaperMeleeAttack.OnTouch))]
         private static IEnumerable<CodeInstruction> ReaperTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            //DEBUG!!
-            Console.WriteLine($"Reaper transpiler running");
-
             var matcher = new CodeMatcher(instructions)
                 .MatchForward(false, 
                     new CodeMatch(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(Component), nameof(Component.gameObject))),
-                    //new CodeMatch(i => i.opcode == OpCodes.Ldfld && ((FieldInfo)i.operand).Name == "component"), //Searches by name of the variable, through any field; a "dirtier" approach
                     new CodeMatch(OpCodes.Ldnull))
-                .ThrowIfInvalid("Totally Invalid")
-                .ThrowIfNotMatch("Totally Not a match")
+                .ThrowIfInvalid("Reaper Transpiler Invalid")
+                .ThrowIfNotMatch("Reaper Transpiler Not A Match")
                 .Advance(1) //Move forward 1 index, so that we replace ldnull, and not the callvirt before it
                 .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Ldarg_0)) //Set 'this' to top of stack, so next function takes that as input
-                .Insert(Transpilers.EmitDelegate<Func<ReaperMeleeAttack, GameObject>>(GetReaperReference)); //Hopefully, take 'this' as input and return reference to the reaper this attack belongs to
+                .Insert(Transpilers.EmitDelegate<Func<ReaperMeleeAttack, GameObject>>(GetReaperReference)); //Take 'this' as input and thus return reference to the reaper this attack belongs to
 
             //DEBUG!!
-            Console.WriteLine($"CodeMatcher ran; found {matcher.Opcode} & {matcher.Operand}");
-
-            //DEBUG!!
-            foreach (var item in matcher.InstructionEnumeration())
+            /*foreach (var item in matcher.InstructionEnumeration())
             {
                 Console.WriteLine($"{item.opcode} {item.operand}");
-            }
-
-            //DEBUG!!
-            Console.WriteLine($"Output Log ran");
+            }*/
 
             return matcher.InstructionEnumeration();
         }
 
-        //Transpile the SeaDragonMeleeAttack OnTouchFront method, replacing the null value CalculateAttack function passes to instead be a reference to the Sea Dragon itself
+        //Transpile the SeaDragonMeleeAttack OnTouchFront method, replacing the null dealer value CalculateAttack function passes to instead be a reference to the Sea Dragon itself
         [HarmonyTranspiler]
         [HarmonyPatch(typeof(SeaDragonMeleeAttack), nameof(SeaDragonMeleeAttack.OnTouchFront))]
         private static IEnumerable<CodeInstruction> SeaDragonTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            //DEBUG!!
-            Console.WriteLine($"Sea Dragon transpiler running");
-
             var matcher = new CodeMatcher(instructions)
                 .MatchForward(false,
                     new CodeMatch(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(Component), nameof(Component.gameObject))),
-                    //new CodeMatch(i => i.opcode == OpCodes.Ldfld && ((FieldInfo)i.operand).Name == "component"), //Searches by name of the variable, through any field; a "dirtier" approach
                     new CodeMatch(OpCodes.Ldnull))
-                .ThrowIfInvalid("Totally Invalid")
-                .ThrowIfNotMatch("Totally Not a match")
+                .ThrowIfInvalid("Sea Dragon Transpiler Invalid")
+                .ThrowIfNotMatch("Sea Dragon Transpiler Not A Match")
                 .Advance(1) //Move forward 1 index, so that we replace ldnull, and not the callvirt before it
                 .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Ldarg_0)) //Set 'this' to top of stack, so next function takes that as input
-                .Insert(Transpilers.EmitDelegate<Func<SeaDragonMeleeAttack, GameObject>>(GetSeaDragonReference)); //Hopefully, take 'this' as input and return reference to the reaper this attack belongs to
+                .Insert(Transpilers.EmitDelegate<Func<SeaDragonMeleeAttack, GameObject>>(GetSeaDragonReference)); //Take 'this' as input and return reference to the sea dragon this attack belongs to
 
             //DEBUG!!
-            Console.WriteLine($"CodeMatcher ran; found {matcher.Opcode} & {matcher.Operand}");
-
-            //DEBUG!!
-            foreach (var item in matcher.InstructionEnumeration())
+            /*foreach (var item in matcher.InstructionEnumeration())
             {
                 Console.WriteLine($"{item.opcode} {item.operand}");
-            }
-
-            //DEBUG!!
-            Console.WriteLine($"Output Log ran");
+            }*/
 
             return matcher.InstructionEnumeration();
         }
 
+        //Return a reference to the Reaper a ReaperMeleeAttack component belongs to
         public static GameObject GetReaperReference(ReaperMeleeAttack attack)
         {
-            logger.LogError($"Transpiler reaper function running with {attack}");
-
             GameObject reaper = attack.reaper.gameObject;
-
-            logger.LogError($"Transpiler found reaper {attack} = {reaper}");
-            logger.LogError($"Found reaper is of size = {reaper.transform.localScale.x}");
 
             return reaper;
         }
+
+        //Return a reference to the Sea Dragon a SeaDragonMeleeAttack component belongs to
         public static GameObject GetSeaDragonReference(SeaDragonMeleeAttack attack)
         {
-            logger.LogError($"Transpiler sea dragon function running with {attack}");
-
             GameObject seaDragon = attack.seaDragon.gameObject;
-
-            logger.LogError($"Transpiler found sea dragon {attack} = {seaDragon}");
-            logger.LogError($"Found sea dragon is of size = {seaDragon.transform.localScale.x}");
 
             return seaDragon;
         }
