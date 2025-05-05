@@ -306,7 +306,7 @@ namespace CreatureConfigSize
             }
             else
             {
-                ErrorMessage.AddError($"{techType} is not in the pickupable reference dictionary!");
+                logger.LogWarning($"{techType} is not in the pickupable reference dictionary!");
             }
 
             //Return whether the creature needs a Pickupable component or not
@@ -390,7 +390,7 @@ namespace CreatureConfigSize
             }
             else
             {
-                logger.LogError($"Error! {techType} is not in the waterpark reference dictionary!");
+                logger.LogWarning($"{techType} is not in the waterpark reference dictionary!");
             }
 
             //Return whether the creature needs a WaterParkCreature component or not
@@ -537,6 +537,7 @@ namespace CreatureConfigSize
             //If the creature is in alien containment, then the max value must not exceed the containment's limits, so we change it to make sure
             if (insideWaterPark && WaterParkReference.ContainsKey(techType)) 
             {
+                //TODO!!! WTF
                 logger.LogWarning($"Warning! {techType}'s maximum size range of {max} exceeds WaterPark safe capacity! Clamping to {WaterParkReference[techType].max}.");
                 max = WaterParkReference[techType].max; 
             }
