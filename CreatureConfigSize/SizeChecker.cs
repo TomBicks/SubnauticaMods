@@ -14,6 +14,7 @@ namespace CreatureConfigSize
 
         void Start()
         {
+            //TODO!! Check if this is still needed!
             //Check if the size has been changed before; if not, resize the creature
             //NOTE!! Hopefully this runs before a lot of other stuff!
             ErrorMessage.AddMessage("Component Started");

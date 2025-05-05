@@ -48,7 +48,7 @@ namespace CreatureConfigSize
             new CreatureInvInfo(TechType.SpineEel, 3, "river_prowler_icon", "River Prowler", "Large, aggressive predator. Capable of pulling in prey with its tendrils."),
             new CreatureInvInfo(TechType.SeaDragon, 5, "sea_dragon_icon", "Sea Dragon Leviathan", "Vast leviathan with aggressive tendencies. Capable of consuming and expelling molten materials."),
             new CreatureInvInfo(TechType.SeaEmperorJuvenile, 4, "sea_emperor_icon", "Sea Emperor Leviathan Juvenile", "Vast leviathan capable of producing Enzyme 42. Even at this size, this is only a juvenile."),
-            new CreatureInvInfo(TechType.SeaEmperorBaby, 3, "sea_emperor_baby_icon", "Sea Emperor Leviathan Baby", "Juvenile leviathan capable of producing Enzyme 42. Taken shortly after being born."),
+            new CreatureInvInfo(TechType.SeaEmperorBaby, 3, "sea_emperor_baby_icon", "Sea Emperor Leviathan Baby", "Infant leviathan capable of producing Enzyme 42. Taken shortly after being born."),
             new CreatureInvInfo(TechType.SeaTreader, 4, "sea_treader_icon", "Sea Treader Leviathan", "Large, herbivorous leviathan. Migratory."),
             new CreatureInvInfo(TechType.Skyray, 2, "skyray_icon", "Skyray", "Small, avian often found over large landmasses. Cannot swim."),
             new CreatureInvInfo(TechType.Warper, 3, "warper_icon", "Warper", "Aggressive creature capable of teleportation. May warp out of containment")
@@ -61,7 +61,6 @@ namespace CreatureConfigSize
             {
                 var (techType, invSize, iconName, name, tooltip) = CreatureInvList[i];
                 //Set size of creature in inventory (invSize * invSize)
-                //TODO!! Check if the EntitySlot.Types are relevant when deciding what size a creature is in inventory
                 CraftData.itemSizes.Add(techType, new Vector2int(invSize, invSize));
 
                 //Get the filepath to the mod assets folder
@@ -415,9 +414,6 @@ namespace CreatureConfigSize
                 data.isPickupableOutside = withinRange;
             }
 
-            //TODO!! Make a list of AssetRefereGameObjects (made using the prefab string) and techType (for example, .ReaperLeviathan to go along with this prefab)
-            //Then, after forcing all of the list to be valid, making a dictionary filled with valid AssetRefereGameObjects, with the techtypes as the key
-
             //Check if AssetPrefabRefernces has an entry for this creature; if not, ignore it (excluding the few baby/juvenile creatures we instead prevent from breeding and assign an adultPrefab to)
             if (AssetPrefabReference.ContainsKey(techType))
             {
@@ -444,13 +440,6 @@ namespace CreatureConfigSize
                 }
             }
         }
-
-        /*[HarmonyPatch(typeof(AddressablesImpl), nameof(AddressablesImpl.EvaluateKey))]
-        [HarmonyPostfix] //After adding to containment, check if creature needs any additional changes (usually reenabling certain components, so they look nicer in containment
-        public static void PostEvaluateKey(Object __instance)
-        {
-
-        }*/
 
         internal static bool GetInsideWaterPark(GameObject creature)
         {
