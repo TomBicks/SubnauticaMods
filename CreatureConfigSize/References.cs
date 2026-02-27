@@ -190,12 +190,12 @@ namespace CreatureConfigSize
         //List of charge values each creature generates when added to a Bio Reactor
         public static readonly List<(TechType, float)> BioReactorChargeReference = new List<(TechType, float)>()
         {
-            (TechType.Biter, 350f),
+            //(TechType.Biter, 350f),
             (TechType.Bleeder, 410f),
             (TechType.Blighter, 410f),
             //(TechType.Shuttlebug, 280f),
             (TechType.CaveCrawler, 260f),
-            (TechType.Floater, 100f),
+            //(TechType.Floater, 100f),
             (TechType.LavaLarva, 2800f),
             (TechType.GhostRayRed, 630f),
             (TechType.GhostRayBlue, 560f),

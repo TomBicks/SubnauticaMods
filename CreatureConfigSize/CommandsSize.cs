@@ -91,6 +91,7 @@ namespace CreatureConfigSize
         }
 
         //DEBUG!!
+        //TODO!! Check if this function is still needed or can be removed safely!
         [ConsoleCommand("fixcreature")]
         public static void FixBadCreature()
         {

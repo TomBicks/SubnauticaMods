@@ -64,7 +64,7 @@ namespace CreatureConfigSize
         public bool ComplexSizeEnabled = false;
 
         //NOTE!! May use these for the 'simple' option, where the user *doesn't* customise every single creature
-        //TODO!! Make it clear it's a random valueb between the min amd max ranges
+        //TODO!! Make it clear it's a random value between the min amd max ranges
         [Slider("Small Creature Minimum Size", Min = 0.1f, Max = 1f, DefaultValue = 1f, Step = 0.1f, Format = "{0:F1}", Id = "SmallCreatureMinSize",
             Tooltip = "Minimum size modifier of small creatures. Will be randomly generated between this and the maximum size, then multiplied against the creature's base size.")]
         public float SmallCreatureMinSize = 1f;
@@ -86,8 +86,6 @@ namespace CreatureConfigSize
 
         //NOTE!! May use this for the 'complex' option, where the user *can* customise every single creature
         //NOTE!! Any changes made to this dictionary in the text file won't be changed when the config options in-game are changed
-        //TODO!! Create a dictionary of min and max values, with assocaited techTypes, so the users can customise each and every value to their whim
-        //TODO!! Utilise the dictionary, if the config is set, to bypass the three sizeclass system and directly change the min and max values
         //NOTE!! The default min and max here is 0.9 and 1.1, so that the decimals show up in the text file and the user is aware they can set them to decimals
         public Dictionary<TechType, (float min, float max)> CreatureSizeRangeReference = new Dictionary<TechType, (float, float)>()
         {

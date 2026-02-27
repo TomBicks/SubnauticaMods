@@ -48,7 +48,7 @@ namespace CreatureConfigSize
             new CreatureInvInfo(TechType.SpineEel, 3, "river_prowler_icon", "River Prowler", "Large, aggressive predator. Capable of pulling in prey with its tendrils."),
             new CreatureInvInfo(TechType.SeaDragon, 5, "sea_dragon_icon", "Sea Dragon Leviathan", "Vast leviathan with aggressive tendencies. Capable of consuming and expelling molten materials."),
             new CreatureInvInfo(TechType.SeaEmperorJuvenile, 4, "sea_emperor_icon", "Sea Emperor Leviathan Juvenile", "Vast leviathan capable of producing Enzyme 42. Even at this size, this is only a juvenile."),
-            new CreatureInvInfo(TechType.SeaEmperorBaby, 3, "sea_emperor_baby_icon", "Sea Emperor Leviathan Baby", "Juvenile leviathan capable of producing Enzyme 42. Taken shortly after being born."),
+            new CreatureInvInfo(TechType.SeaEmperorBaby, 3, "sea_emperor_baby_icon", "Sea Emperor Leviathan Baby", "Infant leviathan capable of producing Enzyme 42. Taken shortly after being born."),
             new CreatureInvInfo(TechType.SeaTreader, 4, "sea_treader_icon", "Sea Treader Leviathan", "Large, herbivorous leviathan. Migratory."),
             new CreatureInvInfo(TechType.Skyray, 2, "skyray_icon", "Skyray", "Small, avian often found over large landmasses. Cannot swim."),
             new CreatureInvInfo(TechType.Warper, 3, "warper_icon", "Warper", "Aggressive creature capable of teleportation. May warp out of containment")
@@ -61,7 +61,6 @@ namespace CreatureConfigSize
             {
                 var (techType, invSize, iconName, name, tooltip) = CreatureInvList[i];
                 //Set size of creature in inventory (invSize * invSize)
-                //TODO!! Check if the EntitySlot.Types are relevant when deciding what size a creature is in inventory
                 CraftData.itemSizes.Add(techType, new Vector2int(invSize, invSize));
 
                 //Get the filepath to the mod assets folder
@@ -105,7 +104,7 @@ namespace CreatureConfigSize
                 //Create an empty WaterParkCreatureData for us to populate, if it's empty
                 if (wpc.data == null)
                 {
-                    logger.LogInfo($"(PostLiveMixinAwake) WaterParkCreatureData of {techType} is null! Creating placeholder!");
+                    //logger.LogInfo($"(PostLiveMixinAwake) WaterParkCreatureData of {techType} is null! Creating placeholder!");
                     wpc.data = ScriptableObject.CreateInstance<WaterParkCreatureData>();
                 }
             }
@@ -178,8 +177,8 @@ namespace CreatureConfigSize
             //If creature techtype is part of our reference tables, i.e. is this a creature we're looking to randomise (means we won't touch modded creatures accidentally)
             if (PickupableReference.ContainsKey(techType))
             {
-                logger.LogInfo($"Creature {techType} found");
-                ErrorMessage.AddMessage($"Creature {techType} found");
+                //logger.LogInfo($"Creature {techType} found");
+                //ErrorMessage.AddMessage($"Creature {techType} found");
 
                 //As Reefbacks share the same TechType with baby Reefbacks, despite both existing, manually apply it, so they can be seperately resized
                 //NOTE!! Below is the Class ID for the ReefbackBaby prefab, so this checks if it's a reefback baby
@@ -196,41 +195,41 @@ namespace CreatureConfigSize
                 //Retrieve the unique id of this creature
                 //NOTE!! Remember, "id" is the private value of UniqueIdentifier, "Id" is the exposed, public accessor; we need to use "Id"
                 string creatureId = creature.GetComponent<PrefabIdentifier>().Id;
-                logger.LogInfo($"ID of {techType} = {creatureId}");
+                //logger.LogInfo($"ID of {techType} = {creatureId}");
 
                 //Check whether we've already randomised the size of this creature, as its id should already be in our dictionary if so
                 if (!creatureSizeInfoList.creatureSizeDictionary.ContainsKey(creatureId))
                 {
-                    logger.LogInfo($"Size not randomised/ID not logged.");
+                    //logger.LogInfo($"Size not randomised/ID not logged.");
 
                     //Generate a modifier for the creature's size
                     //Based on either the creature's size class, retrieved from the CreatureSizeReference array, or the min and max values in the json file, if complex is on
                     float modifier = GetCreatureSizeModifier(creature);
-                    logger.LogInfo($"Creature Modifier = {modifier}");
+                    //logger.LogInfo($"Creature Modifier = {modifier}");
 
                     //Once we've retrieved the modifier, apply it by multiplying the creature's size by the modifier
                     SetSize(creature, modifier);
-                    ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
+                    //ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
 
                     //Add unique id and applied size to dictionary, to document that we *have* randomised this creature's size
                     creatureSizeInfoList.creatureSizeDictionary.Add(creature.GetComponent<PrefabIdentifier>().Id, modifier);
                 }
                 else
                 {
-                    logger.LogInfo($"Size already randomised/ID already logged.");
+                    //logger.LogInfo($"Size already randomised/ID already logged.");
 
                     float modifier = creatureSizeInfoList.creatureSizeDictionary[creatureId];
 
                     //Reapply the modifier, in case it expires if we reload with the creature unloaded
                     SetSize(creature, modifier);
-                    logger.LogInfo($"Changed size of {techType} to {modifier}");
-                    ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
+                    //logger.LogInfo($"Changed size of {techType} to {modifier}");
+                    //ErrorMessage.AddMessage($"Changed size of {techType} to {modifier}");
                 }
 
                 //logger.LogInfo($"Length of ID Dictionary = {creatureSizeInfoList.creatureSizeDictionary.Count}");
 
                 var size = GetSize(creature);
-                logger.LogInfo($"Creature Size After = {size}");
+                //logger.LogInfo($"Creature Size After = {size}");
 
                 //Scale floater's bouyancy with their new size, because why not; it's cool!
                 if(techType == TechType.Floater) { creature.GetComponent<Floater>().buoyantForce = 8 * size; }
@@ -270,7 +269,7 @@ namespace CreatureConfigSize
 
                 if (insideWaterPark)
                 {
-                    logger.LogInfo($"(Pickupable) {techType} is already inside alien containment! Calcuating original size modifier from current size!");
+                    //logger.LogInfo($"(Pickupable) {techType} is already inside alien containment! Calcuating original size modifier from current size!");
 
                     //By performing the calculation to get maxSize for WPC data (x * 0.6), but in reverse (x / 0.6), we get our old size back and original size modifier
                     modifier = size / 0.6f;
@@ -278,7 +277,7 @@ namespace CreatureConfigSize
                 }
                 else
                 {
-                    logger.LogInfo($"(Pickupable) {techType} is not inside alien containment! Using current size for size modifier!");
+                    //logger.LogInfo($"(Pickupable) {techType} is not inside alien containment! Using current size for size modifier!");
 
                     //If the creature isn't in alien containment, this means its current size is equal to its size modifier
                     modifier = size;
@@ -307,7 +306,7 @@ namespace CreatureConfigSize
             }
             else
             {
-                ErrorMessage.AddError($"{techType} is not in the pickupable reference dictionary!");
+                logger.LogWarning($"{techType} is not in the pickupable reference dictionary!");
             }
 
             //Return whether the creature needs a Pickupable component or not
@@ -338,7 +337,7 @@ namespace CreatureConfigSize
 
                 if (GetInsideWaterPark(creature))
                 {
-                    logger.LogWarning($"(WaterParkCreature) {techType} is already inside alien containment! Calcuating original size modifier from current size!");
+                    //logger.LogWarning($"(WaterParkCreature) {techType} is already inside alien containment! Calcuating original size modifier from current size!");
 
                     //By performing the calculation to get maxSize for WPC data (x * 0.6), but in reverse (x / 0.6), we get our old size back and original size modifier
                     modifier = size / 0.6f;
@@ -346,14 +345,14 @@ namespace CreatureConfigSize
                 }
                 else
                 {
-                    logger.LogWarning($"(WaterParkCreature) {techType} is not inside alien containment! Using current size for size modifier!");
+                    //logger.LogWarning($"(WaterParkCreature) {techType} is not inside alien containment! Using current size for size modifier!");
                     
                     //If the creature isn't in alien containment, this means its current size is equal to its size modifier
                     modifier = size;
                 }
 
                 //DEBUG!!
-                logger.LogWarning($"(WaterParkCreature) {techType}'s modifier is {modifier}");
+                //logger.LogWarning($"(WaterParkCreature) {techType}'s modifier is {modifier}");
 
                 //Use original size modifier to determine if eligible for WPC component (also eligibile if set to allow all or if *already in* containment)
                 if ((modifier >= min && modifier <= max) || config.AllowAllWaterPark || insideWaterPark)
@@ -391,7 +390,7 @@ namespace CreatureConfigSize
             }
             else
             {
-                logger.LogError($"Error! {techType} is not in the waterpark reference dictionary!");
+                logger.LogWarning($"{techType} is not in the waterpark reference dictionary!");
             }
 
             //Return whether the creature needs a WaterParkCreature component or not
@@ -401,7 +400,7 @@ namespace CreatureConfigSize
         internal static void SetWaterParkData(ref WaterParkCreatureData data, float modifier, TechType techType)
         {
             //NOTE!! WPC data needs to be repopulated every new session for creatures with usually no WPC component, and for every other creature we want to differentiate
-            logger.LogWarning($"(WaterParkData) Setting {techType}'s WPC data values to initialSize = {modifier * 0.1f}, maxSize = {modifier * 0.6f}, and outsideSize = {modifier}");
+            //logger.LogWarning($"(WaterParkData) Setting {techType}'s WPC data values to initialSize = {modifier * 0.1f}, maxSize = {modifier * 0.6f}, and outsideSize = {modifier}");
             data.initialSize = modifier * 0.1f;
             data.maxSize = modifier * 0.6f;
             data.outsideSize = modifier;
@@ -414,9 +413,6 @@ namespace CreatureConfigSize
                 bool withinRange = (modifier >= min && modifier <= max);
                 data.isPickupableOutside = withinRange;
             }
-
-            //TODO!! Make a list of AssetRefereGameObjects (made using the prefab string) and techType (for example, .ReaperLeviathan to go along with this prefab)
-            //Then, after forcing all of the list to be valid, making a dictionary filled with valid AssetRefereGameObjects, with the techtypes as the key
 
             //Check if AssetPrefabRefernces has an entry for this creature; if not, ignore it (excluding the few baby/juvenile creatures we instead prevent from breeding and assign an adultPrefab to)
             if (AssetPrefabReference.ContainsKey(techType))
@@ -444,13 +440,6 @@ namespace CreatureConfigSize
                 }
             }
         }
-
-        /*[HarmonyPatch(typeof(AddressablesImpl), nameof(AddressablesImpl.EvaluateKey))]
-        [HarmonyPostfix] //After adding to containment, check if creature needs any additional changes (usually reenabling certain components, so they look nicer in containment
-        public static void PostEvaluateKey(Object __instance)
-        {
-
-        }*/
 
         internal static bool GetInsideWaterPark(GameObject creature)
         {
@@ -548,6 +537,7 @@ namespace CreatureConfigSize
             //If the creature is in alien containment, then the max value must not exceed the containment's limits, so we change it to make sure
             if (insideWaterPark && WaterParkReference.ContainsKey(techType)) 
             {
+                //TODO!!! WTF
                 logger.LogWarning($"Warning! {techType}'s maximum size range of {max} exceeds WaterPark safe capacity! Clamping to {WaterParkReference[techType].max}.");
                 max = WaterParkReference[techType].max; 
             }
