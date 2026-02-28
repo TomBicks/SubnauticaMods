@@ -80,7 +80,10 @@ namespace CreatureConfigSize
             for (var i = 0; i < BioReactorChargeReference.Count; i++)
             {
                 var (techType, charge) = BioReactorChargeReference[i];
-                BaseBioReactor.charge.Add(techType, charge);
+                if (!BaseBioReactor.charge.ContainsKey(techType))
+                {
+                    BaseBioReactor.charge.Add(techType, charge);
+                }
             }
         }
 
