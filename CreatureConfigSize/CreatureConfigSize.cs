@@ -45,6 +45,7 @@ namespace CreatureConfigSize
             new CreatureInvInfo(TechType.GhostRayBlue, 3, "ghostray_icon", "Ghostray", "Docile, deep-sea ray with entirely translucent skin."),
             new CreatureInvInfo(TechType.LavaLarva, 2, "lava_larva_icon", "Lava Larva", "Parasite that can drain nearby thermal and electric energy."),
             new CreatureInvInfo(TechType.ReaperLeviathan, 4, "reaper_icon", "Reaper Leviathan", "Vast leviathan with aggressive tendencies. Uses echo-location to hunt its prey."),
+            new CreatureInvInfo(TechType.Rockgrub, 1, "rockgrub_icon", "Rockgrub", "Small, luminescent scavenger that feeds on clumps of coral and seagrass."),
             new CreatureInvInfo(TechType.SpineEel, 3, "river_prowler_icon", "River Prowler", "Large, aggressive predator. Capable of pulling in prey with its tendrils."),
             new CreatureInvInfo(TechType.SeaDragon, 5, "sea_dragon_icon", "Sea Dragon Leviathan", "Vast leviathan with aggressive tendencies. Capable of consuming and expelling molten materials."),
             new CreatureInvInfo(TechType.SeaEmperorJuvenile, 4, "sea_emperor_icon", "Sea Emperor Leviathan Juvenile", "Vast leviathan capable of producing Enzyme 42. Even at this size, this is only a juvenile."),

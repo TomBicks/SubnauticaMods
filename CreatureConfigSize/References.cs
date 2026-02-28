@@ -13,7 +13,7 @@ namespace CreatureConfigSize
             //Size Class - Small
             new TechType[] {TechType.Biter, TechType.Bladderfish, TechType.Bleeder, TechType.Blighter, TechType.Shuttlebug, TechType.Boomerang, TechType.CaveCrawler, TechType.Crash,
                 TechType.Eyeye, TechType.Floater, TechType.GarryFish, TechType.HoleFish, TechType.Hoopfish, TechType.Hoverfish, TechType.LavaBoomerang, TechType.LavaLarva,
-                TechType.Mesmer, TechType.Oculus, TechType.Peeper, TechType.LavaEyeye, TechType.Reginald, TechType.Skyray, TechType.Spadefish, TechType.Spinefish, TechType.Jumper},
+                TechType.Mesmer, TechType.Oculus, TechType.Peeper, TechType.LavaEyeye, TechType.Reginald, TechType.Rockgrub, TechType.Skyray, TechType.Spadefish, TechType.Spinefish, TechType.Jumper},
             //Size Class - Medium
             new TechType[] {TechType.Shocker, TechType.BoneShark, TechType.Crabsnake, TechType.CrabSquid, TechType.Cutefish, TechType.GhostRayRed, TechType.Gasopod, TechType.GhostRayBlue,
                 TechType.Jellyray, TechType.LavaLizard, TechType.RabbitRay, TechType.SpineEel, TechType.Sandshark, TechType.SeaEmperorBaby, TechType.Stalker, TechType.Warper},
@@ -48,6 +48,7 @@ namespace CreatureConfigSize
             { TechType.Peeper, (0.0f, 2.0f) }, //Done
             { TechType.LavaEyeye, (0.0f, 2.0f) }, //Done
             { TechType.Reginald, (0.0f, 2.0f) }, //Done
+            { TechType.Rockgrub, (0.0f, 5.0f) }, //Done
             { TechType.Skyray, (0.0f, 1.7f) }, //Done
             { TechType.Spadefish, (0.0f, 1.5f) }, //Done
             { TechType.Spinefish, (0.0f, 2.0f) }, //Done
@@ -117,6 +118,7 @@ namespace CreatureConfigSize
             { TechType.Peeper, (0.0f, 5.0f) }, //Done
             { TechType.LavaEyeye, (0.0f, 5.0f) }, //Done
             { TechType.Reginald, (0.0f, 5.0f) }, //Done
+            { TechType.Rockgrub, (0.0f, 5.0f) }, //Done
             { TechType.Skyray, (0.0f, 1.7f) }, //Done
             { TechType.Spadefish, (0.0f, 2.5f) }, //Done
             { TechType.Spinefish, (0.0f, 5.0f) }, //Done
@@ -165,6 +167,7 @@ namespace CreatureConfigSize
             { TechType.CaveCrawler, new AssetReferenceGameObject("WorldEntities/Creatures/CaveCrawler.prefab").ForceValid() },
             { TechType.Floater, new AssetReferenceGameObject("WorldEntities/Environment/Floater.prefab").ForceValid() },
             { TechType.LavaLarva, new AssetReferenceGameObject("WorldEntities/Creatures/LavaLarva.prefab").ForceValid() },
+            { TechType.Rockgrub, new AssetReferenceGameObject("WorldEntities/Creatures/Rockgrub.prefab").ForceValid() },
             //{ TechType.Skyray, new AssetReferenceGameObject("WorldEntities/Creatures/Skyray.prefab") },
             //{ TechType.Jumper, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
 
