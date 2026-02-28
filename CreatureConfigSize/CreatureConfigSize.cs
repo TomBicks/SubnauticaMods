@@ -237,6 +237,13 @@ namespace CreatureConfigSize
                 //Scale floater's bouyancy with their new size, because why not; it's cool!
                 if(techType == TechType.Floater) { creature.GetComponent<Floater>().buoyantForce = 8 * size; }
 
+                //Scale rockgrub's light radius with their new size (by default, a rockgrub's size is 0.5 in vanilla, and its light radius is 1)
+                if (techType == TechType.Rockgrub) 
+                {
+                    logger.LogError($"Found component {creature.GetComponentInChildren<Light>()}");
+                    creature.GetComponentInChildren<Light>().range = size * 2; 
+                }
+
                 //Need to check whether creature can be picked up and placed in alien containment, regardless of whether the creature has had its size randomised or not, as these reset at startup
                 //Check whether the creature is eligible to be picked up (and have the Pickupable component) or not
                 CheckPickupableComponent(creature, size);
