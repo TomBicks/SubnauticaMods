@@ -91,6 +91,10 @@ namespace CreatureConfigSize
             GameObject creature = __instance.gameObject;
             TechType techType = CraftData.GetTechType(creature);
             //logger.LogInfo($"(PostLiveMixinAwake) entity is {techType}");
+            if(techType == TechType.Rockgrub)
+            {
+                logger.LogError("FOUND A ROCKGRUB!");
+            }
 
             //If the creature can be in a WaterPark but isn't normally, we need to create a new blank placeholder WPC data at start
             //Otherwise it breaks, because they're null otherwise, on account of not normally having WPC component
