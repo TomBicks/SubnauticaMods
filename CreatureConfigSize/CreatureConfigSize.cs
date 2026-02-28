@@ -61,13 +61,7 @@ namespace CreatureConfigSize
             {
                 var (techType, invSize, iconName, name, tooltip) = CreatureInvList[i];
                 //Set size of creature in inventory (invSize * invSize)
-                //CraftData.itemSizes.Add(techType, new Vector2int(invSize, invSize));
-                logger.LogInfo($"(BEFORE) TechData.GetSizeOf width of TechType {techType} = {TechData.GetItemSize(techType).x}");
-
                 CraftDataHandler.SetItemSize(techType, new Vector2int(invSize, invSize));
-
-                logger.LogInfo($"(AFTER) TechData.GetSizeOf width of TechType {techType} = {TechData.GetItemSize(techType).x}");
-
                 //Get the filepath to the mod assets folder
                 string iconFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Assets");
                 //Apply icon sprite to the desired techtype
