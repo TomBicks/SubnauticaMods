@@ -156,7 +156,7 @@ namespace CreatureConfigSize
 
         //List of prefab references for creatures that can't normally breed, so we assign them a child prefab
         //Each of the AssetReferences is forcibly validated, ensuring their RuntimeKey is valid
-        //NOTE!! Prefab filepaths can be found here: https://github.com/SubnauticaModding/Nautilus/blob/master/Nautilus/Documentation/resources/SN1-PrefabPaths.jsonn 
+        //NOTE!! Prefab filepaths can be found here: https://github.com/SubnauticaModding/Nautilus/blob/master/Nautilus/Documentation/resources/SN1-PrefabPaths.json
         public static readonly Dictionary<TechType, AssetReferenceGameObject> AssetPrefabReference = new Dictionary<TechType, AssetReferenceGameObject>()
         {
             //Small Fish - NOTE!! Shuttlebugs (Jumpers) have their own eggs
@@ -167,7 +167,7 @@ namespace CreatureConfigSize
             { TechType.CaveCrawler, new AssetReferenceGameObject("WorldEntities/Creatures/CaveCrawler.prefab").ForceValid() },
             { TechType.Floater, new AssetReferenceGameObject("WorldEntities/Environment/Floater.prefab").ForceValid() },
             { TechType.LavaLarva, new AssetReferenceGameObject("WorldEntities/Creatures/LavaLarva.prefab").ForceValid() },
-            { TechType.Rockgrub, new AssetReferenceGameObject("WorldEntities/Creatures/Rockgrub.prefab").ForceValid() },
+            { TechType.Rockgrub, new AssetReferenceGameObject("WorldEntities/Creatures/RockGrub.prefab").ForceValid() },
             //{ TechType.Skyray, new AssetReferenceGameObject("WorldEntities/Creatures/Skyray.prefab") },
             //{ TechType.Jumper, new AssetReferenceGameObject("WorldEntities/Creatures/Biter.prefab") },
 
