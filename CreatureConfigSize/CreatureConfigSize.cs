@@ -195,15 +195,6 @@ namespace CreatureConfigSize
                     techType = TechType.ReefbackBaby;
                 }
 
-                if (techType == TechType.SeaEmperorBaby)
-                {
-                    logger.LogError($"BEFORE");
-                    logger.LogError($"(PostLiveMixinStart) Found Sea Emperor Baby at size {GetSize(creature)}");
-                    logger.LogError($"(PostLiveMixinStart) LossyScale = {creature.GetComponent<Transform>().lossyScale}");
-                    logger.LogError($"(PostLiveMixinStart) LocalScale = {creature.GetComponent<Transform>().localScale}");
-                    logger.LogError($"(PostLiveMixinStart) motherInteractionScale = {creature.GetComponent<SeaEmperorBaby>().motherInteractionScale}");
-                }
-
                 //Retrieve the unique id of this creature
                 //NOTE!! Remember, "id" is the private value of UniqueIdentifier, "Id" is the exposed, public accessor; we need to use "Id"
                 string creatureId = creature.GetComponent<PrefabIdentifier>().Id;
@@ -249,7 +240,7 @@ namespace CreatureConfigSize
                 //Scale rockgrub's light radius with their new size (by default, a rockgrub's size is 0.5 in vanilla, and its light radius is 1)
                 if (techType == TechType.Rockgrub) 
                 {
-                    logger.LogError($"Found component {creature.GetComponentInChildren<Light>()}");
+                    //logger.LogError($"Found component {creature.GetComponentInChildren<Light>()}");
                     creature.GetComponentInChildren<Light>().range = size * 2; 
                 }
 
@@ -262,13 +253,13 @@ namespace CreatureConfigSize
                     {
                         //To have them 'randomise' their size correctly hatching from the egg, we'll instead use their own 'motherInteractionScale' as the size they'll scale to
                         SetSize(creature, 0.1f); //Set them to their default from hatching of 0.1
-                        creature.GetComponent<SeaEmperorBaby>().motherInteractionScale = new Vector3(modifier, modifier, modifier);
-                        logger.LogError($"Baby spawned inside {baby.babyId}");
+                        baby.motherInteractionScale = new Vector3(modifier, modifier, modifier);
+                        //logger.LogError($"Baby spawned inside {baby.babyId}");
                     }
                     else
                     {
                         //This should mean the baby randomises its size normally
-                        logger.LogError($"Baby spawned outside {baby.babyId}");
+                        //logger.LogError($"Baby spawned outside {baby.babyId}");
                         SetSize(creature, modifier); //Ensure creature is the correct size
                     }
                 }
@@ -279,15 +270,6 @@ namespace CreatureConfigSize
 
                 //Check whether the creature is eligible to be placed in alien containment up (and have the WPC component) or not
                 CheckWaterParkCreatureComponent(creature, size);
-
-                if (techType == TechType.SeaEmperorBaby)
-                {
-                    logger.LogError($"AFTER");
-                    logger.LogError($"(PostLiveMixinStart) Found Sea Emperor Baby at size {GetSize(creature)}");
-                    logger.LogError($"(PostLiveMixinStart) LossyScale = {creature.GetComponent<Transform>().lossyScale}");
-                    logger.LogError($"(PostLiveMixinStart) LocalScale = {creature.GetComponent<Transform>().localScale}");
-                    logger.LogError($"(PostLiveMixinStart) motherInteractionScale = {creature.GetComponent<SeaEmperorBaby>().motherInteractionScale}");
-                }
             }
         }
 
