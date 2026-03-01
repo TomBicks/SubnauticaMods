@@ -148,14 +148,13 @@ namespace CreatureConfigSize
                     component = birdComponent;
                     break;
                 case TechType.Warper:
-                    System.Random rand = new System.Random();
-                    var escapeChance = 4; //Warper escape is 1/escapeChance chance for it to warp out of containment (this also occurs on load-in)
-                    if (rand.Next(1, escapeChance+1) == escapeChance) //Add 1 to maxValue, as it's not inclusive of the range
+                    var escapeChance = config.WarperEscapeChance; //Warper escape is 1/WarperEscapeChance chance for it to warp out of containment (this also occurs on load-in)
+                    var escapeAttempt = Random.Range(1, escapeChance + 1); //Add 1 to maxValue, as it's not inclusive of the range
+                    if (escapeAttempt == escapeChance)
                     {
                         logger.LogInfo($"Warper is warping out of containment");
-                        ErrorMessage.AddMessage($"Warper has warped out of containment!");
-                        Warper warperComponent = creature.GetComponent<Warper>();
-                        warperComponent.WarpOut();
+                        //ErrorMessage.AddMessage($"Warper has escaped containment!");
+                        creature.GetComponent<Warper>().WarpOut();
                     }
                     break;
             }
