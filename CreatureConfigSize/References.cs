@@ -176,17 +176,16 @@ namespace CreatureConfigSize
             { TechType.GhostRayRed, new AssetReferenceGameObject("WorldEntities/Creatures/GhostRayRed.prefab").ForceValid() },
             { TechType.GhostRayBlue, new AssetReferenceGameObject("WorldEntities/Creatures/GhostRayBlue.prefab").ForceValid() },
             { TechType.SpineEel, new AssetReferenceGameObject("WorldEntities/Creatures/SpineEel.prefab").ForceValid() },
-            //{ TechType.SeaEmperorBaby, new AssetReferenceGameObject("WorldEntities/Creatures/SeaEmperorBaby.prefab") }, //It's a baby; can't breed; probably can't grow up either though? Unless that's what adultPrefab is???
             //{ TechType.Warper, new AssetReferenceGameObject("WorldEntities/Creatures/Warper.prefab") }, //TODO!! Should they breed at all? should they warp more in? WarperSpawner?
 
             //Leviathans
-            { TechType.GhostLeviathan, new AssetReferenceGameObject("WorldEntities/Creatures/GhostLeviathan.prefab").ForceValid() },
+            { TechType.GhostLeviathan, new AssetReferenceGameObject("WorldEntities/Creatures/GhostLeviathanJuvenile.prefab").ForceValid() },
             //{ TechType.GhostLeviathanJuvenile, new AssetReferenceGameObject("WorldEntities/Creatures/GhostLeviathanJuvenile.prefab") },
             { TechType.ReaperLeviathan, new AssetReferenceGameObject("WorldEntities/Creatures/ReaperLeviathan.prefab").ForceValid() },
-            { TechType.Reefback, new AssetReferenceGameObject("WorldEntities/Creatures/Reefback.prefab").ForceValid() },
+            { TechType.Reefback, new AssetReferenceGameObject("WorldEntities/Creatures/Reefback.prefab").ForceValid() }, //TOD!! Has baby form, so births babies
             //{ TechType.ReefbackBaby, new AssetReferenceGameObject("WorldEntities/Creatures/ReaperLeviathan.prefab") },
             { TechType.SeaDragon, new AssetReferenceGameObject("WorldEntities/Creatures/SeaDragon.prefab").ForceValid() }, //TODO!! "WorldEntities/Environment/Precursor/LostRiverBase/Precursor_LostRiverBase_SeaDragonEggShell.prefab" works, though missing most proper physics
-            { TechType.SeaEmperorJuvenile, new AssetReferenceGameObject("WorldEntities/Creatures/SeaEmperorJuvenile.prefab").ForceValid() },
+            { TechType.SeaEmperorJuvenile, new AssetReferenceGameObject("WorldEntities/Creatures/SeaEmperorBaby.prefab").ForceValid() }, //Has baby form, so births babies
             //{ TechType.SeaTreader, new AssetReferenceGameObject("WorldEntities/Creatures/SeaTreader.prefab") } //TODO!! Still doesn't work in containment
         };
 
