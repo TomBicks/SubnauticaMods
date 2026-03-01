@@ -53,6 +53,10 @@ namespace CreatureConfigSize
     [Menu("Creature Config - Size")]
     public class Config : Nautilus.Json.ConfigFile
     {
+        [Toggle("Allow Warpers to sometimes escape from Alien Containment?",
+            Tooltip = "Allows Warpers to have the chance to occassionally warp out of your Alien Containment.")]
+        public bool AllowWarperEscape = false;
+
         [Toggle("Allow all creatures to be picked up?",
             Tooltip = "Allow any fish, regardless of size, to be picked up. Without this enabled, only fish small enough can be picked up.")]
         public bool AllowAllPickupable = false;
