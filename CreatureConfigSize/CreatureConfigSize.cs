@@ -165,6 +165,43 @@ namespace CreatureConfigSize
             }
         }
 
+
+
+        //[HarmonyPatch(typeof(Inventory), nameof(Inventory.Pickup))]
+        [HarmonyPatch(typeof(Pickupable), nameof(Pickupable.Pickup))]
+        [HarmonyPostfix]
+        public static void PickupWarper(Creature __instance)
+        {
+            var warper2 = __instance.GetComponent<Warper>();
+            logger.LogError($"PICKUPWARPER");
+            //logger.LogError($"Pickupable = {__pickupable.inventoryItem.techType}");
+            logger.LogError($"Instance = {__instance}");
+            //if(__pickupable.inventoryItem.techType == TechType.Warper)
+            //{
+            //Get the parent, which leads to the spawner, which allows us to sever the link
+            //var warper = ;
+            //warper.spawner.warper = null; //Null the reference to the warper we picked up
+            //warper.spawner.OnWarpOut(); //Trigger the reset timer, for it to create a new warper
+            //}
+            logger.LogError($"Warper2 = {warper2}");
+
+            if(__instance.TryGetComponent<Warper>(out Warper warper))
+            {
+                logger.LogError($"Warper = {warper}");
+                logger.LogError($"Warper Spawner = {warper.spawner}");
+                if(warper.spawner == null)
+                {
+                    logger.LogError("Warper Spawner is Null! This Warper has already been severed.");
+                }
+                else
+                {
+                    logger.LogError($"Warper Spawner Warper = {warper.spawner.warper}");
+                }
+            }
+        }
+
+
+
         [HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.Start))]
         [HarmonyPostfix] //Using LiveMixin because creatures in containment don't trigger Creature events (because their creature component is disabled)
         //Using .Start for everything else because size changes don't take effect if done in .Awake
