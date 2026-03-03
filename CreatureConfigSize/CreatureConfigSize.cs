@@ -148,7 +148,7 @@ namespace CreatureConfigSize
                     component = birdComponent;
                     break;
                 case TechType.Warper:
-                    var escapeChance = config.WarperEscapeChance; //Warper escape is 1/WarperEscapeChance chance for it to warp out of containment (this also occurs on load-in)
+                    var escapeChance = config.WarperContainmentEscapeChance; //Warper escape is 1/WarperContainmentEscapeChance chance for it to warp out of containment (this also occurs on load-in)
                     var escapeAttempt = Random.Range(1, escapeChance + 1); //Add 1 to maxValue, as it's not inclusive of the range
                     if (escapeAttempt == escapeChance)
                     {
@@ -165,42 +165,28 @@ namespace CreatureConfigSize
             }
         }
 
-
-
-        //[HarmonyPatch(typeof(Inventory), nameof(Inventory.Pickup))]
+        //When picking up a natural warper, we need to sever its connection to its WarperSpawner, lest it teleport out of the inventory when far enough away from its spawner
         [HarmonyPatch(typeof(Pickupable), nameof(Pickupable.Pickup))]
         [HarmonyPostfix]
         public static void PickupWarper(Creature __instance)
         {
-            var warper2 = __instance.GetComponent<Warper>();
-            logger.LogError($"PICKUPWARPER");
-            //logger.LogError($"Pickupable = {__pickupable.inventoryItem.techType}");
-            logger.LogError($"Instance = {__instance}");
-            //if(__pickupable.inventoryItem.techType == TechType.Warper)
-            //{
-            //Get the parent, which leads to the spawner, which allows us to sever the link
-            //var warper = ;
-            //warper.spawner.warper = null; //Null the reference to the warper we picked up
-            //warper.spawner.OnWarpOut(); //Trigger the reset timer, for it to create a new warper
-            //}
-            logger.LogError($"Warper2 = {warper2}");
-
-            if(__instance.TryGetComponent<Warper>(out Warper warper))
+            //If the player wants this behaviour, we *don't* check for it, and disable the fix
+            if (!config.AllowWarperInvEscape)
             {
-                logger.LogError($"Warper = {warper}");
-                logger.LogError($"Warper Spawner = {warper.spawner}");
-                if(warper.spawner == null)
+                //If the thing we picked up *is* a Warper, check if its spawner exists, meaning we have to sever it from its spawner
+                if (__instance.TryGetComponent<Warper>(out Warper warper))
                 {
-                    logger.LogError("Warper Spawner is Null! This Warper has already been severed.");
-                }
-                else
-                {
-                    logger.LogError($"Warper Spawner Warper = {warper.spawner.warper}");
+                    //logger.LogError($"Warper = {warper}");
+                    //logger.LogError($"Warper Spawner = {warper.spawner}");
+                    if (warper.spawner != null)
+                    {
+                        //logger.LogInfo($"Severing Warper's connection to its Spawner");
+                        warper.spawner.warper = null; //Null the reference to the warper we picked up
+                        warper.spawner.OnWarpOut(); //Trigger the reset timer, for the spawner to create a new warper
+                    }
                 }
             }
         }
-
-
 
         [HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.Start))]
         [HarmonyPostfix] //Using LiveMixin because creatures in containment don't trigger Creature events (because their creature component is disabled)

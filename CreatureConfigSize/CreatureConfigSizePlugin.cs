@@ -53,9 +53,12 @@ namespace CreatureConfigSize
     [Menu("Creature Config - Size")]
     public class Config : Nautilus.Json.ConfigFile
     {
-        [Slider("Warper Containment Escape Chance", Min = 0, Max = 10, DefaultValue = 10, Step = 1, Id = "WarperEscapeChance",
-            Tooltip = "The chance that Warpers in Alien Containment have to occassionally warp out and escape. 10 is 1-in-10, 1 is guarunteed, and 0 means never.")]
-        public int WarperEscapeChance = 10;
+        [Toggle("Allow Warpers to escape inventory?",
+            Tooltip = "Allow Warpers to escape from your inventory, when taken far enough away. This does mean containing them is impossible, if containment is too far away from their spawnpoint.")]
+        public bool AllowWarperInvEscape = false;
+        [Slider("Warper Containment Escape Chance", Min = 0, Max = 10, DefaultValue = 10, Step = 1, Id = "WarperContainmentEscapeChance",
+            Tooltip = "The chance that Warpers in Alien Containment have to occassionally warp out and escape. 10 is 1-in-10, 1 is guaranteed, and 0 means never.")]
+        public int WarperContainmentEscapeChance = 10;
 
         [Toggle("Allow all creatures to be picked up?",
             Tooltip = "Allow any fish, regardless of size, to be picked up. Without this enabled, only fish small enough can be picked up.")]
