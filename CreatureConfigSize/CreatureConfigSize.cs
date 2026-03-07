@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
 using Nautilus.Extensions;
+using System;
 
 namespace CreatureConfigSize
 {
@@ -129,6 +130,17 @@ namespace CreatureConfigSize
                     logger.LogInfo($"Enabling {techType}");
                     ErrorMessage.AddMessage($"Enabling {techType}");
                     component = creature.GetComponent<Creature>();
+
+                    /*CaveCrawler crawler = creature.GetComponent<CaveCrawler>();
+
+                    //crawler.walkingSound.asset.path = null;
+                    FMODAsset newWalk = new FMODAsset();
+                    newWalk.path = "event:/creature/warper/idle";
+                    newWalk.id = "{46acd688-e857-430d-974c-168402dad9ff}";
+                    FMODAsset newWalk2 = new FMODAsset();
+                    //crawler.walkingSound.asset.path = "event:/creature/ray/sing";
+                    crawler.walkingSound.asset = newWalk2;
+                    //crawler.jumpSound = newWalk;*/
                     break;
                 case TechType.Shuttlebug: //Blood Crawler
                     logger.LogInfo($"Enabling {techType}");
@@ -149,7 +161,7 @@ namespace CreatureConfigSize
                     break;
                 case TechType.Warper:
                     var escapeChance = config.WarperContainmentEscapeChance; //Warper escape is 1/WarperContainmentEscapeChance chance for it to warp out of containment (this also occurs on load-in)
-                    var escapeAttempt = Random.Range(1, escapeChance + 1); //Add 1 to maxValue, as it's not inclusive of the range
+                    var escapeAttempt = UnityEngine.Random.Range(1, escapeChance + 1); //Add 1 to maxValue, as it's not inclusive of the range
                     if (escapeAttempt == escapeChance)
                     {
                         logger.LogInfo($"Warper is warping out of containment");
@@ -157,11 +169,25 @@ namespace CreatureConfigSize
                         creature.GetComponent<Warper>().WarpOut();
                     }
                     break;
+                /*case TechType.SeaEmperorJuvenile:
+                    logger.LogInfo($"Disabling {techType} OnTouch attacks");
+                    var OnTouchList = creature.transform.GetComponentsInChildren<OnTouch>();
+                    for(int i = 0; i < OnTouchList.Length; i++)
+                    {
+                        logger.LogInfo($"Disabling OnTouchList element {i} is {OnTouchList[i]}");
+                        OnTouchList[i].gameObject.SetActive(false);
+                        __instance.disabledBehaviours.Add(OnTouchList[i]);
+                    }
+                    break;*/
             }
 
             if(component != null)
             {
                 component.enabled = true;
+                /*var disBeh = __instance.disabledBehaviours;
+                logger.LogError($"Disabled behaviours = {disBeh}");
+                bool isInDisabled = disBeh.Contains(component);
+                logger.LogError($"Disabled behaviours contains component {component}? = {isInDisabled}");*/
             }
         }
 
@@ -409,14 +435,12 @@ namespace CreatureConfigSize
                 //Use original size modifier to determine if eligible for WPC component (also eligibile if set to allow all or if *already in* containment)
                 if ((modifier >= min && modifier <= max) || config.AllowAllWaterPark || insideWaterPark)
                 {
-                    WaterParkCreature wpc = creature.EnsureComponent<WaterParkCreature>();
-
                     //If creature is eligible for the component and doesn't have one, add it; return true if it needed one at all
                     if (!componentExists)
                     {
                         //Ensure creature has WaterParkCreature component if it needs one added, and make sure it has blank data
                         //If we need to create a component, that means the previous reference to 'wpc' was null, so we override it with this new and shiny one
-                        wpc = creature.EnsureComponent<WaterParkCreature>();
+                        WaterParkCreature wpc = creature.EnsureComponent<WaterParkCreature>();
                         wpc.data = ScriptableObject.CreateInstance<WaterParkCreatureData>();
                     }
 
@@ -435,7 +459,7 @@ namespace CreatureConfigSize
 
                 //Use appropriate size to calculate WPC data
                 //NOTE!! Always update WaterParkCreature data, so long as the component exists, just in case it's a creature in containment that shouldn't be there
-                if(!(creature.GetComponent<WaterParkCreature>() == null))
+                if(componentExists)
                 {
                     SetWaterParkData(ref creature.GetComponent<WaterParkCreature>().data, modifier, techType);
                 }
@@ -581,7 +605,7 @@ namespace CreatureConfigSize
                 }
                 else
                 {
-                    ErrorMessage.AddError($"Error! {techType} is not in the size range reference dictionary!");
+                    logger.LogError($"Error! {techType} is not in the size range reference dictionary!");
                 }
                 #endregion
             }
@@ -618,7 +642,11 @@ namespace CreatureConfigSize
             //Return an int value, between min and max values, both multiplied by 10
             //NOTE!! We multiply both by 10, so that we can get the numbers unbetween 1 & 2, or 10 and 20 here
             //We'll divide them back down by 10 after we've gotten a random integer
-            var modifierByTen = rand.Next((int)(minSize * 10), (int)(maxSize * 10));
+
+            //Round to avoud floating point rounding (i.e. 3.99999967 down to 3)
+            int minByTen = (int)Math.Round(minSize * 10);
+            int maxByTen = (int)Math.Round(maxSize * 10);
+            int modifierByTen = UnityEngine.Random.Range(minByTen, maxByTen + 1); //Add 1 to maxByTen, as it's not inclusive of the range
 
             //Divide the modifier back down by 10, meaning we have a modifier to 1 decimal place.
             var modifier = (float)modifierByTen / 10;

@@ -129,6 +129,8 @@ namespace CreatureConfigSize
             { TechType.Peeper, (0.9f,1.1f) },
             { TechType.RabbitRay, (0.9f,1.1f) },
             { TechType.ReaperLeviathan, (0.9f,1.1f) },
+            { TechType.Reefback, (0.9f,1.1f) },
+            { TechType.ReefbackBaby, (0.9f,1.1f) },
             { TechType.Reginald, (0.9f, 1.1f) },
             { TechType.Rockgrub, (0.9f, 1.1f) },
             { TechType.Sandshark, (0.9f,1.1f) },
