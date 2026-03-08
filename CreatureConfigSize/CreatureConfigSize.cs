@@ -64,10 +64,9 @@ namespace CreatureConfigSize
                 var (techType, invSize, iconName, name, tooltip) = CreatureInvList[i];
                 //Set size of creature in inventory (invSize * invSize)
                 CraftDataHandler.SetItemSize(techType, new Vector2int(invSize, invSize));
-                //Get the filepath to the mod assets folder
-                string iconFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Assets");
-                //Apply icon sprite to the desired techtype
-                SpriteHandler.RegisterSprite(techType, Path.Combine(iconFilePath, iconName + ".png"));
+                //Apply icon sprite to the desired techtype from the icon asset bundle
+                Sprite iconSprite = IconBundle.LoadAsset<Sprite>(iconName);
+                SpriteHandler.RegisterSprite(techType, iconSprite);
                 //Add display name to the desired techtype
                 LanguageHandler.SetTechTypeName(techType, name);
                 //Add item description to the desired techtype

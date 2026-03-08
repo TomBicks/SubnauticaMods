@@ -6,6 +6,9 @@ using Nautilus.Json.Attributes;
 using Nautilus.Json;
 using Nautilus.Options.Attributes;
 using System.Collections.Generic;
+using UnityEngine;
+using Nautilus.Utility;
+using System.Reflection;
 
 namespace CreatureConfigSize
 {
@@ -15,13 +18,15 @@ namespace CreatureConfigSize
     {
         private const string myGUID = "com.jukebox.creatureconfigsize";
         private const string pluginName = "Creature Config - Size";
-        private const string versionString = "0.8.0";
+        private const string versionString = "1.0.0";
 
         private static readonly Harmony harmony = new Harmony(myGUID);
 
         internal static ManualLogSource logger { get; private set; }
 
         internal static Config config { get; } = OptionsPanelHandler.RegisterModOptions<Config>();
+
+        public static AssetBundle IconBundle { get; private set; }
 
         //TODO!! Maybe think of a better, more fitting name?
         internal static CreatureSizeInfoList creatureSizeInfoList { get; } = SaveDataHandler.RegisterSaveDataCache<CreatureSizeInfoList>();
@@ -45,6 +50,11 @@ namespace CreatureConfigSize
             harmony.PatchAll();
             Logger.LogInfo(pluginName + " " + versionString + " " + "loaded.");
             logger = Logger;
+
+            //Open Icon Asset Bundle
+            IconBundle = AssetBundleLoadingUtils.LoadFromAssetsFolder(Assembly.GetExecutingAssembly(), "iconassetbundle");
+            logger.LogError($"IconBundle = {IconBundle} & {IconBundle.NullOrID()}");
+            //IconBundle = AssetBundleLoadingUtils.LoadFromModFolder(Assembly.GetExecutingAssembly(), "iconassetbundle");
 
             ConsoleCommandsHandler.RegisterConsoleCommands(typeof(CommandsSize));
         }
