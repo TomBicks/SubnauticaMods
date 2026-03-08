@@ -53,8 +53,6 @@ namespace CreatureConfigSize
 
             //Open Icon Asset Bundle
             IconBundle = AssetBundleLoadingUtils.LoadFromAssetsFolder(Assembly.GetExecutingAssembly(), "iconassetbundle");
-            logger.LogError($"IconBundle = {IconBundle} & {IconBundle.NullOrID()}");
-            //IconBundle = AssetBundleLoadingUtils.LoadFromModFolder(Assembly.GetExecutingAssembly(), "iconassetbundle");
 
             ConsoleCommandsHandler.RegisterConsoleCommands(typeof(CommandsSize));
         }
@@ -82,24 +80,24 @@ namespace CreatureConfigSize
 
         //NOTE!! May use these for the 'simple' option, where the user *doesn't* customise every single creature
         //TODO!! Make it clear it's a random value between the min amd max ranges
-        [Slider("Small Creature Minimum Size", Min = 0.1f, Max = 1f, DefaultValue = 1f, Step = 0.1f, Format = "{0:F1}", Id = "SmallCreatureMinSize",
+        [Slider("Small Creature Minimum Size", Min = 0.1f, Max = 1f, DefaultValue = 0.9f, Step = 0.1f, Format = "{0:F1}", Id = "SmallCreatureMinSize",
             Tooltip = "Minimum size modifier of small creatures. Will be randomly generated between this and the maximum size, then multiplied against the creature's base size.")]
-        public float SmallCreatureMinSize = 1f;
-        [Slider("Small Creature Maximum Size", Min = 1f, Max = 4f, DefaultValue = 1f, Step = 0.1f, Format = "{0:F1}", Id = "SmallCreatureMaxSize",
+        public float SmallCreatureMinSize = 0.9f;
+        [Slider("Small Creature Maximum Size", Min = 1f, Max = 4f, DefaultValue = 1.1f, Step = 0.1f, Format = "{0:F1}", Id = "SmallCreatureMaxSize",
             Tooltip = "Maximum size modifier of small creatures. Will be randomly generated between this and the minimum size, then multiplied against the creature's base size.")]
-        public float SmallCreatureMaxSize = 1f;
-        [Slider("Medium Creature Minimum Size", Min = 0.1f, Max = 1f, DefaultValue = 1f, Step = 0.1f, Format = "{0:F1}", Id = "MedCreatureMinSize",
+        public float SmallCreatureMaxSize = 1.1f;
+        [Slider("Medium Creature Minimum Size", Min = 0.1f, Max = 1f, DefaultValue = 0.9f, Step = 0.1f, Format = "{0:F1}", Id = "MedCreatureMinSize",
             Tooltip = "Minimum size modifier of medium creatures. Will be randomly generated between this and the maximum size, then multiplied against the creature's base size.")]
-        public float MedCreatureMinSize = 1f;
-        [Slider("Medium Creature Maximum Size", Min = 1f, Max = 4f, DefaultValue = 1f, Step = 0.1f, Format = "{0:F1}", Id = "MedCreatureMaxSize",
+        public float MedCreatureMinSize = 0.9f;
+        [Slider("Medium Creature Maximum Size", Min = 1f, Max = 4f, DefaultValue = 1.1f, Step = 0.1f, Format = "{0:F1}", Id = "MedCreatureMaxSize",
             Tooltip = "Maximum size modifier of medium creatures. Will be randomly generated between this and the minimum size, then multiplied against the creature's base size.")]
-        public float MedCreatureMaxSize = 1f;
-        [Slider("Large Creature Minimum Size", Min = 0.1f, Max = 1f, DefaultValue = 1f, Step = 0.1f, Format = "{0:F1}", Id = "LargeCreatureMinSize",
+        public float MedCreatureMaxSize = 1.1f;
+        [Slider("Large Creature Minimum Size", Min = 0.1f, Max = 1f, DefaultValue = 0.9f, Step = 0.1f, Format = "{0:F1}", Id = "LargeCreatureMinSize",
             Tooltip = "Minimum size modifier of large creatures. Will be randomly generated between this and the maximum size, then multiplied against the creature's base size.")]
-        public float LargeCreatureMinSize = 1f;
-        [Slider("Large Creature Maximum Size", Min = 1f, Max = 4f, DefaultValue = 1f, Step = 0.1f, Format = "{0:F1}", Id = "LargeCreatureMaxSize",
+        public float LargeCreatureMinSize = 0.9f;
+        [Slider("Large Creature Maximum Size", Min = 1f, Max = 4f, DefaultValue = 1.1f, Step = 0.1f, Format = "{0:F1}", Id = "LargeCreatureMaxSize",
             Tooltip = "Maximum size modifier of large creatures. Will be randomly generated between this and the minimum size, then multiplied against the creature's base size.")]
-        public float LargeCreatureMaxSize = 1f;
+        public float LargeCreatureMaxSize = 1.1f;
 
         //NOTE!! May use this for the 'complex' option, where the user *can* customise every single creature
         //NOTE!! Any changes made to this dictionary in the text file won't be changed when the config options in-game are changed
