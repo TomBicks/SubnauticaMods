@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreatureConfigDamage", "CreatureConfigDamage\CreatureConfigDamage.csproj", "{AD5E57A1-A1FC-4361-BA5B-5A0DD4C5B914}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreatureConfigDamageOld", "CreatureConfigDamage\CreatureConfigDamageOld.csproj", "{AD5E57A1-A1FC-4361-BA5B-5A0DD4C5B914}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreatureConfigDamageLite", "CreatureConfigDamageLite\CreatureConfigDamageLite.csproj", "{6A906B94-9A02-4A66-B212-30D42C741A13}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImmortalSnail", "ImmortalSnail\ImmortalSnail.csproj", "{55531F4B-243B-4E45-9031-630CF58E7445}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreatureConfigSize", "CreatureConfigSize\CreatureConfigSize.csproj", "{2234052C-2AD9-4A16-B7E9-B6F82619F9AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreatureConfigDamage", "CreatureConfigDamage\CreatureConfigDamage.csproj", "{D510619C-0922-485E-B4A2-86C6DEC6DED8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{2234052C-2AD9-4A16-B7E9-B6F82619F9AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2234052C-2AD9-4A16-B7E9-B6F82619F9AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2234052C-2AD9-4A16-B7E9-B6F82619F9AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D510619C-0922-485E-B4A2-86C6DEC6DED8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D510619C-0922-485E-B4A2-86C6DEC6DED8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D510619C-0922-485E-B4A2-86C6DEC6DED8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D510619C-0922-485E-B4A2-86C6DEC6DED8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

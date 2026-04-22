@@ -3,6 +3,9 @@ using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 using CreatureConfigDamage.Items.Equipment;
+using Nautilus.Options.Attributes;
+using System.Collections.Generic;
+using Nautilus.Handlers;
 
 namespace CreatureConfigDamage;
 
@@ -11,24 +14,15 @@ namespace CreatureConfigDamage;
 public class Plugin : BaseUnityPlugin
 {
     public new static ManualLogSource Logger { get; private set; }
-    
+
+    internal static DamageConfig config { get; } = OptionsPanelHandler.RegisterModOptions<DamageConfig>();
+
     private static Assembly Assembly { get; } = Assembly.GetExecutingAssembly();
 
     private void Awake()
     {
-        // set project-scoped logger instance
         Logger = base.Logger;
-        
-        // Initialize custom prefabs
-        InitializePrefabs();
-
-        // register harmony patches, if there are any
         Harmony.CreateAndPatchAll(Assembly, $"{PluginInfo.PLUGIN_GUID}");
         Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
-    }
-
-    private void InitializePrefabs()
-    {
-        YeetKnifePrefab.Register();
     }
 }
