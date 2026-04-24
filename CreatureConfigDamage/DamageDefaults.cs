@@ -44,7 +44,7 @@ internal class DamageDefaults
     };
 
     //MUCH CLEANER!!
-    public static readonly List<(TechType, AttackInfo[])> attacks = new List<(TechType, AttackInfo[])>()
+    public static readonly List<(TechType, AttackInfo[])> creatureAttacks = new List<(TechType, AttackInfo[])>()
     {
         { (TechType.Biter, new AttackInfo[] {
             new AttackInfo { attackKey="BiterBite", defaultDamage=7f }
@@ -53,8 +53,8 @@ internal class DamageDefaults
             new AttackInfo { attackKey="StalkerBite", defaultDamage=30f }
         })},
         { (TechType.Shocker, new AttackInfo[] {
-            new AttackInfo { attackKey="AmpeelBiteDmg", defaultDamage=30f },
-            new AttackInfo { attackKey="AmpeelShockDmg", defaultDamage=15f, isGenericAttack=false } //NOW, IT'LL AUTOMATICALLY USE GENERIC OR NOT! (LIKELY WILL BE A SWITCH STATEMENT ON THE OTHER SIDE)
+            new AttackInfo { attackKey="AmpeelBite", defaultDamage=30f },
+            new AttackInfo { attackKey="AmpeelShock", defaultDamage=15f, isGenericAttack=false } //NOW, IT'LL AUTOMATICALLY USE GENERIC OR NOT! (LIKELY WILL BE A SWITCH STATEMENT ON THE OTHER SIDE)
         })},
     };
 }

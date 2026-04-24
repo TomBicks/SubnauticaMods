@@ -13,6 +13,7 @@ internal class PlayerPatch : MonoBehaviour
     [HarmonyPostfix]
     public static void PlayerStart()
     {
+        CoroutineHost.StartCoroutine(DamageHandler.Iterate());
         CoroutineHost.StartCoroutine(TestPrefabStuff());
     }
 
