@@ -4,7 +4,7 @@ namespace CreatureConfigDamage;
 
 internal class DamageDefaults
 {
-    public static readonly Dictionary<string, float> defaultDamageValues = new Dictionary<string, float>()
+    public static readonly Dictionary<string, float> defaults = new Dictionary<string, float>()
     {
         { "AmpeelBiteDmg",30F },
         { "AmpeelShockDmg",15F },
@@ -42,4 +42,26 @@ internal class DamageDefaults
         { "WarperClawDmg", 30F },
         { "WarperWarpDmg", 10F }
     };
+
+    //MUCH CLEANER!!
+    public static readonly List<(TechType, AttackInfo[])> attacks = new List<(TechType, AttackInfo[])>()
+    {
+        { (TechType.Biter, new AttackInfo[] {
+            new AttackInfo { attackKey="BiterBite", defaultDamage=7f }
+        })},
+        { (TechType.Stalker, new AttackInfo[] {
+            new AttackInfo { attackKey="StalkerBite", defaultDamage=30f }
+        })},
+        { (TechType.Shocker, new AttackInfo[] {
+            new AttackInfo { attackKey="AmpeelBiteDmg", defaultDamage=30f },
+            new AttackInfo { attackKey="AmpeelShockDmg", defaultDamage=15f, isGenericAttack=false } //NOW, IT'LL AUTOMATICALLY USE GENERIC OR NOT! (LIKELY WILL BE A SWITCH STATEMENT ON THE OTHER SIDE)
+        })},
+    };
+}
+
+internal class AttackInfo
+{
+    internal string attackKey; // The string used to identify the specific attack (one creature may have several different attacks)
+    internal float defaultDamage; // The damage the attack deals by default (will be used to calculate damage changes)
+    internal bool isGenericAttack = true; // Whether the attack is simply a MeleeAttack component, or requires more specifics to apply changes (true by default)
 }
