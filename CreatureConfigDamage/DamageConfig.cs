@@ -6,6 +6,7 @@ namespace CreatureConfigDamage;
 [Menu("Creature Config - Damage")]
 public class DamageConfig : Nautilus.Json.ConfigFile
 {
+    //NOTE!! As to why I'm not using the Choice ModOption, it's because it doesn't support this very nice and detailed Tooltip
     [Slider("Damage Presets", Min = 1f, Max = 8f, DefaultValue = 1f, Step = 1f, Id = "DamagePreset",
         Tooltip = "The damage multiplier preset you wish to use if you want to quickly change all damage values. \n" +
         "Keep in mind that changes made to individual creatures below will not take effect unless you select preset 1, Custom. \n" +
