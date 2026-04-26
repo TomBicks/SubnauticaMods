@@ -8,18 +8,58 @@ namespace CreatureConfigDamage;
 
 internal class DamageHandler
 {
-    //Modies the damage value of a creature prefab's MeleeAttack component (several creatures use the same implementation)
-    private static void ModifyGenericMeleeAttack(ref GameObject creaturePrefab, float damage)
+    private static float CalculateDamage(AttackInfo attack)
     {
+        //Set the attack default
+        float damage = attack.defaultDamage;
+
+        //Obtain preset and determine which damage value to assign according to the preset
+        float preset = Plugin.config.DamagePreset;
+
+        switch (preset)
+        {
+            //Custom, apply individual custom changes
+            case 1:
+                damage = attack.configValue();
+                break;
+            //Sandbox, make all damage values 1
+            case 2:
+                damage = 1;
+                break;
+            //Damage Presets 3,4,5,6,7, multiply default damage values by a percentage, based on the preset selected
+            //5 is Default, damage value is reset to default
+            case float n when n >= 3 && n <= 7:
+                damage = (preset - 1) / 4 * attack.defaultDamage;
+                break;
+            //Sudden Death, make all damage values 1000
+            case 8:
+                damage = 1000;
+                break;
+            default:
+                Plugin.Logger.LogError($"Preset {preset} not recognised!");
+                break;
+        }
+
+        //Return attack damage value to assign
+        return damage;
+    }
+
+    //Modies the damage value of a creature prefab's MeleeAttack component (several creatures use the same implementation)
+    private static void ModifyGenericMeleeAttack(ref GameObject creaturePrefab, AttackInfo attack)
+    {
+        float damage = CalculateDamage(attack);
         creaturePrefab.GetComponent<MeleeAttack>().biteDamage = damage;
+
         ErrorMessage.AddError($"Damage of {damage} assigned for {creaturePrefab} MeleeAttack component");
         Plugin.Logger.LogError($"Damage of {damage} assigned for {creaturePrefab} MeleeAttack component");
     }
 
     //Modifies the damage value of any component of a creature that *isn't* a MeleeAttack component, hence why the field of component itself has to be passed in
-    private static void ModifyUniqueAttack(ref float componentDamageField, float damage)
+    private static void ModifyUniqueAttack(ref float componentDamageField, AttackInfo attack)
     {
+        float damage = CalculateDamage(attack);
         componentDamageField = damage;
+
         ErrorMessage.AddError($"Damage of {damage} assigned for custom component");
         Plugin.Logger.LogError($"Damage of {damage} assigned for custom component");
     }
@@ -47,7 +87,7 @@ internal class DamageHandler
                 if (attack.isGenericAttack)
                 {
                     //ModifyGenericMeleeAttack(ref prefab, attack.defaultDamage);
-                    ModifyGenericMeleeAttack(ref prefab, attack.defaultDamage);
+                    ModifyGenericMeleeAttack(ref prefab, attack);
                 }
                 else
                 {
@@ -59,7 +99,7 @@ internal class DamageHandler
                             Plugin.Logger.LogWarning($"Attack {attack.attackKey} has damage of {attack.defaultDamage}");
                             break;
                         case "GasPodPoison":
-                            ModifyUniqueAttack(ref prefab.GetComponent<GasPod>().damagePerSecond, attack.defaultDamage);
+                            ModifyUniqueAttack(ref prefab.GetComponent<GasPod>().damagePerSecond, attack);
                             break;
                         default:
                             Plugin.Logger.LogError($"Error! Attack {attack.attackKey} for {techType} has no implementation!");
