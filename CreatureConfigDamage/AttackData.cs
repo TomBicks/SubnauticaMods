@@ -2,7 +2,7 @@
 
 namespace CreatureConfigDamage;
 
-internal class DamageDefaults
+internal class AttackData
 {
     public static readonly List<(TechType, AttackInfo[])> creatureAttacks = new List<(TechType, AttackInfo[])>()
     {
