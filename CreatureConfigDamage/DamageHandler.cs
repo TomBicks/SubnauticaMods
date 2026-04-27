@@ -51,7 +51,6 @@ internal class DamageHandler
         float damage = CalculateDamage(attack);
         creaturePrefab.GetComponent<MeleeAttack>().biteDamage = damage;
 
-        ErrorMessage.AddError($"Damage of {damage} assigned for {creaturePrefab} MeleeAttack component");
         Plugin.Logger.LogWarning($"Damage of {damage} assigned for {creaturePrefab} MeleeAttack component");
     }
 
@@ -61,7 +60,6 @@ internal class DamageHandler
         float damage = CalculateDamage(attack);
         componentDamageField = damage;
 
-        ErrorMessage.AddError($"Damage of {damage} assigned for component for {attack.attackKey}");
         Plugin.Logger.LogWarning($"Damage of {damage} assigned for component for {attack.attackKey}");
     }
 
@@ -72,20 +70,15 @@ internal class DamageHandler
         foreach ((TechType techType, AttackInfo[] attacks) in AttackData.creatureAttacks)
         {
             Plugin.Logger.LogError($"{techType} has {attacks.Count()} attack(s)");
-            ErrorMessage.AddMessage($"{techType} has {attacks.Count()} attack(s)");
 
             CoroutineTask<GameObject> prefabTask = CraftData.GetPrefabForTechTypeAsync(techType);
             yield return prefabTask;
 
             GameObject prefab = prefabTask.GetResult();
-            ErrorMessage.AddError($"{prefab}");
-            Plugin.Logger.LogWarning(prefab);
 
             //By now, we've grabbed our TechType's prefab gameobject; now it's time to iterate over the creature's attacks to apply their changes to said gameobject
             foreach (AttackInfo attack in attacks)
             {
-                Plugin.Logger.LogWarning($"Attacks values are {attack.attackKey}, {attack.defaultDamage}, and {attack.isGenericAttack}");
-                ErrorMessage.AddMessage($"Attacks values are {attack.attackKey}, {attack.defaultDamage}, and {attack.isGenericAttack}");
                 if (attack.isGenericAttack)
                 {
                     //ModifyGenericMeleeAttack(ref prefab, attack.defaultDamage);
