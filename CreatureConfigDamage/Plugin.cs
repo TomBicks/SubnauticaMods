@@ -2,9 +2,6 @@
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using CreatureConfigDamage.Items.Equipment;
-using Nautilus.Options.Attributes;
-using System.Collections.Generic;
 using Nautilus.Handlers;
 
 namespace CreatureConfigDamage;
@@ -24,5 +21,8 @@ public class Plugin : BaseUnityPlugin
         Logger = base.Logger;
         Harmony.CreateAndPatchAll(Assembly, $"{PluginInfo.PLUGIN_GUID}");
         Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
+
+        //Register tasks for early load screen
+        WaitScreenHandler.RegisterEarlyAsyncLoadTask(PluginInfo.PLUGIN_NAME, DamageHandler.ApplyDamageChanges);
     }
 }

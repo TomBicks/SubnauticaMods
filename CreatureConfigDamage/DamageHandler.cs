@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Logging;
+using Nautilus.Handlers;
 using UnityEngine;
 
 namespace CreatureConfigDamage;
@@ -65,17 +66,18 @@ internal class DamageHandler
     }
 
     //Function to iterate over the list of creature damage defaults to assign values
-    public static IEnumerator Iterate()
+    public static IEnumerator ApplyDamageChanges(WaitScreenHandler.WaitScreenTask task)
     {
+        task.Status = "Applying creature damage changes";
         foreach ((TechType techType, AttackInfo[] attacks) in AttackData.creatureAttacks)
         {
-            Plugin.Logger.LogWarning($"{techType} has {attacks.Count()} attack(s)");
+            Plugin.Logger.LogError($"{techType} has {attacks.Count()} attack(s)");
             ErrorMessage.AddMessage($"{techType} has {attacks.Count()} attack(s)");
 
-            CoroutineTask<GameObject> task = CraftData.GetPrefabForTechTypeAsync(techType);
-            yield return task;
+            CoroutineTask<GameObject> prefabTask = CraftData.GetPrefabForTechTypeAsync(techType);
+            yield return prefabTask;
 
-            GameObject prefab = task.GetResult();
+            GameObject prefab = prefabTask.GetResult();
             ErrorMessage.AddError($"{prefab}");
             Plugin.Logger.LogWarning(prefab);
 
@@ -173,5 +175,6 @@ internal class DamageHandler
                 }
             }
         }
+        yield return null;
     }
 }
