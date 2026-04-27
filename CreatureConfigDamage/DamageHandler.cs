@@ -1,7 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using BepInEx.Logging;
 using Nautilus.Handlers;
 using UnityEngine;
 
@@ -37,7 +35,7 @@ internal class DamageHandler
                 damage = 1000;
                 break;
             default:
-                Plugin.Logger.LogError($"Preset {preset} not recognised!");
+                Plugin.Logger.LogError($"Error! Preset {preset} not recognised!");
                 break;
         }
 
@@ -51,7 +49,7 @@ internal class DamageHandler
         float damage = CalculateDamage(attack);
         creaturePrefab.GetComponent<MeleeAttack>().biteDamage = damage;
 
-        Plugin.Logger.LogWarning($"Damage of {damage} assigned for {creaturePrefab} MeleeAttack component");
+        Plugin.Logger.LogMessage($"Damage of {damage} assigned for {creaturePrefab} MeleeAttack component");
     }
 
     //Modifies the damage value of any component of a creature that *isn't* a MeleeAttack component, hence why the field of component itself has to be passed in
@@ -60,7 +58,7 @@ internal class DamageHandler
         float damage = CalculateDamage(attack);
         componentDamageField = damage;
 
-        Plugin.Logger.LogWarning($"Damage of {damage} assigned for component for {attack.attackKey}");
+        Plugin.Logger.LogMessage($"Damage of {damage} assigned for component for {attack.attackKey}");
     }
 
     //Function to iterate over the list of creature damage defaults to assign values
@@ -69,7 +67,7 @@ internal class DamageHandler
         task.Status = "Applying creature damage changes";
         foreach ((TechType techType, AttackInfo[] attacks) in AttackData.creatureAttacks)
         {
-            Plugin.Logger.LogError($"{techType} has {attacks.Count()} attack(s)");
+            Plugin.Logger.LogMessage($"{techType} has {attacks.Count()} attack(s)");
 
             CoroutineTask<GameObject> prefabTask = CraftData.GetPrefabForTechTypeAsync(techType);
             yield return prefabTask;
