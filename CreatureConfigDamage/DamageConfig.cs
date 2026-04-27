@@ -18,7 +18,7 @@ public class DamageConfig : Nautilus.Json.ConfigFile
         "6 = Hard, All enemies deal 25% more damage \n" +
         "7 = Very Hard, All enemies deal 50% more damage \n" +
         "8 = Sudden Death, All enemies will kill the player in one hit, including vehicles (cyclops takes 2 hits); you have been warned")]
-    public float DamagePreset = 1.0f;
+    public float DamagePreset = 1f;
 
     //NOTE!! Seamoth has 300 HP, Prawn Suit has 600 HP, and Cyclops has 1500 HP. As such, some attacks designed for vehicles may do less damage than appears when compared to attacking players
 
@@ -74,9 +74,15 @@ public class DamageConfig : Nautilus.Json.ConfigFile
     #endregion
 
     #region Crabsnake
-    [Slider("Crabsnake Damage", Min = 1f, Max = 100f, DefaultValue = 35f, Step = 1f, Id = "CrabsnakeBite",
+    [Slider("Crabsnake Damage", Min = 1f, Max = 100f, DefaultValue = 20f, Step = 1f, Id = "CrabsnakeBite",
         Tooltip = "Damage dealt by a Crabsnake's bite.")]
-    public float CrabsnakeBite = 35f;
+    public float CrabsnakeBite = 20f;
+    [Slider("Crabsnake Damage", Min = 1f, Max = 100f, DefaultValue = 15f, Step = 1f, Id = "CrabsnakeGrabBite",
+        Tooltip = "Additional damage dealt by a Crabsnake's bite when they grab hold of the player.")]
+    public float CrabsnakeGrabBite = 15f;
+    [Slider("Crabsnake Damage", Min = 1f, Max = 100f, DefaultValue = 35f, Step = 1f, Id = "CrabsnakeSeamothBite",
+        Tooltip = "Damage dealt by a Crabsnake's bite to a Seamoth.")]
+    public float CrabsnakeSeamothBite = 35f;
     #endregion
 
     #region Crabsquid

@@ -94,9 +94,23 @@ internal class DamageHandler
                     //If the attack isn't generic, *then* we need to use the attackKeys to figure out the custom code to implement the damage changes
                     switch (attack.attackKey)
                     {
-                        case "AmpeelBite":
-                            ErrorMessage.AddError($"Attack {attack.attackKey} has damage of {attack.defaultDamage}");
-                            Plugin.Logger.LogWarning($"Attack {attack.attackKey} has damage of {attack.defaultDamage}");
+                        case "AmpeelShock":
+                            ModifyUniqueAttack(ref prefab.GetComponent<ShockerMeleeAttack>().electricalDamage, attack);
+                            break;
+                        case "AmpeelCyclopsShock":
+                            ModifyUniqueAttack(ref prefab.GetComponent<ShockerMeleeAttack>().cyclopsDamage, attack);
+                            break;
+                        case "BleederSuck":
+                            ModifyUniqueAttack(ref prefab.GetComponent<AttachAndSuck>().leechDamage, attack);
+                            break;
+                        case "CrabsnakeBite":
+                            ModifyUniqueAttack(ref prefab.GetComponent<CrabsnakeMeleeAttack>().biteDamage, attack);
+                            break;
+                        case "CrabsnakeGrabBite":
+                            ModifyUniqueAttack(ref prefab.GetComponent<CrabsnakeMeleeAttack>().cinematicAttackAdditionalDamage, attack);
+                            break;
+                        case "CrabsnakeSeamothBite":
+                            ModifyUniqueAttack(ref prefab.GetComponent<CrabsnakeMeleeAttack>().seamothDamage, attack);
                             break;
                         case "GasPodPoison":
                             ModifyUniqueAttack(ref prefab.GetComponent<GasPod>().damagePerSecond, attack);

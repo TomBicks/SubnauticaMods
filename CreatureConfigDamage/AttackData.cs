@@ -31,7 +31,9 @@ internal class AttackData
             new AttackInfo { attackKey="CaveCrawlerBite", defaultDamage=5f, configValue=() => Plugin.config.CaveCrawlerBite }
         })},
         { (TechType.Crabsnake, new AttackInfo[] {
-            new AttackInfo { attackKey="CrabsnakeBite", defaultDamage=35f, configValue=() => Plugin.config.CrabsnakeBite, isGenericAttack=false }
+            new AttackInfo { attackKey="CrabsnakeBite", defaultDamage=20f, configValue=() => Plugin.config.CrabsnakeBite, isGenericAttack=false },
+            new AttackInfo { attackKey="CrabsnakeGrabBite", defaultDamage=15f, configValue=() => Plugin.config.CrabsnakeGrabBite, isGenericAttack=false },
+            new AttackInfo { attackKey="CrabsnakeSeamothBite", defaultDamage=35f, configValue=() => Plugin.config.CrabsnakeSeamothBite, isGenericAttack=false }
         })},
         { (TechType.CrabSquid, new AttackInfo[] {
             new AttackInfo { attackKey="CrabSquidBite", defaultDamage=40f, configValue=() => Plugin.config.CrabSquidBite }
