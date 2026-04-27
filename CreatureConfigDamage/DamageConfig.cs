@@ -23,8 +23,6 @@ public class DamageConfig : Nautilus.Json.ConfigFile
     //NOTE!! Seamoth has 300 HP, Prawn Suit has 600 HP, and Cyclops has 1500 HP. As such, some attacks designed for vehicles may do less damage than appears when compared to attacking players
 
     #region Creature Damage Sliders
-    //NOTE!! Do any of these sliders actually need the ID variable to function? Am I just wasting space and code?
-    //Isn't that what the variable below is for?
     #region Ampeel
     [Slider("Ampeel Bite Damage", Min = 1f, Max = 100f, DefaultValue = 30f, Step = 1f, Id = "AmpeelBiteDmg",
         Tooltip = "Damage dealt by an Ampeel's bite.")]
@@ -203,7 +201,7 @@ public class DamageConfig : Nautilus.Json.ConfigFile
     #region Warper
     [Slider("Warper Claw Damage", Min = 1f, Max = 100f, DefaultValue = 30f, Step = 1f, Id = "WarperClaw",
         Tooltip = "Damage dealt by a Warper's claws. Note that the damage is multiplied by the player's infection level, capping at 4x.")]
-    public float WarperClaw = 30f; //TODO!!Damage increases based on infection level??? Starts at 23??? But biteDamge is 30??? LiveMixin with InfectionMixin to calcualte damage???
+    public float WarperClaw = 30f;
     [Slider("Warper Warp Damage", Min = 1f, Max = 100f, DefaultValue = 10f, Step = 1f, Id = "WarperWarpBall",
         Tooltip = "Damage dealt by a Warper's teleport projectile.")]
     public float WarperWarpBall = 10f;
@@ -224,7 +222,7 @@ public class DamageConfig : Nautilus.Json.ConfigFile
             { TechType.Crabsnake, false },
             { TechType.CrabSquid, false },
             { TechType.Crash, false }, //TechType for Crashfish
-            //{ TechType.Gasopod, false }, //TODO!! Doesn't work; No TechType for 'dealer' when damaged by the gas
+            //{ TechType.Gasopod, false }, //TODO!! No dealer; requires transpiler to function and thus, low-priority
             { TechType.GhostLeviathan, false },
             { TechType.GhostLeviathanJuvenile, false },
             { TechType.LavaLizard, false },
@@ -235,7 +233,7 @@ public class DamageConfig : Nautilus.Json.ConfigFile
             { TechType.SeaDragon, false },
             { TechType.SeaTreader, false },
             { TechType.Stalker, false },
-            { TechType.SpikePlant, false }, //TODO!! Doesn't work; No TechType for 'dealer' when shot with this projectile
+            //{ TechType.SpikePlant, false }, //TODO!! No dealer; requires transpiler to function and thus, low-priority
             { TechType.Warper, false }
         };
 }

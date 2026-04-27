@@ -5,7 +5,6 @@ namespace CreatureConfigDamage;
 
 internal static class AttackData
 {
-    //TODO!! Change this to a dictionary of TechType : AttackInfo[] pairs; you can still iterate over it in DamageHandler
     public static readonly Dictionary<TechType, AttackInfo[]> creatureAttacks = new Dictionary<TechType, AttackInfo[]>()
     {
         { TechType.Shocker, new AttackInfo[] { //Ampeel
@@ -91,6 +90,8 @@ internal static class AttackData
             new AttackInfo { attackKey="WarperWarpBall", defaultDamage=10f, configValue=() => Plugin.config.WarperWarpBall, isGenericAttack=false }
         }},
     };
+
+    //TODO!! To change HangingStinger damage, which is hard-coded when added to the DamageOverTime component it places on whoever touches it, requires a transpiler and thus, low-priority
 
     //Deconstructor, so the code knows how to break down the dictionary when I iterate over it in DamageHandler
     public static void Deconstruct<T1, T2>(this KeyValuePair<T1, T2> pair, out T1 key, out T2 value)
