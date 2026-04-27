@@ -51,7 +51,7 @@ internal class DamageHandler
         creaturePrefab.GetComponent<MeleeAttack>().biteDamage = damage;
 
         ErrorMessage.AddError($"Damage of {damage} assigned for {creaturePrefab} MeleeAttack component");
-        Plugin.Logger.LogError($"Damage of {damage} assigned for {creaturePrefab} MeleeAttack component");
+        Plugin.Logger.LogWarning($"Damage of {damage} assigned for {creaturePrefab} MeleeAttack component");
     }
 
     //Modifies the damage value of any component of a creature that *isn't* a MeleeAttack component, hence why the field of component itself has to be passed in
@@ -60,8 +60,8 @@ internal class DamageHandler
         float damage = CalculateDamage(attack);
         componentDamageField = damage;
 
-        ErrorMessage.AddError($"Damage of {damage} assigned for custom component");
-        Plugin.Logger.LogError($"Damage of {damage} assigned for custom component");
+        ErrorMessage.AddError($"Damage of {damage} assigned for component for {attack.attackKey}");
+        Plugin.Logger.LogWarning($"Damage of {damage} assigned for component for {attack.attackKey}");
     }
 
     //Function to iterate over the list of creature damage defaults to assign values
@@ -112,8 +112,59 @@ internal class DamageHandler
                         case "CrabsnakeSeamothBite":
                             ModifyUniqueAttack(ref prefab.GetComponent<CrabsnakeMeleeAttack>().seamothDamage, attack);
                             break;
+                        case "CrashfishExplosion":
+                            ModifyUniqueAttack(ref prefab.GetComponent<Crash>().maxDamage, attack);
+                            break;
                         case "GasPodPoison":
                             ModifyUniqueAttack(ref prefab.GetComponent<GasPod>().damagePerSecond, attack);
+                            break;
+                        case "GhostBite":
+                            ModifyUniqueAttack(ref prefab.GetComponent<GhostLeviathanMeleeAttack>().biteDamage, attack);
+                            break;
+                        case "GhostCyclopsBite":
+                            ModifyUniqueAttack(ref prefab.GetComponent<GhostLeviathanMeleeAttack>().cyclopsDamage, attack);
+                            break;
+                        case "GhostJuvBite":
+                            ModifyUniqueAttack(ref prefab.GetComponent<GhostLeviathanMeleeAttack>().biteDamage, attack);
+                            break;
+                        case "GhostJuvCyclopsBite":
+                            ModifyUniqueAttack(ref prefab.GetComponent<GhostLeviathanMeleeAttack>().cyclopsDamage, attack);
+                            break;
+                        case "LavaLizardLavaRock":
+                            ModifyUniqueAttack(ref prefab.GetComponent<LavaLiazardRangedAttack>().attackTypes[0].ammoPrefab.GetComponent<LavaMeteor>().damage, attack);
+                            break;
+                        case "ReaperBite":
+                            ModifyUniqueAttack(ref prefab.GetComponent<ReaperMeleeAttack>().biteDamage, attack);
+                            break;
+                        case "ReaperCyclopsBite":
+                            ModifyUniqueAttack(ref prefab.GetComponent<ReaperMeleeAttack>().cyclopsDamage, attack);
+                            break;
+                        case "SeaDragonBite":
+                            ModifyUniqueAttack(ref prefab.GetComponent<SeaDragonMeleeAttack>().biteDamage, attack);
+                            break;
+                        case "SeaDragonSwat":
+                            ModifyUniqueAttack(ref prefab.GetComponent<SeaDragonMeleeAttack>().swatAttackDamage, attack);
+                            break;
+                        case "SeaDragonShove":
+                            ModifyUniqueAttack(ref prefab.GetComponent<SeaDragonMeleeAttack>().shoveAttackDamage, attack);
+                            break;
+                        case "SeaDragonBurningChunk":
+                            ModifyUniqueAttack(ref prefab.GetComponent<RangedAttackLastTarget>().attackTypes[0].ammoPrefab.GetComponent<BurningChunk>().fireDamage, attack);
+                            break;
+                        case "SeaDragonLavaMeteor":
+                            ModifyUniqueAttack(ref prefab.GetComponent<RangedAttackLastTarget>().attackTypes[1].ammoPrefab.GetComponent<LavaMeteor>().damage, attack);
+                            break;
+                        case "SeaTreaderPeck":
+                            ModifyUniqueAttack(ref prefab.GetComponent<SeaTreaderMeleeAttack>().damage, attack);
+                            break;
+                        case "TigerPlantThorn":
+                            ModifyUniqueAttack(ref prefab.GetComponent<RangeAttacker>().damage, attack);
+                            break;
+                        case "WarperClaw":
+                            ModifyUniqueAttack(ref prefab.GetComponent<WarperMeleeAttack>().biteDamage, attack);
+                            break;
+                        case "WarperWarpBall":
+                            ModifyUniqueAttack(ref prefab.GetComponent<RangedAttackLastTarget>().attackTypes[0].ammoPrefab.GetComponent<WarpBall>().damage, attack);
                             break;
                         default:
                             Plugin.Logger.LogError($"Error! Attack {attack.attackKey} for {techType} has no implementation!");
