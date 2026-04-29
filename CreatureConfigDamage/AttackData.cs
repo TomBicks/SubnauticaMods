@@ -69,8 +69,9 @@ internal static class AttackData
         { TechType.Sandshark, new AttackInfo[] {
             new AttackInfo { attackKey="SandsharkBite", defaultDamage=30f, configValue=() => Plugin.config.SandsharkBite }
         }},
-        { TechType.SeaDragon, new AttackInfo[] { //TODO!! SeaDragon was accordingly broken, so need to test these later (most notably the projectiles)
+        { TechType.SeaDragon, new AttackInfo[] {
             new AttackInfo { attackKey="SeaDragonBite", defaultDamage=300f, configValue=() => Plugin.config.SeaDragonBite, isGenericAttack=false },
+            new AttackInfo { attackKey="SeaDragonPrawnGrab", defaultDamage=15f, configValue=() => Plugin.config.SeaDragonPrawnGrab, isGenericAttack=false },
             new AttackInfo { attackKey="SeaDragonSwat", defaultDamage=70f, configValue=() => Plugin.config.SeaDragonSwat, isGenericAttack=false },
             new AttackInfo { attackKey="SeaDragonShove", defaultDamage=250f, configValue=() => Plugin.config.SeaDragonShove, isGenericAttack=false },
             new AttackInfo { attackKey="SeaDragonBurningChunk", defaultDamage=10f, configValue=() => Plugin.config.SeaDragonBurningChunk, isGenericAttack=false },

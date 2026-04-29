@@ -135,6 +135,10 @@ internal class DamageHandler
                         case "SeaDragonBite":
                             ModifyUniqueAttack(ref prefab.GetComponent<SeaDragonMeleeAttack>().biteDamage, attack);
                             break;
+                        case "SeaDragonPrawnGrab":
+                            //NOTE!! Damage is multiplied by damageInterval, which is 0.5, meaning the actual damage applied is half the amount, but applied every half-second
+                            ModifyUniqueAttack(ref prefab.GetComponent<SeaDragon>().exosuitDamagePerSecond, attack);
+                            break;
                         case "SeaDragonSwat":
                             ModifyUniqueAttack(ref prefab.GetComponent<SeaDragonMeleeAttack>().swatAttackDamage, attack);
                             break;

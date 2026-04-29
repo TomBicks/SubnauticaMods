@@ -166,6 +166,9 @@ public class DamageConfig : Nautilus.Json.ConfigFile
     [Slider("Sea Dragon Bite Damage", Min = 5f, Max = 500f, DefaultValue = 300f, Step = 5f, Id = "SeaDragonBite",
         Tooltip = "Damage dealt by a Sea Dragon Leviathan's bite.")]
     public float SeaDragonBite = 300f;
+    [Slider("Sea Dragon Prawnsuit Grab Damage", Min = 1f, Max = 100f, DefaultValue = 15f, Step = 1f, Id = "SeaDragonPrawnGrab",
+        Tooltip = "Damage dealt per second by a Sea Dragon Leviathan's bite to a Prawnsuit caught in its mouth.")]
+    public float SeaDragonPrawnGrab = 15f;
     [Slider("Sea Dragon Swat Damage", Min = 1f, Max = 100f, DefaultValue = 70f, Step = 1f, Id = "SeaDragonSwat",
         Tooltip = "Damage dealt by a Sea Dragon Leviathan's swat.")]
     public float SeaDragonSwat = 70f;
